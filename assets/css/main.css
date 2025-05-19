@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+    --color-mtgreen-50: #fdfcfa;
+    --color-mtgreen-100: #e0dbc1;
+    --color-mtgreen-200: #89a24c;
+    --color-mtgreen-300: #fdfcfa;
+
+    --color-mtwine-800: #593333;
+   
+  }
+
+
