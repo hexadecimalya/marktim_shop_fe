@@ -30,15 +30,8 @@ const { data, error: productError, pending: loading } = useFetchData(
 );
 
 if (productError.value) {
-  console.error('Error fetching products:', categoryError.value);
+  console.error('Error fetching products:', productError.value);
 }
 
-// console.log("here are the prods", data.value)
-
-// onMounted(() => {
-//     fetchData("https://marktim.shop/api/v1/public/stock/?page_size=10")
-// })
-
-
-
+console.log(products.value)
 </script>

@@ -22,30 +22,30 @@
                         : linkVariant.inactive]">
                         <NuxtLink to="/">Головна</NuxtLink>
                     </li>
-                    <li>
-                        <USlideover title="Категорії" :description="categoryType">
-                    <li :class="[isActiveLink('/in-stock')
-                        ? linkVariant.active
-                        : linkVariant.inactive]">
-                        В наявності
-                    </li>
-                    <template #body>
-                        <UCard variant="soft" :ui="{ body: { base: 'flex-1' }, root: 'border-none bg-white p-0' }">
-                            <ul>
-                                <NuxtLink to="/in-stock">
-                                    <li class="hover:font-medium leading-relaxed ">Всі товари
-                                    </li>
-                                </NuxtLink>
-                                <NuxtLink v-for="category in categories" :key="category.id"
-                                    :to="`/in-stock/${category.slug}`">
-                                    <li class="hover:font-medium leading-relaxed
+
+                    <USlideover title="Категорії" :description="categoryType">
+                        <li :class="[isActiveLink('/in-stock')
+                            ? linkVariant.active
+                            : linkVariant.inactive]">
+                            В наявності
+                        </li>
+                        <template #body>
+                            <UCard variant="soft" :ui="{ body: { base: 'flex-1' }, root: 'border-none bg-white p-0' }">
+                                <ul>
+                                    <NuxtLink to="/in-stock">
+                                        <li class="hover:font-medium leading-relaxed ">Всі товари
+                                        </li>
+                                    </NuxtLink>
+                                    <NuxtLink v-for="category in categories" :key="category.id"
+                                        :to="`/in-stock/${category.slug}`">
+                                        <li class="hover:font-medium leading-relaxed
  ">{{ category.name }}</li>
-                                </NuxtLink>
-                            </ul>
-                        </UCard>
-                    </template>
+                                    </NuxtLink>
+                                </ul>
+                            </UCard>
+                        </template>
                     </USlideover>
-                    </li>
+
                     <USlideover title="Категорії" :description="categoryType">
                         <li :class="[isActiveLink('/preorders')
                             ? linkVariant.active

@@ -1,7 +1,7 @@
 <template>
 
     <div class="duration-200 hover:scale-102 border-1 border-gray-100 mx-auto hover:overflow-visible">
-        <NuxtLink to="/product">
+        <NuxtLink :to="`/products/${itemData.id}/`">
             <img :src="itemData.image" :alt="itemData.name" class="object-cover rounded-t-xl" />
             <!-- <div @mouseenter="showFullTitle = true" @mouseleave="showFullTitle = false" class="px-4 py-3 xl:w-64 lg:w-60"> -->
             <div class="px-4 py-3 flex flex-col content-stretch">
@@ -40,11 +40,13 @@ const props = defineProps({
     product: Object
 })
 
-
 const itemData = {
+    id: props.product.id,
     name: props.product.product.name_ukr ? props.product.product.name_ukr : props.product.product.name,
     image: props.product.product.files[0].link,
     regular_price: props.product.sell_price
 }
+
+console.log(itemData)
 
 </script>
