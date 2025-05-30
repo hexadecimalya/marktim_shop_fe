@@ -4,7 +4,7 @@
       <p class="text-lg md:text-xl max-w-3xl mx-auto mb-6">
         MarkTim — магазин, натхненний подорожами, родинними цінностями та любов’ю до смачної їжі.
       </p>
-      <img src="../assets/about_1.jpeg" alt="Європейські смаколики" class="mx-auto rounded-xs shadow-lg w-full max-w-4xl" />
+      <img src="@/assets/hero-img.jpeg" alt="Європейські смаколики" class="mx-auto rounded-xs shadow-lg w-full max-w-5xl" />
     </section>
 
     <section class="py-12 px-4 max-w-5xl mx-auto">
@@ -19,14 +19,14 @@
           </blockquote>
         </div>
         <div class="md:w-1/2 mt-8 md:mt-0">
-          <img src="../assets/about_2.jpeg" alt="Сімейна історія" class="rounded-xs shadow-md" />
+          <img src="https://images.unsplash.com/photo-1557236751-b60abca1479e?q=80&w=3147&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Сімейна історія" class="shadow-md" />
         </div>
       </div>
     </section>
 
     <section class= "bg-mtgreen-50 py-12 px-4 max-w-5xl mx-auto">
       <h2 class="text-3xl font-semibold mb-4">Що ми пропонуємо</h2>
-      <div class="grid md:grid-cols-2 gap-8">
+      <!-- <div class="grid md:grid-cols-2 gap-8"> -->
         <ul class="list-disc pl-6 space-y-3 text-lg">
           <li>Продукти з Польщі, Італії, Німеччини, Іспанії та інших країн</li>
           <li>Власні закупівлі — обираємо найкраще вручну</li>
@@ -34,8 +34,8 @@
           <li>Gourmet-асортимент для справжніх гурманів</li>
           <li>Готові подарункові набори + сертифікати</li>
         </ul>
-        <img src="https://source.unsplash.com/featured/?gourmet,food" alt="Продукти gourmet" class="rounded-xl shadow-lg" />
-      </div>
+           <!-- <img src="https://images.unsplash.com/photo-1622341357129-c460d41da93d?q=80&w=2500&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Подарункові пакування" class="shadow-lg" /> -->
+      <!-- </div> -->
     </section>
 
     <section class="py-12 px-4 max-w-5xl mx-auto">
@@ -48,7 +48,7 @@
           <li>Поради й допомога в підборі смаколиків та подарунків</li>
           <li>Упаковка з любов’ю — кожне замовлення як для себе</li>
         </ul>
-        <img src="https://source.unsplash.com/featured/?giftbox,delivery" alt="Подарункові пакування" class="rounded-xl shadow-lg" />
+        <img src="https://images.unsplash.com/photo-1699788201352-c700fd34a38c?q=80&w=3120&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Подарункові пакування" class="shadow-lg" />
       </div>
   
     </section>
@@ -75,4 +75,13 @@
     </section>
    <!-- </section> -->
 </template>
-<script setup></script>
+<script setup>
+useSeoMeta({
+  title: 'Про нас',
+  ogTitle: 'Про нас | MarkTim Shop – Європейський смак з душею',
+  description: 'MarkTim – магазин, натхненний подорожами та родинними цінностями. Ми ретельно відбираємо європейські продукти, gourmet-делікатеси та подарункові набори, даруючи унікальний смак кожному клієнту.',
+  ogDescription: 'Зануртесь у світ MarkTim – місця, де подорожі, родинні цінності та любов до смачної їжі створюють неповторний гастрономічний досвід. Відкрийте для себе преміальний асортимент європейських делікатесів.',
+  ogImage: 'https://example.com/image.png',
+  twitterCard: 'summary_large_image',
+})
+</script>

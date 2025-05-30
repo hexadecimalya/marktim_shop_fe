@@ -37,7 +37,7 @@
                                         </li>
                                     </NuxtLink>
                                     <NuxtLink v-for="category in categories" :key="category.id"
-                                        :to="`/in-stock/${category.slug}`">
+                                        :to="`/in-stock/?category=${category.slug}`">
                                         <li class="hover:font-medium leading-relaxed
  ">{{ category.name }}</li>
                                     </NuxtLink>
@@ -117,8 +117,6 @@ const toggleBurgerMenu = () => isOpen.value = !isOpen.value
 
 const categoryType = 'в наявності на складі'
 
-// const { data: categories } = useFetchData('https://marktim.shop/api/v1/public/categories/');
-
 const { data: categories, error: categoryError } = useFetchData(
     'categories',
     'https://marktim.shop/api/v1/public/categories/'
@@ -127,9 +125,5 @@ const { data: categories, error: categoryError } = useFetchData(
 if (categoryError.value) {
     console.error('Error fetching categories:', categoryError.value);
 }
-
-// onMounted(()=>{
-//     fetchData("https://marktim.shop/api/v1/public/categories/")
-// })
 
 </script>
