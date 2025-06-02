@@ -2,7 +2,7 @@
     <section class="py-4 md:py-8 px-4 max-w-5xl mx-auto">
         <h2 class="text-3xl font-semibold py-4">Доставка та оплата</h2>
         <div class="md:flex items-center gap-8">
-            <div class="text-justify">
+            <div class="text-justify  text-sm">
                 <p class="mb-4">
                     У MarkTim ми прагнемо зробити покупки максимально зручними для вас!
                     Товари з нашого магазину доставляються по всій Україні за допомогою національних перевізників:</p>
