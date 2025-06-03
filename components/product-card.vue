@@ -47,6 +47,6 @@ const itemData = {
     regular_price: props.product.sell_price
 }
 
-console.log(itemData)
+// console.log(itemData)
 
 </script>
