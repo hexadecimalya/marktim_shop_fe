@@ -3,10 +3,8 @@
     <div class="duration-200 hover:scale-102 border-1 border-gray-100 mx-auto hover:overflow-visible">
         <NuxtLink :to="`/products/${itemData.id}/`">
             <img :src="itemData.image" :alt="itemData.name" class="object-cover rounded-t-xl" />
-            <!-- <div @mouseenter="showFullTitle = true" @mouseleave="showFullTitle = false" class="px-4 py-3 xl:w-64 lg:w-60"> -->
             <div class="px-4 py-3 flex flex-col content-stretch">
                 <span class="mr-3 text-xs uppercase text-gray-600 font-semibold line-clamp-1">Rana</span>
-                <!-- <span class="text-gray-400 mr-3 text-xs">{{ cardData.brand() }}</span> -->
                 <p class="text-sm text-gray-800 text-justify tracking-tight line-clamp-2 border-t-1  border-gray-300 ">
                     {{
                         itemData.name
@@ -46,7 +44,5 @@ const itemData = {
     image: props.product.product.files[0].link,
     regular_price: props.product.sell_price
 }
-
-// console.log(itemData)
 
 </script>

@@ -1,12 +1,12 @@
 <template>
     <section class="container mt-8 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4">
         <h1 class="text-xl md:ml-0 ml-2 md:text-3xl font-semibold mb-4">Товари в наявності </h1>
-        <template v-if="loading">
-            <CardLoader />
+        <template v-if="loading || !productList.length">
+           <CardLoader />
         </template>
         <template v-else>
             <section class="gap-4 grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3">
-                <ProductCard v-for="product in products.slice(0, 40)" :key="product.id" :product="product"
+                <ProductCard v-for="product in productList.slice(0, 40)" :key="product.id" :product="product"
                      />
             </section>
         </template>
@@ -16,10 +16,11 @@
 
 </template>
 <script setup>
+import CardLoader from '~/components/UI/card-loader.vue';
 import useFetchData from '~/composables/use-fetchdata';
 
 
-const products = computed(()=> {
+const productList = computed(()=> {
     return data.value?.data ?? []
 })
 
@@ -33,5 +34,4 @@ if (productError.value) {
   console.error('Error fetching products:', productError.value);
 }
 
-console.log(products.value)
 </script>
