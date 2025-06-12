@@ -16,14 +16,16 @@
 
 </template>
 <script setup>
-import CardLoader from '~/components/UI/card-loader.vue';
-import useFetchData from '~/composables/use-fetchdata';
+import CardLoader from '@/components/UI/card-loader.vue';
+import useFetchData from '@/composables/use-fetchdata';
 
 
 const productList = computed(()=> {
     return data.value?.data ?? []
 })
 
+// const route = useRoute()
+// console.log(route.params.location)
 
 const { data, error: productError, pending: loading } = useFetchData(
   'products',

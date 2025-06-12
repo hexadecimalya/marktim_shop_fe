@@ -10,8 +10,8 @@
         </button>
 
         <div class="hidden h-8 lg:flex ml-4 xl:ml-10">
-            <img src="/assets/MarkTim.png" alt="">
-            <NuxtLink to="/"></NuxtLink>
+           <NuxtLink to="/"><img src="/assets/MarkTim.png" class="h-8" alt=""/></NuxtLink>
+            
         </div>
         <div class="relative flex-1 xl:w-4/6 xl:px-4 py-4 px-2">
             <nav class="lg:text-sm text-xs uppercase font-medium">
@@ -24,7 +24,7 @@
                     </li>
 
                     <USlideover title="Категорії" :description="categoryType">
-                        <li :class="[isActiveLink('/in-stock')
+                        <li :class="[isActiveLink('/products/in-stock')
                             ? linkVariant.active
                             : linkVariant.inactive]">
                             В наявності
@@ -32,12 +32,12 @@
                         <template #body>
                             <UCard variant="soft" :ui="{ body: { base: 'flex-1' }, root: 'border-none bg-white p-0' }">
                                 <ul>
-                                    <NuxtLink to="/in-stock">
+                                    <NuxtLink to="/products/in-stock">
                                         <li class="hover:font-medium leading-relaxed ">Всі товари
                                         </li>
                                     </NuxtLink>
                                     <NuxtLink v-for="category in categories" :key="category.id"
-                                        :to="`/in-stock/?category=${category.slug}`">
+                                        :to="`/products/in-stock/?category=${category.slug}`">
                                         <li class="hover:font-medium leading-relaxed
  ">{{ category.name }}</li>
                                     </NuxtLink>
@@ -47,7 +47,7 @@
                     </USlideover>
 
                     <USlideover title="Категорії" :description="categoryType">
-                        <li :class="[isActiveLink('/preorders')
+                        <li :class="[isActiveLink('/products/preorders')
                             ? linkVariant.active
                             : linkVariant.inactive]">
                             Передзамовлення
@@ -55,12 +55,12 @@
                         <template #body>
                             <UCard variant="soft" :ui="{ body: { base: 'flex-1' }, root: 'border-none bg-white p-0' }">
                                 <ul>
-                                    <NuxtLink to="/preorders">
+                                    <NuxtLink to="/products/preorders">
                                         <li class="hover:font-medium leading-relaxed ">Всі товари
                                         </li>
                                     </NuxtLink>
                                     <NuxtLink v-for="category in categories" :key="category.id"
-                                        :to="`/preorders/${category.slug}`">
+                                        :to="`/products/preorders/${category.slug}`">
                                         <li class="hover:font-medium leading-relaxed
  ">{{ category.name }}</li>
                                     </NuxtLink>

@@ -1,9 +1,9 @@
 <template>
   <footer class="app-footer bg-gray-100 border-t border-gray-200">
     <div class="container mx-auto px-4 py-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
         <!-- Company Info -->
-        <div class="col-span-1 md:col-span-1">
+        <div class="col-span-1">
           <h3 class="text-lg font-semibold mb-4">Компанія</h3>
           <div class="flex items-center mb-4">
             <img src="/assets/MT_Logo.png" class="md:w-32 w-48" />
@@ -16,57 +16,60 @@
         <!-- Links 1 -->
         <div class="col-span-1">
           <h3 class="text-lg font-semibold mb-4">Наші послуги</h3>
-          <ul class="space-y-2 text-gray-600 text-sm ">
-            <li><a href="#" class="hover:font-semibold">Про MarkTim</a></li>
-            <li><a href="#" class="hover:font-semibold">Передзамовлення</a></li>
-            <li><a href="#" class="hover:font-semibold">Оплата та доставка</a></li>
-            <li><a href="#" class="hover:font-semibold">Як нас знайти</a></li>
+          <ul class="md:space-y-2 space-y-1 text-gray-600 text-sm ">
+            <li>
+              <NuxtLink to="/about" class="hover:font-semibold">Про MarkTim</NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="/" class="hover:font-semibold">Передзамовлення</NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="/delivery" class="hover:font-semibold">Оплата та доставка</NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="/about#location" class="hover:font-semibold">Як нас знайти</NuxtLink>
+            </li>
           </ul>
         </div>
 
         <!-- Contact -->
         <div class="col-span-1">
           <h3 class="text-lg font-semibold mb-4">Звʼяжіться з нами</h3>
-          <ul class="space-y-2 text-gray-600 text-sm">
+          <ul class="md:space-y-2 space-y-1 text-gray-600 text-sm">
             <li>
               <div>Ми в соцмережах:</div>
             </li>
             <div class="flex space-x-4 mb-4">
               <div>
-                <UTooltip text="Instagram" >
-              <UIcon name="i-f7:logo-instagram" class="w-6 h-6 p-4 mx-4" /></UTooltip>
+                <UTooltip text="Instagram">
+                  <UIcon name="i-f7:logo-instagram" class="w-6 h-6 p-4 mx-4" />
+                </UTooltip>
               </div>
               <div>
 
-                <UTooltip text="Facebook" >
-                <UIcon name="i-ic:sharp-facebook" class="w-6 h-6 p-4 mx-4" /></UTooltip>
+                <UTooltip text="Facebook">
+                  <UIcon name="i-ic:sharp-facebook" class="w-6 h-6 p-4 mx-4" />
+                </UTooltip>
               </div>
             </div>
             <li>
               <div>Контакти</div>
             </li>
-           
-              <li class="flex ">
-                <UIcon name="i-heroicons:phone-16-solid" class="w-6 h-6 p-2 mx-4" />  <UTooltip text="Скопійовано!" :popper="{ placement: 'top' }" :open="tooltipVisible"><span 
-                class="cursor-pointer hover:text-gray-900" 
-                @click="copyToClipboard">
-                +380 (66) 462 09 98
-              </span>
-             </UTooltip>
-              </li>
-        
-              <li class="flex ">
-              <UIcon name="i-heroicons:envelope-16-solid" class="w-6 h-6 p-2 mx-4" /> <span>info@yourbrand.com</span> 
+
+            <li class="flex ">
+              <UIcon name="i-heroicons:phone-16-solid" class="w-6 h-6 p-2 mx-4" />
+              <UTooltip text="Скопійовано!" :popper="{ placement: 'top' }" :open="tooltipVisible"><span
+                  class="cursor-pointer hover:text-gray-900" @click="copyToClipboard">
+                  +380 (66) 462 09 98
+                </span>
+              </UTooltip>
             </li>
 
-
+            <li class="flex ">
+              <UIcon name="i-heroicons:envelope-16-solid" class="w-6 h-6 p-2 mx-4" />
+              <span>buruk.svetlana@gmail.com</span>
+            </li>
           </ul>
-
-
-
-          <!-- <p class="text-gray-600 text-sm">
-            Email: <a href="mailto:info@yourbrand.com" class="hover:text-gray-900">info@yourbrand.com</a>
-          </p> -->
         </div>
       </div>
 
@@ -83,6 +86,7 @@
 </template>
 
 <script setup>
+
 const tooltipVisible = ref(false)
 
 const copyToClipboard = (text) => {
@@ -101,8 +105,7 @@ const copyToClipboard = (text) => {
 </script>
 
 <style>
-/* This CSS ensures the footer is fixed at the bottom when content is short */
-html,
+html, 
 body {
   height: 100%;
   margin: 0;

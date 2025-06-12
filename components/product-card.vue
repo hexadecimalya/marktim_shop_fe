@@ -1,14 +1,14 @@
 <template>
 
     <div class="duration-200 hover:scale-102 border-1 border-gray-100 mx-auto hover:overflow-visible">
-        <NuxtLink :to="`/products/${itemData.id}/`">
+        <NuxtLink :to="`/products/${route.params.location}/${itemData.id}/`">
             <img :src="itemData.image" :alt="itemData.name" class="object-cover rounded-t-xl" />
             <div class="px-4 py-3 flex flex-col content-stretch">
                 <span class="mr-3 text-xs uppercase text-gray-600 font-semibold line-clamp-1">Rana</span>
-                <p class="text-sm text-gray-800 text-justify tracking-tight line-clamp-2 border-t-1  border-gray-300 ">
-                    {{
-                        itemData.name
-                    }}</p>
+                <p class="text-sm text-gray-800 text-justify tracking-tight line-clamp-2 border-t border-gray-300 xl:min-h-[3rem] min-h-[4rem] mb-2">
+                {{
+                    itemData.name
+                }} </p>
                 <div class="">
 
                     <div class="flex items-center justify-evenly space-x-2">
@@ -31,7 +31,8 @@
 <script setup>
 
 const isDiscount = ref(false)
-
+const route = useRoute()
+// console.log(route)
 
 
 const props = defineProps({
