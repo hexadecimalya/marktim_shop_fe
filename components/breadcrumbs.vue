@@ -6,5 +6,10 @@
 
 <script setup>
 
+const props = defineProps({
+  location: Object
+})
+console.log(props.location)
+
 </script>
 

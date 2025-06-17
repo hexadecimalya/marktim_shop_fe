@@ -10,7 +10,7 @@
       </section>
     </template>
   </section>
-  <section class="container mt-8 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4">
+  <!-- <section class="container mt-8 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4">
     <h1 class="text-xl md:ml-0 ml-2 md:text-3xl font-semibold mb-4">Так смакує світ </h1>
     <div class="flex justify-center items-center">
       <UCarousel v-slot="{ item }"  :ui="{ item: 'lg:basis-1/4 basis-1/3' }"  dots :items="items" class="flex justify-center">
@@ -18,7 +18,7 @@
       </UCarousel>
     </div>
 
-  </section>
+  </section> -->
   <!-- <section class="py-12 px-4 max-w-5xl mx-auto">
     <h2 class="text-3xl font-semibold mb-4">Наш підхід</h2> 
     <div class="grid md:grid-cols-4 grid-cols-2 sm:gap-16 gap-8 text-center">
@@ -55,14 +55,14 @@ const productList = computed(() => {
   return data.value?.data ?? []
 })
 
-const items = [
-  '/Users/alinapantina/Documents/Marktim/marktim-nuxt-latest/mt-fe/assets/cat-asia.jpg',
-  'https://picsum.photos/468/468?random=2',
-  'https://picsum.photos/468/468?random=3',
-  'https://picsum.photos/468/468?random=4',
-  'https://picsum.photos/468/468?random=5',
-  'https://picsum.photos/468/468?random=6'
-]
+// const items = [
+//   '@/assets/cat-asia.jpg',
+//   'https://picsum.photos/468/468?random=2',
+//   'https://picsum.photos/468/468?random=3',
+//   'https://picsum.photos/468/468?random=4',
+//   'https://picsum.photos/468/468?random=5',
+//   'https://picsum.photos/468/468?random=6'
+// ]
 
 const { data, error: productError, pending: loading } = useFetchData(
   'products',
