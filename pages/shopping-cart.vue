@@ -60,7 +60,7 @@
             
             <!-- Remove button -->
             <button @click="removeItem(index)" class="ml-4 text-gray-400 hover:text-red-500">
-              <IconTrash2 class="w-5 h-5" />
+              <UIcon name="lucide-trash" />
             </button>
           </div>
         </div>
@@ -103,14 +103,7 @@
 </template>
 
 <script setup>
-// import { 
-//   ShoppingCart as IconShoppingCart, 
-//   Minus as IconMinus, 
-//   Plus as IconPlus, 
-//   Trash2 as IconTrash2 
-// } from 'lucide-vue-next';
 
-// Sample cart data
 const cart = ref([
   {
     name: 'Minimalist Analog Watch',

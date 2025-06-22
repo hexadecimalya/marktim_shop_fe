@@ -1,10 +1,10 @@
 <template>
 
     <div v-if="product && product.product">
-
         <!-- <Breadcrumbs /> -->
-        <div
-            class="lg:container sm:mt-8 mx-auto flex sm:flex-row flex-col justify-center bg-green-300 sm:bg-orange-200 md:bg-fuchsia-300 lg:bg-blue-200">
+        <!-- <div
+            class="lg:container sm:mt-8 mx-auto flex sm:flex-row flex-col justify-center bg-green-300 sm:bg-orange-200 md:bg-fuchsia-300 lg:bg-blue-200"> -->
+        <div class="lg:container sm:mt-8 mx-auto flex sm:flex-row flex-col justify-center">
             <img class="sm:w-1/2" :src="product.product.files[0].link" />
 
             <div class="p-4 lg:ml-4 md:w-2/5">
@@ -15,10 +15,26 @@
                 <div class="text-xl sm:my-4 font-semibold">{{ product.sell_price }} грн</div>
                 <div class="my-4">
                     <div class="text-xs font-medium mb-0">кількість</div>
-                    <QuantityButton />
-                    <button
-                        class=" w-full h-12 bg-green-300 rounded-sm hover:bg-green-600 uppercase text-sm font-medium">До
-                        кошика</button>
+                    <div
+                        class="flex flex-row h-12 w-full rounded-md relative bg-transparent my-4 border border-gray-100 ">
+                        <button class="hover:bg-gray-200 h-full w-1/3 rounded-l cursor-pointer outline-none"
+                            @click="decQuantity">
+                            <span class="m-auto text-2xl">−</span>
+                        </button>
+                        <input
+                            class="outline-none focus:outline-none text-center w-1/3 font-semibold text-md flex items-center"
+                            name="custom-input-number" :value="quantity"></input>
+                        <button class="hover:bg-gray-200 h-full w-1/3 rounded-r cursor-pointer" @click="incQuantity">
+                            <span class="m-auto text-2xl">+</span>
+                        </button>
+                    </div>
+
+                    <UButton v-if="!addButtonState" @click="toggleAddToCart"
+                        class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
+                        icon="lucide-circle-plus" trailing>Додати до кошика</UButton>
+                    <NuxtLink to="/shopping-cart" v-else><UButton  @click="handleAddToCart"
+                        class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
+                        icon="lucide-circle-arrow-right" trailing>Оформити замовлення</UButton></NuxtLink>
                 </div>
             </div>
         </div>
@@ -33,12 +49,16 @@
     <div v-else-if="loading">
         <ProductLoader />
     </div>
-    <div v-else class="text-center text-4xl font-mono text-red-500 mt-8">Something went wrong</div>
+    <div v-else-if="productError" class="text-center text-4xl font-mono text-red-500 mt-8">Something went wrong</div>
 
 </template>
 <script setup>
 import useFetchData from '@/composables/use-fetchdata'
 import ProductLoader from '@/components/UI/product-loader.vue';
+let quantity = ref(1)
+const incQuantity = () => quantity.value++
+const decQuantity = () => quantity.value--
+
 
 const route = useRoute()
 // console.log(route)
@@ -46,8 +66,24 @@ const { data, error: productError, pending: loading } = useFetchData(
     `product-${route.params.id}`,
     `https://marktim.shop/api/v1/public/stock/${route.params.id}/`);
 
+const addButtonState = ref(false)
+
+const toggleAddToCart = () => {
+    addButtonState.value = !addButtonState.value;
+}
+
+const handleAddToCart = () => {
+    toggleAddToCart()
+    if (addButtonState) {
+        //adding logic goes here 
+        console.log(addButtonState.value, 'added to cart, title changed');
+    } else {
+        console.log(addButtonState.value, 'initial state, title changed');
+    }
+}
 
 const product = computed(() => data.value ?? {})
+
 watch(product, (updProduct) => {
     if (updProduct && updProduct.product) {
         useSeoMeta({

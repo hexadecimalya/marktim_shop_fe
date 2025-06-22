@@ -7,11 +7,11 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
-  app: {
-    head: {
-      title: 'MARKTIM SHOP', // default fallback title
-    }
-  },
+  // app: {
+  //   head: {
+  //     title: 'MARKTIM SHOP', // default fallback title
+  //   }
+  // },
   modules: ['@nuxt/ui'],
   vite: {
     plugins: [

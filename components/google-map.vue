@@ -27,7 +27,8 @@ onMounted(async () => {
 
 <style scoped>
 .map {
+  margin-top: 2rem;
   width: 100%;
-  height: 50vh;
+  height: 30vh;
 }
 </style>
