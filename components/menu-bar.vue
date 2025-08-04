@@ -10,8 +10,8 @@
         </button>
 
         <div class="hidden h-8 lg:flex ml-4 xl:ml-10">
-           <NuxtLink to="/"><img src="/assets/MarkTim.png" class="h-8" alt=""/></NuxtLink>
-            
+            <NuxtLink to="/"><img src="/assets/MarkTim.png" class="h-8" alt="" /></NuxtLink>
+
         </div>
         <div class="relative flex-1 xl:w-4/6 xl:px-4 py-4 px-2">
             <nav class="lg:text-sm text-xs uppercase font-medium">
@@ -84,12 +84,24 @@
         </div>
         <div class="flex w-24 flex-none justify-evenly">
             <button>
-                <NuxtLink to="/shopping-cart">
-                    <UIcon name="i-heroicons:shopping-cart" class="w-6 h-6" />
-                </NuxtLink>
-            </button>
+  <NuxtLink to="/shopping-cart">
+    <div class="relative flex items-center">
+      <!-- Icon wrapper with relative position -->
+      <div class="relative">
+        <UIcon name="i-solar:cart-large-2-linear" class="w-6 h-6" />
+
+        <!-- Badge absolutely positioned -->
+        <UBadge
+          class="absolute -top-2 -right-2.5 text-xs px-1.5 py-0.5 font-bold rounded-full text-white"
+        >
+          {{ totalQuantity }}
+        </UBadge>
+      </div>
+    </div>
+  </NuxtLink>
+</button>
             <button>
-                <UIcon name="i-heroicons:user" class="w-6 h-6 " />
+                <UIcon name="i-solar:user-circle-linear" class="w-6 h-6 " />
             </button>
         </div>
     </div>
@@ -98,8 +110,10 @@
 
 import useFetchData from '~/composables/use-fetchdata';
 
+import { useCartStore } from '~/store/use-cart-store';
 
-
+const store = useCartStore()
+const { totalQuantity } = storeToRefs(store)
 
 const linkVariant = {
     active: 'border-b-1 border-mtwine-800 text-mtwine-800',
