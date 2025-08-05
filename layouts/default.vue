@@ -1,5 +1,5 @@
 <template>
-<MenuBar/>
+<MenuBarTest/>
 <!-- <Search /> -->
 
 <slot />

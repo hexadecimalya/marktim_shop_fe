@@ -52,6 +52,5 @@ export const useCartStore = defineStore('cart', () => {
     clearCart,
   }
 }, {
-  // if you've installed pinia-plugin-persistedstate
   persist: true
 })

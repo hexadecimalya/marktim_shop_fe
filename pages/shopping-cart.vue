@@ -62,10 +62,10 @@
               <span class="text-gray-600">Знижка -3%</span>
               <span class="font-medium text-mtwine-800">- {{ discount.toFixed(2) }} грн</span>
             </div>
-            <div class="flex justify-between">
+            <!-- <div class="flex justify-between">
               <span class="text-gray-600">Доставка</span>
               <span class="font-medium">Згідно тарифів перевізника</span>
-            </div>
+            </div> -->
             <USeparator />
             <div class="pt-2 mt-2 flex justify-between">
               <span class="font-medium">Всього</span>
@@ -91,8 +91,6 @@ import { useCartStore } from '~/store/use-cart-store';
 import { storeToRefs } from 'pinia'
 
 const cart = useCartStore()
-// expose directly in template:
-// now these are *refs* tied to the store’s state
 const { items, subtotal, discount, total } = storeToRefs(cart)
 
 function updateQty(item, newQty) {

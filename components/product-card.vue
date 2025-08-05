@@ -66,5 +66,5 @@ const isInCart = computed(() =>
 const addToCart = () => {
     cart.addItem({ ...itemData, quantity: 1 })
 }
-console.log(itemData)
+// console.log(itemData)
 </script>
