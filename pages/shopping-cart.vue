@@ -1,15 +1,16 @@
 <template>
-  <div class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-2 sm:p-6">
+  <div class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-2 md:my-4 lg:my-18 sm:p-6 border-2 border-gray-200/25 md:shadow-2xl">
     <h1 class="font-semibold text-2xl mb-6">Кошик</h1>
 
     <!-- Empty cart state -->
     <div v-if="cart.items.length === 0" class="text-center py-12">
       <h2 class="text-xl font-medium text-gray-600 mb-2">Йой! В кошику пусто... </h2>
       <p class="text-gray-500 mb-6">Схоже, що сюди не додали жодного товару.</p>
-      <button
-        class="px-6 py-2 text-white font-semibold rounded-sm transition-colors uppercase text-sm bg-gray-800 hover:bg-gray-600">
-        <NuxtLink to="/">Розпочати покупки</NuxtLink>
-      </button>
+      <div class="w-54 mx-auto">
+        <AppButton>
+          <NuxtLink to="/">Розпочати покупки</NuxtLink>
+        </AppButton>
+      </div>
     </div>
 
     <!-- Cart with items -->
@@ -26,7 +27,8 @@
                 <div>{{ item.price }} грн</div>
                 <div class="sm:inline-block flex justify-between items-center">
                   <div class="font-semibold flex items-center my-1">
-                    <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1" class="mr-2 flex items-center">
+                    <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
+                      class="mr-2 flex items-center">
                       <UIcon name="i-solar:minus-square-bold" class="sm:w-6 sm:h-6  w-7 h-7 opacity-80" />
                     </button>
                     <span class="text-gray-700">{{ item.quantity }}</span>
@@ -72,11 +74,7 @@
               <span class="font-bold">{{ total.toFixed(2) }} грн</span>
             </div>
           </div>
-
-          <button
-            class="absolute bottom-0 mt-auto w-full h-12 text-white font-semibold rounded-sm transition-colors  uppercase text-sm bg-gray-800 hover:bg-gray-600">
-            Продовжити
-          </button>
+          <AppButton>продовжити</AppButton>
         </div>
 
       </div>
@@ -89,6 +87,7 @@
 <script setup>
 import { useCartStore } from '~/store/use-cart-store';
 import { storeToRefs } from 'pinia'
+import AppButton from '~/components/UI/app-button.vue';
 
 const cart = useCartStore()
 const { items, subtotal, discount, total } = storeToRefs(cart)

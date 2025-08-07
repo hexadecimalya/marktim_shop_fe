@@ -1,14 +1,14 @@
 <template>
-<MenuBarTest/>
+<MenuBar/>
 <!-- <Search /> -->
 
 <slot />
 <!-- Just some space between footer and the page -->
     <div class="h-8"></div>
-  <AppFooter />
+  <!-- footer -->
   </template>
-  
   <script setup>
+import MenuBar from '~/components/menu-bar.vue';
 
 
 
@@ -31,7 +31,6 @@
   </script>
   
   <style>
-  /* Set the font family for the entire site */
   body {
     font-family: 'Montserrat';
    

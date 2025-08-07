@@ -1,21 +1,25 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: "2024-11-01",
   colorMode: {
-    preference: 'light'
+    preference: "light",
   },
   devtools: { enabled: true },
-  css: ['~/assets/css/main.css'],
+  components: [
+    {
+      path: "~/components",
+      pathPrefix: false, // disables folder name prefix
+    },
+  ],
+  css: ["~/assets/css/main.css"],
   // app: {
   //   head: {
   //     title: 'MARKTIM SHOP', // default fallback title
   //   }
   // },
-  modules: ['@nuxt/ui', '@pinia/nuxt'],
+  modules: ["@nuxt/ui", "@pinia/nuxt"],
   vite: {
-    plugins: [
-      tailwindcss(),
-    ],
-  }
-})
+    plugins: [tailwindcss()],
+  },
+});
