@@ -15,7 +15,7 @@ import MenuBar from '~/components/menu-bar.vue';
 
   // Link to Google Fonts
   useHead({
-    titleTemplate: '%s - MarkTim Shop ', // %s is a template for STRING that will replaced at every page ;
+    titleTemplate: '%s | MarkTim Shop ', // %s is a template for STRING that will replaced at every page ;
     link: [
       {
         rel: 'preconnect',
@@ -28,6 +28,16 @@ import MenuBar from '~/components/menu-bar.vue';
       }
     ]
   })
+useSeoMeta({
+  ogSiteName: 'MarkTim Shop',
+  ogImage: 'http://localhost:3000/og-default.png',
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  icon: 'http://localhost:3000/favicon.ico',
+  lang: 'ua'
+  
+})
+
   </script>
   
   <style>

@@ -100,8 +100,30 @@ function remove(item) {
   cart.removeItem(item.id)
 }
 
+const route = useRoute()
+const runtimeConfig = useRuntimeConfig()
 
+// const canonicalUrl = computed(() =>
+//   new URL(route.path, runtimeConfig.public.siteUrl).toString()
+// )
+
+
+
+useSeoMeta({
+  title: 'Оформлення замовлення',
+  description: 'Перевірте ваші товари, заповніть дані доставки і завершіть замовлення у MarkTim Shop — швидко, просто і зручно.',
+  ogTitle: 'Оформлення замовлення | MarkTim Shop',
+  ogDescription: 'Оформіть замовлення у MarkTim Shop всього за кілька кроків: товари, дані доставки та підтвердження.',
+  ogType: 'website',
+ 
+  // ogUrl: canonicalUrl.value,
+
+  twitterCard: 'summary_large_image',
+
+  robots: 'noindex, nofollow',
+  googleBot: 'noindex, nofollow, noimageindex',
+  // canonical: canonicalUrl.value
+})
 
 </script>
 
-<style></style>
