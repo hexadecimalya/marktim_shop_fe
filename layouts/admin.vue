@@ -1,10 +1,14 @@
 <template>
         <main>
-            <MenuBarAdmin />
+            <NavbarAdmin />
           <slot />
         </main>
 
 </template>
 
 
-<script setup></script>
+<script setup>
+import NavbarAdmin from '~/components/admin/navbar-admin.vue';
+
+
+</script>

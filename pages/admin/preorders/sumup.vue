@@ -1,7 +1,9 @@
 <template>
-
-<h1 class="text-2xl">Preorders sumup</h1>
-
+     <section class="w-5/6 lg:w-3/5 mx-auto">
+        <h1 class="text-2xl font-extrabold my-4">
+            Preorder sumup
+        </h1>
+    </section>
 </template>
 
 
