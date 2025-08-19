@@ -20,7 +20,6 @@
 
 </template>
 <script setup>
-import { NuxtLink } from '#components';
 import { reactive } from 'vue'
 import AppButton from '~/components/UI/app-button.vue';
 const state = reactive({
