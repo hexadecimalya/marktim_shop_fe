@@ -8,7 +8,7 @@
                 <UFormField label="Name (ukrainian)" name="name_ukr" required>
                     <UInput v-model="newProductData.name_ukr" class="w-full" />
                 </UFormField>
-                <UFormField label="Brand">
+                <UFormField label="Brand"  required>
                     <UInput v-model="newProductData.brand" class="w-full" placeholder="e.g. Deluxe" />
                 </UFormField>
                 <UFormField label="Name (ru)">
@@ -44,9 +44,9 @@
 
             </div>
             <UFileUpload color="neutral" highlight label="Drop your image here"
-                description="SVG, PNG, JPG or GIF (max. 2MB)" class="md:w-1/2 w-full min-h-48" />
-            <div class="mx-auto">
-                <pre>{{ newProductData }}</pre>
+                description="SVG, PNG, JPG or GIF (max. 2MB)" class="md:w-1/2 w-full min-h-92" />
+            <div class="text-center">
+                <!-- <pre>{{ newProductData }}</pre> -->
                 <UButton>Save product</UButton>
             </div>
         </form>
@@ -57,6 +57,7 @@
 definePageMeta({
     layout: 'admin'
 })
+
 
 const unitsList = ['г', 'кг', 'мл', 'л', 'шт']
 const catItems = [

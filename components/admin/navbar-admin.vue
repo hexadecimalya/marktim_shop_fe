@@ -15,7 +15,10 @@
                     :content="{ align: 'start' }">
                     <li class="cursor-default">Preorders</li>
                 </DropdownMenu>
-                <li class="cursor-default">Deliveries</li>
+               <DropdownMenu :items="itemsSupplies" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
+                    :content="{ align: 'start' }">
+                    <li class="cursor-default">Supplies</li>
+                </DropdownMenu>
                 <li></li>
                 <li></li>
             </ul>
@@ -57,6 +60,19 @@ const itemsProducts = [
         label: 'Create',
         icon: 'i-lucide-plus',
         to: '/admin/products/create'
+    }
+]
+
+const itemsSupplies = [
+    {
+        label: 'List',
+        icon: 'i-lucide-align-justify',
+        to: '/admin/supplies'
+    },
+    {
+        label: 'Create',
+        icon: 'i-lucide-plus',
+        to: '/admin/supplies/create'
     }
 ]
 
