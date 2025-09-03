@@ -55,11 +55,11 @@
                     порада? Зв’яжіться з нами – ми з радістю допоможемо!</div>
         </div>
     </div>
-    <div v-else-if="loading">
+    <div v-else="loading">
         <ProductLoader />
     </div>
-    <div v-else-if="productError" class="text-center text-4xl font-mono text-red-500 mt-8">Something went wrong
-    </div>
+    <!-- <div v-else-if="productError" class="text-center text-4xl font-mono text-red-500 mt-8">Something went wrong
+    </div> -->
 
 </template>
 <script setup>
@@ -94,13 +94,17 @@ const { data, error: productError, pending: loading } = useFetchData(
     `product-${route.params.id}`,
     `https://marktim.shop/api/v1/public/stock/${route.params.id}/`);
 
-const addButtonState = ref(false)
+// const addButtonState = ref(false)
 
-const toggleAddToCart = () => {
-    addButtonState.value = !addButtonState.value;
-}
+// const toggleAddToCart = () => {
+//     addButtonState.value = !addButtonState.value;
+// }
 
 const product = computed(() => data.value ?? {})
+
+if (productError.value) {
+    throw createError({statusCode: 404, statusMessage: 'Такого продукту не знайдено'})
+}
 
 watch(product, (updProduct) => {
     if (updProduct && updProduct.product) {

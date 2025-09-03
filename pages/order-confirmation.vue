@@ -1,11 +1,11 @@
 <template>
     <div
-        class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-2 md:my-4 lg:my-12 sm:p-6  border-1 border-gray-200 rounded-sm  ">
+        class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-0 md:my-4 lg:my-12 sm:p-6  border-1 border-gray-200 rounded-sm  ">
         <div class="my-4 text-center p-4">
 
-            <h1 class="text-2xl font-bold  mb-4">Дякуємо за замовлення!</h1>
+            <h1 class="text-2xl font-bold  mb-4">Все минуло успішно :)</h1>
             <p class="text-lg text-gray-800 mb-6">
-                Ваше замовлення № <span class="font-semibold">123456</span> успішно прийнято.
+                Ваше замовлення № <span class="font-semibold">123456</span> прийнято.
             </p>
 
             <!-- Самовивіз -->
@@ -49,6 +49,12 @@
     </div>
 </template>
 <script setup>
+const success = ref(true)
 const route = useRoute()
 const showInfo = route.query
+import { useCartStore } from '~/store/use-cart-store';
+const store = useCartStore()
+if (success.value) {
+    store.clearCart()
+}
 </script>

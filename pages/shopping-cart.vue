@@ -84,7 +84,6 @@
       </div>
     </template>
     <template v-if="goShipping">
-
       Shipping
     </template>
   </div>
