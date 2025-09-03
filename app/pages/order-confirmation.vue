@@ -52,7 +52,7 @@
 const success = ref(true)
 const route = useRoute()
 const showInfo = route.query
-import { useCartStore } from '~/store/use-cart-store';
+
 const store = useCartStore()
 if (success.value) {
     store.clearCart()

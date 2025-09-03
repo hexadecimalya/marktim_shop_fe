@@ -5,7 +5,7 @@
     class="lg:container sm:mt-8 mx-auto flex sm:flex-row flex-col justify-center bg-green-300 sm:bg-orange-200 md:bg-fuchsia-300 lg:bg-blue-200">
     <!-- <div class="lg:container sm:mt-8 mx-auto flex sm:flex-row flex-col justify-center bg-green-300 sm:bg-orange-200 md:bg-fuchsia-300 lg:bg-blue-200 "> -->
 
-    <img class="sm:w-1/2" src="assets/1_test.png" />
+    <img class="sm:w-1/2" src="../assets/1_test.png" />
 
     <div class="p-4 lg:ml-4 md:w-2/5">
       <h1 class="font-semibold uppercase">JOHNNIE WALKER</h1>

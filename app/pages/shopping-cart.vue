@@ -92,7 +92,6 @@
 </template>
 
 <script setup>
-import { useCartStore } from '~/store/use-cart-store';
 import { storeToRefs } from 'pinia'
 import AppButton from '~/components/UI/app-button.vue';
 

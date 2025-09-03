@@ -36,7 +36,7 @@
 </template>
 <script setup>
 
-import { useCartStore } from '~/store/use-cart-store'
+// import { useCartStore } from '~/store/use-cart-store'
 import AppButton from './UI/app-button.vue'
 const isDiscount = ref(false)
 const route = useRoute()

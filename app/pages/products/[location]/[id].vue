@@ -65,7 +65,7 @@
 <script setup>
 import useFetchData from '@/composables/use-fetchdata'
 import ProductLoader from '@/components/UI/product-loader.vue';
-import { useCartStore } from '~/store/use-cart-store';
+// import { useCartStore } from '~/store/use-cart-store';
 
 const cart = useCartStore()
 const prodId = Number(useRoute().params.id)

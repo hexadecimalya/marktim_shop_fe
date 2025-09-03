@@ -31,7 +31,7 @@
 </template>
 <script setup>
 
-import { useCartStore } from '~/store/use-cart-store';
+
 
 const store = useCartStore()
 const { totalQuantity } = storeToRefs(store)

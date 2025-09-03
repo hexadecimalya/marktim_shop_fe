@@ -5,17 +5,18 @@ export default defineNuxtConfig({
   runtimeConfig: {
     npApiKey: process.env.NP_API_KEY,
   },
+  pages: true,
   colorMode: {
     preference: "light",
   },
   devtools: { enabled: true },
   components: [
     {
-      path: "~/components",
+      path: "components",
       pathPrefix: false, // disables folder name prefix
     },
   ],
-  css: ["~/assets/css/main.css"],
+  css: ["assets/css/main.css"],
   app: {
     head: {
       title: 'MARKTIM SHOP', // default fallback title
