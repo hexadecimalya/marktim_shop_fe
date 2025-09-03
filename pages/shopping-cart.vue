@@ -1,21 +1,23 @@
 <template>
-  <div class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-2 md:my-4 lg:my-18 sm:p-6 border-2 border-gray-200/25 md:shadow-2xl">
+  <!-- <div class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-2 md:my-4 lg:my-18 sm:p-6 border-2 border-gray-200/25 md:shadow-2xl"> -->
+  <div
+    class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-2 md:my-4 lg:my-12 sm:p-6  border-1 border-gray-200 rounded-sm  ">
     <h1 class="font-semibold text-2xl mb-6">Кошик</h1>
 
     <!-- Empty cart state -->
-    <div v-if="cart.items.length === 0" class="text-center py-12">
-      <h2 class="text-xl font-medium text-gray-600 mb-2">Йой! В кошику пусто... </h2>
-      <p class="text-gray-500 mb-6">Схоже, що сюди не додали жодного товару.</p>
+    <template v-if="cart.items.length === 0" class="py-12">
+      <h2 class="text-xl font-medium text-gray-600 mb-2 text-center">Йой! В кошику пусто... </h2>
+      <p class="text-gray-500 mb-6 text-center">Схоже, що сюди не додали жодного товару.</p>
       <div class="w-54 mx-auto">
         <AppButton>
           <NuxtLink to="/">Розпочати покупки</NuxtLink>
         </AppButton>
       </div>
-    </div>
+    </template>
 
     <!-- Cart with items -->
     <!-- Cart items list -->
-    <div v-else class="sm:p-4 p-0">
+    <template v-else class="sm:p-4 p-0">
       <div class="flex flex-col lg:flex-row sm:gap-6 gap-2">
         <div class="flex-1">
           <h2 class="md:text-lg font-semibold mb-4">Товари</h2>
@@ -74,11 +76,17 @@
               <span class="font-bold">{{ total.toFixed(2) }} грн</span>
             </div>
           </div>
-          <AppButton>продовжити</AppButton>
+          <NuxtLink to="/checkout">
+            <AppButton>продовжити</AppButton>
+          </NuxtLink>
         </div>
 
       </div>
-    </div>
+    </template>
+    <template v-if="goShipping">
+
+      Shipping
+    </template>
   </div>
 
 
@@ -91,6 +99,7 @@ import AppButton from '~/components/UI/app-button.vue';
 
 const cart = useCartStore()
 const { items, subtotal, discount, total } = storeToRefs(cart)
+
 
 function updateQty(item, newQty) {
   cart.updateQuantity(item.id, newQty)
@@ -115,7 +124,7 @@ useSeoMeta({
   ogTitle: 'Оформлення замовлення | MarkTim Shop',
   ogDescription: 'Оформіть замовлення у MarkTim Shop всього за кілька кроків: товари, дані доставки та підтвердження.',
   ogType: 'website',
- 
+
   // ogUrl: canonicalUrl.value,
 
   twitterCard: 'summary_large_image',
@@ -126,4 +135,3 @@ useSeoMeta({
 })
 
 </script>
-

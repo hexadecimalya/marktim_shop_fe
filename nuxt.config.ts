@@ -2,6 +2,9 @@
 import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
+  runtimeConfig: {
+    npApiKey: process.env.NP_API_KEY,
+  },
   colorMode: {
     preference: "light",
   },
@@ -13,11 +16,11 @@ export default defineNuxtConfig({
     },
   ],
   css: ["~/assets/css/main.css"],
-  // app: {
-  //   head: {
-  //     title: 'MARKTIM SHOP', // default fallback title
-  //   }
-  // },
+  app: {
+    head: {
+      title: 'MARKTIM SHOP', // default fallback title
+    }
+  },
   modules: ["@nuxt/ui", "@pinia/nuxt"],
   vite: {
     plugins: [tailwindcss()],

@@ -18,11 +18,13 @@
                 </AppButton>
             </NuxtLink>
         </form>
+
     </div>
 
 
 </template>
 <script setup>
+
 const state = reactive({
     email: '',
     password: '',
