@@ -8,7 +8,7 @@
         <template #body>
             <UCard variant="soft" :ui="{ body: { base: 'flex-1' }, root: 'border-none bg-white p-0' }">
                 <ul>
-                    <NuxtLink to="/products/in-stock">
+                    <NuxtLink to="props.linkType.link">
                         <li class="hover:font-medium leading-relaxed ">Всі товари
                         </li>
                     </NuxtLink>

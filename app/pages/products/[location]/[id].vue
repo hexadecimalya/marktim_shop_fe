@@ -12,7 +12,7 @@
                     {{ product.product.name_ukr }}
                 </h2>
                 <div class="text-xl sm:my-4 font-semibold">{{ product.sell_price }} грн</div>
-                <div v-if="!inCart" class="my-4">
+                <div v-if="!isInCart" class="my-4">
                     <div class="text-xs font-medium mb-0">кількість</div>
                     <div
                         class="flex flex-row h-12 w-full rounded-md relative bg-transparent my-4 border border-gray-100 ">
@@ -62,12 +62,12 @@
 <script setup>
 import useFetchData from '@/composables/use-fetchdata'
 import ProductLoader from '@/components/UI/product-loader.vue';
-// import { useCartStore } from '~/store/use-cart-store';
 
 const cart = useCartStore()
 const prodId = Number(useRoute().params.id)
-const inCart = computed(() =>
-    cart.items.some(i => i.id === prodId)
+const isInCart = computed(() =>
+  cart.stockItems.some(i => i.id === itemData.id) ||
+  cart.preorderItems.some(i => i.id === itemData.id)
 )
 
 const quantity = ref(1)

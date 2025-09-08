@@ -5,7 +5,7 @@
     <h1 class="font-semibold text-2xl mb-6">Кошик</h1>
 
     <!-- Empty cart state -->
-    <template v-if="cart.items.length === 0" class="py-12">
+    <template v-if="cart.stockItems.length === 0 && cart.preorderItems.length === 0" class="py-12">
       <h2 class="text-xl font-medium text-gray-600 mb-2 text-center">Йой! В кошику пусто... </h2>
       <p class="text-gray-500 mb-6 text-center">Схоже, що сюди не додали жодного товару.</p>
       <div class="w-54 mx-auto">
@@ -21,7 +21,7 @@
       <div class="flex flex-col lg:flex-row sm:gap-6 gap-2">
         <div class="flex-1">
           <h2 class="md:text-lg font-semibold mb-4">Товари</h2>
-          <div v-for="item in items" :key="item.id">
+          <div v-for="item in stockItems" :key="item.id">
             <div class="grid grid-cols-5 md:grid-cols-6 items-start text-sm sm:my-4 my-1">
               <img :src="item.image" :alt="item.name" width="100" class="rounded-xs col-span-1">
               <div class="col-span-3 md:col-span-4">
@@ -46,7 +46,7 @@
                 <div class="sm:mr-2">{{ (item.price * item.quantity).toFixed(2) }} грн</div>
               </div>
             </div>
-            <USeparator v-if="item.id !== items[items.length - 1].id" />
+            <USeparator v-if="item.id !== stockItems[stockItems.length - 1].id" />
           </div>
         </div>
         <USeparator orientation="vertical" icon="i-solar:alt-arrow-right-outline"
@@ -82,6 +82,7 @@
         </div>
 
       </div>
+      
     </template>
     <!-- <template v-if="goShipping">
       Shipping
@@ -96,7 +97,14 @@ import { storeToRefs } from 'pinia'
 import AppButton from '~/components/UI/app-button.vue';
 
 const cart = useCartStore()
-const { items, subtotal, discount, total } = storeToRefs(cart)
+const { stockItems,
+  preorderItems,
+  totalQuantity,
+  stockSubtotal,
+  preorderSubtotal,
+  subtotal,
+  discount,
+  total } = storeToRefs(cart)
 
 
 function updateQty(item, newQty) {
@@ -113,7 +121,7 @@ const runtimeConfig = useRuntimeConfig()
 // const canonicalUrl = computed(() =>
 //   new URL(route.path, runtimeConfig.public.siteUrl).toString()
 // )
-
+console.log(cart.stockItems.length)
 
 
 useSeoMeta({

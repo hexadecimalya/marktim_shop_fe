@@ -38,33 +38,31 @@
 
 // import { useCartStore } from '~/store/use-cart-store'
 import AppButton from './UI/app-button.vue'
+
 const isDiscount = ref(false)
 const route = useRoute()
 const routeLocation = route.params.location || 'stock'
 
-
 const props = defineProps({
-    product: Object,
-
+  product: Object
 })
 
 const itemData = {
-    id: props.product.id,
-    name:
-        props.product.product.name_ukr ||
-        props.product.product.name,
-    image: props.product.product.files[0].link,
-    price: props.product.sell_price,
-    // bulk: props.product.bulk_price || null
+  id: props.product.id,
+  name: props.product.product.name_ukr || props.product.product.name,
+  image: props.product.product.files[0].link,
+  price: props.product.sell_price,
+  preorder: routeLocation === 'preorder'
 }
 
 const cart = useCartStore()
 const isInCart = computed(() =>
-    cart.items.some(i => i.id === itemData.id)
+  cart.stockItems.some(i => i.id === itemData.id) ||
+  cart.preorderItems.some(i => i.id === itemData.id)
 )
 
 const addToCart = () => {
-    cart.addItem({ ...itemData, quantity: 1 })
+  cart.addItem({ ...itemData, quantity: 1 })
 }
 // console.log(itemData)
 </script>
