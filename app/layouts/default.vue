@@ -5,7 +5,7 @@
 <slot />
 <!-- Just some space between footer and the page -->
     <div class="h-8"></div>
-  <!-- footer -->
+  <AppFooter />
   </template>
   <script setup>
 import MenuBar from '~/components/menu-bar.vue';

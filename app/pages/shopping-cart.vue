@@ -1,7 +1,7 @@
 <template>
   <!-- <div class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-2 md:my-4 lg:my-18 sm:p-6 border-2 border-gray-200/25 md:shadow-2xl"> -->
   <div
-    class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-2 md:my-4 lg:my-12 sm:p-6  border-1 border-gray-200 rounded-sm  ">
+    class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-0 md:my-4 lg:my-12 sm:p-6  border-1 border-gray-200 rounded-sm  ">
     <h1 class="font-semibold text-2xl mb-6">Кошик</h1>
 
     <!-- Empty cart state -->
@@ -83,9 +83,9 @@
 
       </div>
     </template>
-    <template v-if="goShipping">
+    <!-- <template v-if="goShipping">
       Shipping
-    </template>
+    </template> -->
   </div>
 
 

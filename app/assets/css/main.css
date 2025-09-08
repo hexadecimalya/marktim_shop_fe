@@ -2,18 +2,16 @@
 @import "@nuxt/ui";
 
 @theme {
-    --color-mtgreen-50: #fdfcfa;
-    --color-mtgreen-100: #e0dbc1;
-    --color-mtgreen-200: #D6CEA6;
-    --color-mtgreen-300: #98966E;
-    --color-mtgreen-400: #89a24c;
+  --color-mtgreen-50: #fdfcfa;
+  --color-mtgreen-100: #e8ebe1;
+  --color-mtgreen-150: #e0dbc1;
+  --color-mtgreen-200: #d6cea6;
+  --color-mtgreen-300: #98966e;
+  --color-mtgreen-400: #89a24c;
 
-    --color-mtwine-800: #593333;
-   
-  }
-
-  html {
-  scroll-behavior: smooth;
+  --color-mtwine-800: #593333;
 }
 
-
+html {
+  scroll-behavior: smooth;
+}

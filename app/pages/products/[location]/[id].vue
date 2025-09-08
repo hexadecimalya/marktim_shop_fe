@@ -27,16 +27,13 @@
                             <span class="m-auto text-2xl">+</span>
                         </button>
                     </div>
-                    <UButton @click="handleAddToCart"
-                        class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
-                        icon="lucide-circle-plus" trailing>Додати до кошика</UButton>
-                    <!-- <UButton v-if="!addButtonState" @click="toggleAddToCart"
-                        class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
-                        icon="lucide-circle-plus" trailing>Додати до кошика</UButton>
-                    <NuxtLink to="/shopping-cart" v-else><UButton  @click="handleAddToCart"
-                        class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
-                        icon="lucide-circle-arrow-right" trailing>Оформити замовлення</UButton></NuxtLink> -->
-
+                    <AppButton @click="handleAddToCart"
+                        class="w-full h-12 not-[]:rounded-xs uppercase text-xs font-medium tracking-normal justify-center"
+                        icon="lucide-circle-plus" trailing>Додати до кошика
+                    </AppButton>
+                    <!-- <UButton @click="handleAddToCart"
+                        class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50   bg-mtgreen-300  text-mtgreen-50 hover:bg-mtgreen-400tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
+                        icon="lucide-circle-plus" trailing>Додати до кошика</UButton> -->
                 </div>
                 <div v-else>
                     <NuxtLink to="/shopping-cart">

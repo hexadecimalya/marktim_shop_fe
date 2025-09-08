@@ -1,9 +1,9 @@
 <template>
-    <USlideover title="Категорії" :description="categoryType">
-        <li :class="[isActiveLink('/products/in-stock')
+    <USlideover title="Категорії" :description="props.linkType.description">
+        <li :class="[isActiveLink(props.linkType.link)
             ? linkVariant.active
             : linkVariant.inactive]">
-            В наявності
+             {{ props.linkType.displayedName }}
         </li>
         <template #body>
             <UCard variant="soft" :ui="{ body: { base: 'flex-1' }, root: 'border-none bg-white p-0' }">
@@ -25,8 +25,6 @@
 <script setup>
 import useFetchData from '~/composables/use-fetchdata';
 
-const categoryType = 'в наявності на складі'
-
 const { data: categories, error: categoryError } = useFetchData(
     'categories',
     'https://marktim.shop/api/v1/public/categories/'
@@ -35,6 +33,14 @@ const { data: categories, error: categoryError } = useFetchData(
 if (categoryError.value) {
     console.error('Error fetching categories:', categoryError.value);
 }
+
+const props = defineProps({
+    linkType: {
+        type: Object,
+        required: true
+    }
+})
+
 
 const linkVariant = {
     active: 'underline font-semibold',
