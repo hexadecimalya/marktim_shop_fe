@@ -24,7 +24,7 @@ const productList = computed(() => {
 
 const { data, error: productError, pending: loading } = useFetchData(
   'products',
-  'https://marktim.shop/api/v1/public/stock/?page_size=10'
+  computed(()=> 'https://marktim.shop/api/v1/public/stock/?page_size=10')
 );
 
 if (productError.value) {

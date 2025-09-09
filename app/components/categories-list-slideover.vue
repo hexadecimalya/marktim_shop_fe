@@ -3,17 +3,17 @@
         <li :class="[isActiveLink(props.linkType.link)
             ? linkVariant.active
             : linkVariant.inactive]">
-             {{ props.linkType.displayedName }}
+            {{ props.linkType.displayedName }}
         </li>
         <template #body>
             <UCard variant="soft" :ui="{ body: { base: 'flex-1' }, root: 'border-none bg-white p-0' }">
                 <ul>
-                    <NuxtLink to="props.linkType.link">
+                    <NuxtLink :to="props.linkType.link">
                         <li class="hover:font-medium leading-relaxed ">Всі товари
                         </li>
                     </NuxtLink>
                     <NuxtLink v-for="category in categories" :key="category.id"
-                        :to="`/products/in-stock/?category=${category.slug}`">
+                        :to="`/products/stock/?category=${category.slug}`">
                         <li class="hover:font-medium leading-relaxed
  ">{{ category.name }}</li>
                     </NuxtLink>
@@ -26,8 +26,8 @@
 import useFetchData from '~/composables/use-fetchdata';
 
 const { data: categories, error: categoryError } = useFetchData(
-    'categories',
-    'https://marktim.shop/api/v1/public/categories/'
+    'categories', computed(() => 'https://marktim.shop/api/v1/public/categories/')
+
 );
 
 if (categoryError.value) {

@@ -51,8 +51,8 @@ const itemData = {
   id: props.product.id,
   name: props.product.product.name_ukr || props.product.product.name,
   image: props.product.product.files[0].link,
-  price: props.product.sell_price,
-  preorder: routeLocation === 'preorder'
+  price: Math.trunc(props.product.sell_price),
+  isPreorder: routeLocation === 'preorder' ? true : false
 }
 
 const cart = useCartStore()
@@ -64,5 +64,5 @@ const isInCart = computed(() =>
 const addToCart = () => {
   cart.addItem({ ...itemData, quantity: 1 })
 }
-// console.log(itemData)
+
 </script>

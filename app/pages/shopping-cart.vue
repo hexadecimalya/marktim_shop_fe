@@ -20,33 +20,66 @@
     <template v-else class="sm:p-4 p-0">
       <div class="flex flex-col lg:flex-row sm:gap-6 gap-2">
         <div class="flex-1">
-          <h2 class="md:text-lg font-semibold mb-4">Товари</h2>
-          <div v-for="item in stockItems" :key="item.id">
-            <div class="grid grid-cols-5 md:grid-cols-6 items-start text-sm sm:my-4 my-1">
-              <img :src="item.image" :alt="item.name" width="100" class="rounded-xs col-span-1">
-              <div class="col-span-3 md:col-span-4">
-                <div class="line-clamp-1">{{ item.name }}</div>
-                <div>{{ item.price }} грн</div>
-                <div class="sm:inline-block flex justify-between items-center">
-                  <div class="font-semibold flex items-center my-1">
-                    <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
-                      class="mr-2 flex items-center">
-                      <UIcon name="i-solar:minus-square-bold" class="sm:w-6 sm:h-6  w-7 h-7 opacity-80" />
-                    </button>
-                    <span class="text-gray-700">{{ item.quantity }}</span>
-                    <button @click="updateQty(item, item.quantity + 1)" class="mx-2 flex items-center">
-                      <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7 opacity-80" />
-                    </button>
+          <div v-if="stockItems.length">
+            <h2 class="md:text-lg font-semibold mb-4">Товари</h2>
+            <div v-for="item in stockItems" :key="item.id">
+              <div class="grid grid-cols-5 md:grid-cols-6 items-start text-sm sm:my-4 my-1">
+                <img :src="item.image" :alt="item.name" width="100" class="rounded-xs col-span-1">
+                <div class="col-span-3 md:col-span-4">
+                  <div class="line-clamp-1">{{ item.name }}</div>
+                  <div>{{ item.price }} грн</div>
+                  <div class="sm:inline-block flex justify-between items-center">
+                    <div class="font-semibold flex items-center my-1">
+                      <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
+                        class="mr-2 flex items-center">
+                        <UIcon name="i-solar:minus-square-bold" class="sm:w-6 sm:h-6  w-7 h-7 opacity-80" />
+                      </button>
+                      <span class="text-gray-700">{{ item.quantity }}</span>
+                      <button @click="updateQty(item, item.quantity + 1)" class="mx-2 flex items-center">
+                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7 opacity-80" />
+                      </button>
+                    </div>
+                    <div @click="remove(item)" class="underline cursor-pointer">Видалити</div>
                   </div>
-                  <div @click="remove(item)" class="underline cursor-pointer">Видалити</div>
+                </div>
+
+                <div class="col-span-1 justify-self-end flex font-semibold text-xs sm:text-base">
+                  <div class="sm:mr-2">{{ (item.price * item.quantity).toFixed(2) }} грн</div>
                 </div>
               </div>
-
-              <div class="col-span-1 justify-self-end flex font-semibold text-xs sm:text-base">
-                <div class="sm:mr-2">{{ (item.price * item.quantity).toFixed(2) }} грн</div>
-              </div>
+              <USeparator v-if="item.id !== stockItems[stockItems.length - 1].id" />
             </div>
-            <USeparator v-if="item.id !== stockItems[stockItems.length - 1].id" />
+          </div>
+
+          <div v-if="preorderItems.length" class="mt-6">
+            <h2 class="md:text-lg font-semibold mb-4">Передзамовлення</h2>
+            <div v-for="item in preorderItems" :key="item.id">
+              <div class="grid grid-cols-5 md:grid-cols-6 items-start text-sm sm:my-4 my-1">
+                <img :src="item.image" :alt="item.name" width="100" class="rounded-xs col-span-1">
+                <div class="col-span-3 md:col-span-4">
+                  <div class="line-clamp-1">{{ item.name }}</div>
+                  <div>{{ item.price }} грн</div>
+                  <div class="sm:inline-block flex justify-between items-center">
+                    <div class="font-semibold flex items-center my-1">
+                      <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
+                        class="mr-2 flex items-center">
+                        <UIcon name="i-solar:minus-square-bold" class="sm:w-6 sm:h-6  w-7 h-7 opacity-80" />
+                      </button>
+                      <span class="text-gray-700">{{ item.quantity }}</span>
+                      <button @click="updateQty(item, item.quantity + 1)" class="mx-2 flex items-center">
+                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7 opacity-80" />
+                      </button>
+                    </div>
+                    <div @click="remove(item)" class="underline cursor-pointer">Видалити</div>
+                  </div>
+                </div>
+
+                <div class="col-span-1 justify-self-end flex font-semibold text-xs sm:text-base">
+                  <div class="sm:mr-2">{{ (item.price * item.quantity).toFixed(2) }} грн</div>
+                </div>
+              </div>
+              <USeparator v-if="item.id !== preorderItems[preorderItems.length - 1].id" />
+            </div>
           </div>
         </div>
         <USeparator orientation="vertical" icon="i-solar:alt-arrow-right-outline"
@@ -58,6 +91,14 @@
           <h2 class="md:text-lg font-semibold mb-4">Замовлення</h2>
 
           <div class="space-y-2 mb-4 md:text-base text-sm">
+            <div v-if="stockItems.length" class="flex justify-between">
+              <span class="text-gray-600">Товари</span>
+              <span class="font-medium">{{ stockSubtotal.toFixed(2) }} грн</span>
+            </div>
+            <div v-if="preorderItems.length" class="flex justify-between">
+              <span class="text-gray-600">Передзамовлення</span>
+              <span class="font-medium">{{ preorderSubtotal.toFixed(2) }} грн</span>
+            </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Сума</span>
               <span class="font-medium">{{ subtotal.toFixed(2) }} грн</span>
@@ -99,7 +140,6 @@ import AppButton from '~/components/UI/app-button.vue';
 const cart = useCartStore()
 const { stockItems,
   preorderItems,
-  totalQuantity,
   stockSubtotal,
   preorderSubtotal,
   subtotal,
@@ -121,7 +161,6 @@ const runtimeConfig = useRuntimeConfig()
 // const canonicalUrl = computed(() =>
 //   new URL(route.path, runtimeConfig.public.siteUrl).toString()
 // )
-console.log(cart.stockItems.length)
 
 
 useSeoMeta({

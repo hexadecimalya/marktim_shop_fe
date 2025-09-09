@@ -14,16 +14,27 @@ export const useCartStore = defineStore('cart', () => {
 
   const subtotal = computed(() => stockSubtotal.value + preorderSubtotal.value)
 
-  const totalQuantity = computed(() =>
-    stockItems.value.reduce((sum, i) => sum + i.quantity, 0) +
+  // const totalQuantity = computed(() =>
+  //   stockItems.value.reduce((sum, i) => sum + i.quantity, 0) +
+  //   preorderItems.value.reduce((sum, i) => sum + i.quantity, 0)
+  // )
+
+  const totalQtyStockItems = computed(() =>
+    stockItems.value.reduce((sum, i) => sum + i.quantity, 0)
+  )
+
+  const totalQtyPreorderItems = computed(() =>
     preorderItems.value.reduce((sum, i) => sum + i.quantity, 0)
   )
+
+  const totalQuantity = computed(() => totalQtyStockItems.value + totalQtyPreorderItems.value)
 
   const discount = computed(() => subtotal.value * 0.03)
   const total = computed(() => subtotal.value - discount.value)
 
   const addItem = (product) => {
-    const list = product?.preorder ? preorderItems : stockItems
+    const list = product?.isPreorder ? preorderItems : stockItems // tut
+    console.log(preorderItems.value)
     const existing = list.value.find(i => i.id === product.id)
     if (existing) {
       existing.quantity += product.quantity
@@ -31,6 +42,9 @@ export const useCartStore = defineStore('cart', () => {
       list.value.push({ ...product })
     }
   }
+
+
+
 
   const updateQuantity = (id, qty) => {
     const item = stockItems.value.find(i => i.id === id) ||
@@ -57,6 +71,8 @@ export const useCartStore = defineStore('cart', () => {
     stockItems,
     preorderItems,
     totalQuantity,
+    totalQtyStockItems,
+    totalQtyPreorderItems,
     stockSubtotal,
     preorderSubtotal,
     subtotal,

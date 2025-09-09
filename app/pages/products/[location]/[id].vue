@@ -37,19 +37,19 @@
                 </div>
                 <div v-else>
                     <NuxtLink to="/shopping-cart">
-                    <UButton
-                        class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
-                        icon="lucide-circle-arrow-right" trailing>Оформити замовлення</UButton>
+                        <UButton
+                            class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
+                            icon="lucide-circle-arrow-right" trailing>Оформити замовлення</UButton>
                     </NuxtLink>
                 </div>
             </div>
         </div>
-            <div class="lg:container sm:mt-8 mx-auto p-4  ">
-                <h1 class="font-semibold text-2xl"> Загальна інформація</h1>
-                <div v-if="product.product.description" class="border-t border-dotted mt-2 py-2 text-justify">{{
-                    product.product.description_ukr }}</div>
-                <div v-else class="border-t-2 border-dotted mt-2 py-2 text-justify text-sm">Потрібен детальніший опис чи
-                    порада? Зв’яжіться з нами – ми з радістю допоможемо!</div>
+        <div class="lg:container sm:mt-8 mx-auto p-4  ">
+            <h1 class="font-semibold text-2xl"> Загальна інформація</h1>
+            <div v-if="product.product.description" class="border-t border-dotted mt-2 py-2 text-justify">{{
+                product.product.description_ukr }}</div>
+            <div v-else class="border-t-2 border-dotted mt-2 py-2 text-justify text-sm">Потрібен детальніший опис чи
+                порада? Зв’яжіться з нами – ми з радістю допоможемо!</div>
         </div>
     </div>
     <div v-else="loading">
@@ -66,8 +66,8 @@ import ProductLoader from '@/components/UI/product-loader.vue';
 const cart = useCartStore()
 const prodId = Number(useRoute().params.id)
 const isInCart = computed(() =>
-  cart.stockItems.some(i => i.id === itemData.id) ||
-  cart.preorderItems.some(i => i.id === itemData.id)
+    cart.stockItems.some(i => i.id === itemData.id) ||
+    cart.preorderItems.some(i => i.id === itemData.id)
 )
 
 const quantity = ref(1)
@@ -86,10 +86,11 @@ const handleAddToCart = () => {
 }
 
 const route = useRoute()
+
 // console.log(route)
 const { data, error: productError, pending: loading } = useFetchData(
-    `product-${route.params.id}`,
-    `https://marktim.shop/api/v1/public/stock/${route.params.id}/`);
+    `product-${route.params.id}`, computed(() => `https://marktim.shop/api/v1/public/stock/${route.params.id}/`)
+);
 
 // const addButtonState = ref(false)
 
@@ -100,7 +101,7 @@ const { data, error: productError, pending: loading } = useFetchData(
 const product = computed(() => data.value ?? {})
 
 if (productError.value) {
-    throw createError({statusCode: 404, statusMessage: 'Такого продукту не знайдено'})
+    throw createError({ statusCode: 404, statusMessage: 'Такого продукту не знайдено' })
 }
 
 watch(product, (updProduct) => {

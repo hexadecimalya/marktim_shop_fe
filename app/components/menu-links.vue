@@ -32,7 +32,7 @@ const linkVariant = {
 
 const linkType = [
     {
-        link: '/products/in-stock',
+        link: '/products/stock',
         displayedName: 'В наявності',
         description: 'Товари в наявності на складі',
         key: ''

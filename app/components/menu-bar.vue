@@ -7,25 +7,17 @@
             <NuxtLink to="/"><img src="/assets/MarkTim.png" class="h-8" alt="Marktim Shop logo" /></NuxtLink>
         </div>
         <MenuLinks class="hidden md:flex" />
-        <div class="flex w-24 flex-none justify-evenly">
-            <button>
-                <NuxtLink to="/shopping-cart">
-                    <div class="relative flex items-center">
-                        <div class="relative">
-                            <UIcon name="i-solar:cart-large-2-linear" class="w-6 h-6" />
-                            <UBadge
-                                class="absolute -top-2 -right-2.5 text-xs px-1.5 py-0.5 font-bold rounded-full text-white bg-gray-600">
-                                {{ totalQuantity }}
-                            </UBadge>
-                        </div>
-                    </div>
-                </NuxtLink>
-            </button>
-            <button>
-                <NuxtLink to="/auth/login">
-                    <UIcon name="i-solar:user-circle-linear" class="w-6 h-6 " />
-                </NuxtLink>
-            </button>
+        <div class="flex items-center justify-center gap-4">
+            <NuxtLink to="/shopping-cart" class="flex items-center">
+                <UBadge icon="i-solar:cart-large-2-linear"
+                    class="flex items-center text-xs px-2 py-1 font-bold text-white bg-gray-600 h-7 tracking-tight">
+                    {{ totalQtyStockItems }} / {{ totalQtyPreorderItems }}
+                </UBadge>
+            </NuxtLink>
+
+            <NuxtLink to="/auth/login" class="flex items-center">
+                <UIcon name="i-solar:user-circle-bold" class="w-8 h-8" />
+            </NuxtLink>
         </div>
     </div>
 </template>
@@ -34,7 +26,7 @@
 
 
 const store = useCartStore()
-const { totalQuantity } = storeToRefs(store)
+const { totalQtyPreorderItems, totalQtyStockItems } = storeToRefs(store)
 
 
 
