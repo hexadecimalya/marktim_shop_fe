@@ -11,7 +11,7 @@
                 <h2 class="text-base my-2 font-normal text-justify">
                     {{ product.product.name_ukr }}
                 </h2>
-                <div class="text-xl sm:my-4 font-semibold">{{ product.sell_price }} грн</div>
+                <div class="text-xl sm:my-4 font-semibold">{{ Math.trunc(product.sell_price) }} грн {{product.bulk_price ? `/ ${ Math.trunc(product.bulk_price) } грн від 2 шт` : ''}}</div>
                 <div v-if="!isInCart" class="my-4">
                     <div class="text-xs font-medium mb-0">кількість</div>
                     <div
@@ -65,6 +65,7 @@ import ProductLoader from '@/components/UI/product-loader.vue';
 
 const cart = useCartStore()
 const prodId = Number(useRoute().params.id)
+
 const isInCart = computed(() =>
     cart.stockItems.some(i => i.id === itemData.id) ||
     cart.preorderItems.some(i => i.id === itemData.id)
@@ -80,16 +81,18 @@ const handleAddToCart = () => {
         name: product.value.product.name_ukr ||
             product.value.product.name,
         price: product.value.sell_price,
+        bulkPrice: product.value.bulk_price,
         image: product.value.product.files[0].link,
         quantity: quantity.value
     })
 }
 
 const route = useRoute()
+const routeLocation = route.params.location || 'stock'
 
 // console.log(route)
 const { data, error: productError, pending: loading } = useFetchData(
-    `product-${route.params.id}`, computed(() => `https://marktim.shop/api/v1/public/stock/${route.params.id}/`)
+    `product-${route.params.id}`, computed(() => `https://marktim.shop/api/v1/public/${routeLocation}/${route.params.id}/`)
 );
 
 // const addButtonState = ref(false)

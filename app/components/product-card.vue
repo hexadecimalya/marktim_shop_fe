@@ -52,6 +52,8 @@ const itemData = {
   name: props.product.product.name_ukr || props.product.product.name,
   image: props.product.product.files[0].link,
   price: Math.trunc(props.product.sell_price),
+  bulk_price: Math.trunc(props.product.bulk_price),
+
   isPreorder: routeLocation === 'preorder' ? true : false
 }
 
