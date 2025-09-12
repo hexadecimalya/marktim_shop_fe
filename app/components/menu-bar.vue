@@ -25,8 +25,8 @@
 
 
 
-const store = useCartStore()
-const { totalQtyPreorderItems, totalQtyStockItems } = storeToRefs(store)
+const cart = useCartStore()
+const { totalQtyPreorderItems, totalQtyStockItems } = storeToRefs(cart)
 
 
 

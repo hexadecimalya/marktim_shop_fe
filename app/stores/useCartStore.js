@@ -2,39 +2,19 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 export const useCartStore = defineStore('cart', () => {
+
+  // values
+
   const stockItems = ref([])
   const preorderItems = ref([])
 
-  const stockSubtotal = computed(() =>
-    stockItems.value.reduce((sum, i) => sum + i.price * i.quantity, 0)
-  )
-  const preorderSubtotal = computed(() =>
-    preorderItems.value.reduce((sum, i) => sum + i.price * i.quantity, 0)
-  )
+  const totalQtyStockItems = computed(() => stockItems.value.reduce((sum, i) => sum + i.quantity, 0))
+  const totalQtyPreorderItems = computed(() => preorderItems.value.reduce((sum, i) => sum + i.quantity, 0))
 
-  const subtotal = computed(() => stockSubtotal.value + preorderSubtotal.value)
-
-  // const totalQuantity = computed(() =>
-  //   stockItems.value.reduce((sum, i) => sum + i.quantity, 0) +
-  //   preorderItems.value.reduce((sum, i) => sum + i.quantity, 0)
-  // )
-
-  const totalQtyStockItems = computed(() =>
-    stockItems.value.reduce((sum, i) => sum + i.quantity, 0)
-  )
-
-  const totalQtyPreorderItems = computed(() =>
-    preorderItems.value.reduce((sum, i) => sum + i.quantity, 0)
-  )
-
-  const totalQuantity = computed(() => totalQtyStockItems.value + totalQtyPreorderItems.value)
-
-  const discount = computed(() => subtotal.value * 0.03)
-  const total = computed(() => subtotal.value - discount.value)
+  // funcs
 
   const addItem = (product) => {
-    const list = product?.isPreorder ? preorderItems : stockItems // tut
-    console.log(preorderItems.value)
+    const list = product.isPreorder ? preorderItems : stockItems
     const existing = list.value.find(i => i.id === product.id)
     if (existing) {
       existing.quantity += product.quantity
@@ -42,6 +22,39 @@ export const useCartStore = defineStore('cart', () => {
       list.value.push({ ...product })
     }
   }
+
+  const stockSubtotal = computed(() =>
+    stockItems.value.reduce((sum, i) => sum + i.price * i.quantity, 0)
+  )
+
+  const preorderSubtotal = computed(() =>
+    preorderItems.value.reduce((sum, i) =>
+      sum + (i.quantity === 1 ? i.price * i.quantity : i.bulk_price * i.quantity), 0)
+  )
+
+  // const subtotal = computed(() => stockSubtotal.value + preorderSubtotal.value)
+
+  // const totalQuantity = computed(
+  //   () => totalQtyStockItems.value + totalQtyPreorderItems.value
+  // )
+
+  // const stockDiscount = computed(() => stockSubtotal.value * 0.03)
+  // const preorderDiscount = computed(
+  //   () => preorderSubtotal.value * 0.03
+  // )
+  // const stockTotal = computed(() => stockSubtotal.value - stockDiscount.value)
+  // const preorderTotal = computed(
+  //   () => preorderSubtotal.value - preorderDiscount.value
+  // )
+  // const stockTotal = computed(() => stockSubtotal.value - stockDiscount.value)
+
+  // const discount = computed(
+  //   () => stockDiscount.value + preorderDiscount.value
+  // )
+  // const total = computed(
+  //   () => stockTotal.value + preorderTotal.value
+  // )
+
 
 
 
@@ -70,14 +83,18 @@ export const useCartStore = defineStore('cart', () => {
   return {
     stockItems,
     preorderItems,
-    totalQuantity,
+    // totalQuantity,
     totalQtyStockItems,
     totalQtyPreorderItems,
     stockSubtotal,
     preorderSubtotal,
-    subtotal,
-    discount,
-    total,
+    // subtotal,
+    // stockDiscount,
+    // preorderDiscount,
+    // stockTotal,
+    // preorderTotal,
+    // discount,
+    // total,
     addItem,
     updateQuantity,
     removeItem,
@@ -86,5 +103,3 @@ export const useCartStore = defineStore('cart', () => {
 }, {
   persist: true
 })
-
-

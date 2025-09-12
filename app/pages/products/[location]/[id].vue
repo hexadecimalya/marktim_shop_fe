@@ -31,9 +31,6 @@
                         class="w-full h-12 not-[]:rounded-xs uppercase text-xs font-medium tracking-normal justify-center"
                         icon="lucide-circle-plus" trailing>Додати до кошика
                     </AppButton>
-                    <!-- <UButton @click="handleAddToCart"
-                        class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50   bg-mtgreen-300  text-mtgreen-50 hover:bg-mtgreen-400tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
-                        icon="lucide-circle-plus" trailing>Додати до кошика</UButton> -->
                 </div>
                 <div v-else>
                     <NuxtLink to="/shopping-cart">
@@ -63,12 +60,15 @@
 import useFetchData from '@/composables/use-fetchdata'
 import ProductLoader from '@/components/UI/product-loader.vue';
 
+const route = useRoute()
+const routeLocation = route.params.location || 'stock'
+
 const cart = useCartStore()
-const prodId = Number(useRoute().params.id)
+const prodId = Number(route.params.id)
 
 const isInCart = computed(() =>
-    cart.stockItems.some(i => i.id === itemData.id) ||
-    cart.preorderItems.some(i => i.id === itemData.id)
+    cart.stockItems.some(i => i.id === prodId) ||
+    cart.preorderItems.some(i => i.id === prodId)
 )
 
 const quantity = ref(1)
@@ -76,30 +76,28 @@ const incQuantity = () => quantity.value++
 const decQuantity = () => quantity.value = Math.max(1, quantity.value - 1)
 
 const handleAddToCart = () => {
-    cart.addItem({
+    const payload = {
         id: prodId,
         name: product.value.product.name_ukr ||
             product.value.product.name,
         price: product.value.sell_price,
         bulkPrice: product.value.bulk_price,
         image: product.value.product.files[0].link,
-        quantity: quantity.value
-    })
+        quantity: quantity.value,
+        isPreorder: routeLocation === 'preorder'
+    }
+    if (isInCart.value) {
+        cart.updateQuantity(prodId, quantity.value)
+    } else {
+        cart.addItem(payload)
+    }
 }
 
-const route = useRoute()
-const routeLocation = route.params.location || 'stock'
 
 // console.log(route)
 const { data, error: productError, pending: loading } = useFetchData(
     `product-${route.params.id}`, computed(() => `https://marktim.shop/api/v1/public/${routeLocation}/${route.params.id}/`)
 );
-
-// const addButtonState = ref(false)
-
-// const toggleAddToCart = () => {
-//     addButtonState.value = !addButtonState.value;
-// }
 
 const product = computed(() => data.value ?? {})
 
@@ -115,8 +113,8 @@ watch(product, (updProduct) => {
             ogTitle: `${updProduct.product.name_ukr} – ${updProduct.brand} | MarkTim Shop`,
             ogDescription: `Відкрийте ${product.category} від ${updProduct.brand} у MarkTim Shop! Європейська якість, швидка доставка.`,
             ogImage: updProduct.product.files[0].link,
-            ogUrl: `https://marktim.shop/products/${product.id}`,
-            canonical: `https://marktim.shop/products/${product.id}`,
+            ogUrl: `https://marktim.shop/products/${routeLocation}/${product.id}`,
+            canonical: `https://marktim.shop/products/${routeLocation}/${product.id}`,
             keywords: `${updProduct.product.name_ukr}, ${updProduct.brand}, ${updProduct.category}, купити, доставка по Україні`,
             productPriceAmount: updProduct.sell_price,
             productBrand: updProduct.brand,
