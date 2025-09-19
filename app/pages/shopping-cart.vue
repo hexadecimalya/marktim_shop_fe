@@ -5,7 +5,7 @@
     <h1 class="font-semibold text-2xl mb-6">Кошик</h1>
 
     <!-- Empty cart state -->
-    <template v-if="cart.stockItems.length === 0 && cart.preorderItems.length === 0" class="py-12">
+    <template v-if="!loading && cart.stockItems.length === 0 && cart.preorderItems.length === 0" class="py-12">
       <h2 class="text-xl font-medium text-gray-600 mb-2 text-center">Йой! В кошику пусто... </h2>
       <p class="text-gray-500 mb-6 text-center">Схоже, що сюди не додали жодного товару.</p>
       <div class="w-54 mx-auto">
@@ -16,7 +16,7 @@
     </template>
 
     <!-- Cart with items -->
-    <template v-else class="sm:p-4 p-0">
+    <template v-else-if="!loading" class="sm:p-4 p-0">
       <div v-if="stockItems.length" class="mb-8 ">
         <div class="flex flex-col lg:flex-row sm:gap-6 gap-2">
           <div class="flex-1">
@@ -154,6 +154,8 @@
 import { storeToRefs } from 'pinia'
 import AppButton from '~/components/UI/app-button.vue';
 
+let loading = ref(true)
+
 const cart = useCartStore()
 const {
   stockItems,
@@ -166,6 +168,9 @@ const {
   preorderTotal
 } = storeToRefs(cart)
 
+if (cart.stockItems.length >0 || cart.preorderItems.length >0 ){
+  loading.value = false
+}
 
 const updateQty = (item, newQty) => {
   cart.updateQuantity(item.id, newQty)
@@ -175,8 +180,8 @@ const remove = (item) => {
   cart.removeItem(item.id)
 }
 
-const route = useRoute()
-const runtimeConfig = useRuntimeConfig()
+// const route = useRoute()
+// const runtimeConfig = useRuntimeConfig()
 
 // const canonicalUrl = computed(() =>
 //   new URL(route.path, runtimeConfig.public.siteUrl).toString()

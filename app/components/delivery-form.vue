@@ -1,9 +1,9 @@
 <template>
-    <div class="space-y-4">
+    <div class="space-x-4 space-y-4">
         <USelectMenu v-model="selectedCity" v-model:search-term="searchTerm" :items="items" :loading="loading"
              placeholder="Оберіть місто" class="w-80" />
         <USelectMenu v-if="warehouseItems.length > 0" v-model="selectedWarehouse" :items="warehouseItems"
-            :loading="loadingWarehouses" placeholder="Оберіть відділення" class="w-full" />
+            :loading="loadingWarehouses" placeholder="Оберіть відділення" class="w-full md:w-1/2" />
     </div>
 </template>
 

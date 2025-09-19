@@ -16,7 +16,7 @@
             </NuxtLink>
 
             <NuxtLink to="/auth/login" class="flex items-center">
-                <UIcon name="i-solar:user-circle-bold" class="w-8 h-8" />
+                <UIcon name="i-solar:user-circle-bold" class="w-8 h-8 mr-2" />
             </NuxtLink>
         </div>
     </div>

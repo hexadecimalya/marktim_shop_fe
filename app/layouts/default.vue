@@ -1,15 +1,11 @@
 <template>
 <MenuBar/>
 <!-- <Search /> -->
-
 <slot />
-<!-- Just some space between footer and the page -->
     <div class="h-8"></div>
   <AppFooter />
   </template>
   <script setup>
-import MenuBar from '~/components/menu-bar.vue';
-
 
 
 
@@ -23,6 +19,7 @@ import MenuBar from '~/components/menu-bar.vue';
       },
       {
         rel: 'stylesheet',
+        // href: 'href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap',
         href: 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap',
         crossorigin: ''
       }
