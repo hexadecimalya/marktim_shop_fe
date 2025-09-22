@@ -34,7 +34,7 @@ async function fetchCities(query) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: {
-                apiKey: config.npApiKey,
+                // apiKey: config.npApiKey,
                 modelName: 'Address',
                 calledMethod: 'getCities',
                 methodProperties: { FindByString: query }
@@ -71,7 +71,7 @@ watch(selectedCity, async (cityRef) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: {
-                apiKey: config.npApiKey,
+                // apiKey: config.npApiKey,
                 modelName: 'AddressGeneral',
                 calledMethod: 'getWarehouses',
                 methodProperties: { CityRef: cityRef.value }

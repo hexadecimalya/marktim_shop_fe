@@ -1,7 +1,9 @@
 <template>
 <MenuBar/>
 <!-- <Search /> -->
-<slot />
+
+  <slot />
+ 
     <div class="h-8"></div>
   <AppFooter />
   </template>

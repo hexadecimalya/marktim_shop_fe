@@ -14,6 +14,9 @@
         </AppButton>
       </div>
     </template>
+    <template  v-else-if="loading">
+     <SummaryCardLoader />
+    </template>
 
     <!-- Cart with items -->
     <template v-else-if="!loading" class="sm:p-4 p-0">
@@ -168,9 +171,10 @@ const {
   preorderTotal
 } = storeToRefs(cart)
 
-if (cart.stockItems.length >0 || cart.preorderItems.length >0 ){
+onMounted(() => {
   loading.value = false
-}
+})
+
 
 const updateQty = (item, newQty) => {
   cart.updateQuantity(item.id, newQty)
