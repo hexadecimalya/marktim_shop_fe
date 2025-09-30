@@ -22,7 +22,7 @@ export default defineNuxtConfig({
       title: 'MARKTIM SHOP', // default fallback title
     }
   },
-  modules: ["@nuxt/ui", "@pinia/nuxt"],
+  modules: ["@nuxt/ui", "@pinia/nuxt", "@vueuse/nuxt"],
   vite: {
     plugins: [tailwindcss()],
   },

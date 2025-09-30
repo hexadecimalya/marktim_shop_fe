@@ -1,9 +1,10 @@
 <template>
     <div
-        class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-0 md:my-4 lg:my-12 sm:p-6  border-1 border-gray-200 rounded-sm  ">
+        class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-0 md:my-4 lg:my-12 sm:p-6 border-1 border-gray-200 rounded-sm">
         <h1 class="font-semibold text-2xl mb-6">Оформити замовлення</h1>
         <div v-if="guestMode" class="my-4 text-center  bg-mtgreen-50 p-4">
-            <p>
+            <div class="bg-mtgreen-50 border-l-4 border-mtgreen-200 p-4 rounded text-sm">
+                <p>
                 Для того, щоб скористатися всіми перевагами легкого шопінгу, рекомендуємо
                 <NuxtLink to="/auth/register" class="underline">зареєструватися</NuxtLink>.
             </p>
@@ -13,6 +14,8 @@
                 Вашій
                 картці клієнта.
             </p>
+            </div>
+            
         </div>
 
         <UForm :state="state" @submit="handleSubmit" class="space-y-6">
@@ -47,7 +50,7 @@
             <URadioGroup v-model="value" :items="items" class="my-4" />
             <div v-if="value === items[1]" class="space-y-4">
                 <DeliveryForm />
-                <UCheckbox label="Отримувач інша людина" v-model="anotherRecipient" />
+                <UCheckbox label="Отримувач інша людина" v-model="anotherRecipient"  />
 
                 <section v-if="anotherRecipient" class="w-full lg:w-1/2 space-y-4">
                     <UFormField label="Імʼя отримувача" name="firstName">

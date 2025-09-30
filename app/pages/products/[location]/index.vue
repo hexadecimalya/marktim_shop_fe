@@ -20,17 +20,28 @@ import CardLoader from '@/components/UI/card-loader.vue';
 import useFetchData from '@/composables/use-fetchdata';
 const route = useRoute()
 const routeLocation = computed(() => route.params.location)
+
+const categoryId = computed(() => {
+  const q = route.query.category
+  return Array.isArray(q) ? q[0] : q || null
+})
+
 const url = computed(() =>
-  `https://marktim.shop/api/v1/public/${routeLocation.value}/?page_size=10`
+{
+    const base = `https://marktim.shop/api/v1/public/${routeLocation.value}/`
+    return categoryId.value ? `${base}?category=${encodeURIComponent(categoryId.value)}`
+    : base
+}
 )
 // const link = computed(() => routeLocation === 'in -stock' ? 'stock' : 'preorders' )
-const key = computed(() => `products-${routeLocation.value}`)
+const key = computed(() => `products-${routeLocation.value}-${categoryId.value || 'all'}`)
+
 const productList = computed(()=> {
     return data.value?.data ?? []
 })
 
 // const route = useRoute()
-console.log(route.params.location)
+console.log(url.value)
 
 const { data, error: productError } = useFetchData(key, url)
 

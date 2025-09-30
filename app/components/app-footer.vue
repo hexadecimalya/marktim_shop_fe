@@ -21,13 +21,13 @@
               <NuxtLink to="/about" class="hover:font-semibold">Про MarkTim</NuxtLink>
             </li>
             <li>
-              <NuxtLink to="/" class="hover:font-semibold">Передзамовлення</NuxtLink>
+              <NuxtLink to="/preorder-info" class="hover:font-semibold">Як зробити передзамовлення</NuxtLink>
             </li>
             <li>
               <NuxtLink to="/delivery" class="hover:font-semibold">Оплата та доставка</NuxtLink>
             </li>
             <li>
-              <NuxtLink to="/about#location" class="hover:font-semibold">Як нас знайти</NuxtLink>
+              <NuxtLink to="/about#location" class="hover:font-semibold">Де ми знаходимося</NuxtLink>
             </li>
           </ul>
         </div>
@@ -42,13 +42,18 @@
             <div class="flex space-x-4 mb-4">
               <div>
                 <UTooltip text="Instagram">
-                  <UIcon name="i-f7:logo-instagram" class="w-6 h-6 p-4 mx-4" />
+                  <a href="https://www.instagram.com/marktim.shop/" target="_blank" rel="noopener noreferrer">
+
+                    <UIcon name="i-f7:logo-instagram" class="w-6 h-6 p-4 mx-4" />
+                  </a>
                 </UTooltip>
               </div>
               <div>
 
-                <UTooltip text="Facebook">
-                  <UIcon name="i-ic:sharp-facebook" class="w-6 h-6 p-4 mx-4" />
+                <UTooltip text="Viber">
+                  <a href="https://invite.viber.com/?g2=AQBV7vVtBsCtzkjDXxda3N%2BpAMy9rCjwCr48sgTsS%2FfQeiCq3o7hE7CjNts5jsoh"
+                    target="_blank" rel="noopener noreferrer"></a>
+                  <UIcon name="i-mingcute:viber-messenger-fill" class="w-6 h-6 p-4 mx-4" />
                 </UTooltip>
               </div>
             </div>
@@ -56,18 +61,20 @@
               <div>Контакти</div>
             </li>
 
-            <li class="flex ">
+            <li class="flex">
               <UIcon name="i-heroicons:phone-16-solid" class="w-6 h-6 p-2 mx-4" />
-              <UTooltip text="Скопійовано!" :popper="{ placement: 'top' }" :open="tooltipVisible"><span
-                  class="cursor-pointer hover:text-gray-900" @click="copyToClipboard">
+          <span
+                  class="hover:text-gray-900">
                   +380 (66) 462 09 98
                 </span>
-              </UTooltip>
             </li>
 
-            <li class="flex ">
+            <li class="flex">
               <UIcon name="i-heroicons:envelope-16-solid" class="w-6 h-6 p-2 mx-4" />
-              <span>buruk.svetlana@gmail.com</span>
+              <span
+                  class=" hover:text-gray-900">
+             marktim.shop@gmail.com</span>
+            
             </li>
           </ul>
         </div>
@@ -87,25 +94,10 @@
 
 <script setup>
 
-const tooltipVisible = ref(false)
-
-const copyToClipboard = (text) => {
-  navigator.clipboard.writeText(text)
-    .then(() => {
-      tooltipVisible.value = true
-      setTimeout(() => {
-        tooltipVisible.value = false
-      }, 2000)
-    })
-    .catch(err => {
-      console.error('Failed to copy text: ', err)
-    })
-}
-
 </script>
 
 <style>
-html, 
+html,
 body {
   height: 100%;
   margin: 0;

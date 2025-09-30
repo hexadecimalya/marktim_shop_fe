@@ -20,18 +20,20 @@
                 </div>
             </div>
         </NuxtLink>
-        <div class="w-8/9 mx-auto mb-2
+        <ClientOnly>
+            <div class="w-8/9 mx-auto mb-2
         ">
-            <AppButton v-if="!isInCart" @click="addToCart">
-                До кошика
-            </AppButton>
-
-            <NuxtLink v-else to="/shopping-cart">
-                <AppButton>
-                    Оформити замовлення
+                <AppButton v-if="!isInCart" @click="addToCart">
+                    До кошика
                 </AppButton>
-            </NuxtLink>
-        </div>
+
+                <NuxtLink v-else to="/shopping-cart">
+                    <AppButton>
+                        Оформити замовлення
+                    </AppButton>
+                </NuxtLink>
+            </div>
+        </ClientOnly>
     </div>
 </template>
 <script setup>
