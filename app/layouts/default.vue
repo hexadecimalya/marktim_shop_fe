@@ -9,7 +9,9 @@
   </template>
   <script setup>
 
-
+    const { data } = useFetchData('categories',
+        computed(() => 'https://marktim.shop/api/v1/public/categories/')
+    )
 
   // Link to Google Fonts
   useHead({
@@ -21,7 +23,6 @@
       },
       {
         rel: 'stylesheet',
-        // href: 'href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap',
         href: 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap',
         crossorigin: ''
       }

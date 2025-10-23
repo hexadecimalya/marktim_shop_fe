@@ -33,7 +33,8 @@ import  useCategories  from '~/composables/useCategories';
 
 // let categories = [];
 
-const { list:categories } =  useCategories();
+const { list: categories } =  useCategories();
+console.log(categories.value)
 // const categories = Object.values(categoriesObj.value);
 
 

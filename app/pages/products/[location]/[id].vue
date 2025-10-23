@@ -1,6 +1,8 @@
 <template>
-    <div v-if="product && product.product">
-        <!-- <Breadcrumbs /> -->
+
+    <div v-if="product && product.product" class="container mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4 mt-4">
+        <Breadcrumbs :items="items"  />
+        <!-- <Breadcrumbs :items="items" class="mb-6 pt-4 mt-4 mx-4" /> -->
         <!-- <div
             class="lg:container sm:mt-8 mx-auto flex sm:flex-row flex-col justify-center bg-green-300 sm:bg-orange-200 md:bg-fuchsia-300 lg:bg-blue-200"> -->
         <div class="lg:container sm:mt-8 mx-auto flex sm:flex-row flex-col justify-center">
@@ -11,7 +13,9 @@
                 <h2 class="text-base my-2 font-normal text-justify">
                     {{ product.product.name_ukr }}
                 </h2>
-                <div class="text-xl sm:my-4 font-semibold">{{ Math.trunc(product.sell_price) }} грн {{product.bulk_price ? `/ ${ Math.trunc(product.bulk_price) } грн від 2 шт` : ''}}</div>
+                <div class="text-xl sm:my-4 font-semibold">{{ Math.trunc(product.sell_price) }} грн {{
+                    product.bulk_price
+                        ? `/ ${Math.trunc(product.bulk_price)} грн від 2 шт` : '' }}</div>
                 <div v-if="!isInCart" class="my-4">
                     <div class="text-xs font-medium mb-0">кількість</div>
                     <div
@@ -39,6 +43,16 @@
                             icon="lucide-circle-arrow-right" trailing>Оформити замовлення</UButton>
                     </NuxtLink>
                 </div>
+                <div v-if="categoriesList.length">
+                    <!-- Категорії: -->
+                    <UBadge class="mx-2 my-2 " size="md" color="neutral" variant="outline" v-for="category in categoriesList"
+                        :key="category.slug">
+                        <NuxtLink :to="`/products/${routeLocation}/category/${category.slug}`">
+                            {{ category.name }}
+                        </NuxtLink>
+                    </UBadge>
+                </div>
+
             </div>
         </div>
         <div class="lg:container sm:mt-8 mx-auto p-4  ">
@@ -49,19 +63,21 @@
                 порада? Зв’яжіться з нами – ми з радістю допоможемо!</div>
         </div>
     </div>
-    <div v-else="loading">
+    <div v-else>
         <ProductLoader />
     </div>
     <!-- <div v-else-if="productError" class="text-center text-4xl font-mono text-red-500 mt-8">Something went wrong
     </div> -->
-
+ 
 </template>
 <script setup>
-import useFetchData from '@/composables/use-fetchdata'
+import useFetchData from '~/composables/useFetchData'
 import ProductLoader from '@/components/UI/product-loader.vue';
 
 const route = useRoute()
-const routeLocation = route.params.location || 'stock'
+const routeLocation = route.params.location // stock or preorder
+const routeLabel = routeLocation === 'stock' ? 'Товари на складі' : 'Під замовлення'
+
 
 const cart = useCartStore()
 const prodId = Number(route.params.id)
@@ -95,7 +111,7 @@ const handleAddToCart = () => {
 
 
 // console.log(route)
-const { data, error: productError, pending: loading } = useFetchData(
+const { data, error: productError } = useFetchData(
     `product-${route.params.id}`, computed(() => `https://marktim.shop/api/v1/public/${routeLocation}/${route.params.id}/`)
 );
 
@@ -104,6 +120,26 @@ const product = computed(() => data.value ?? {})
 if (productError.value) {
     throw createError({ statusCode: 404, statusMessage: 'Такого продукту не знайдено' })
 }
+// const { previous, goBackFallback } = usePreviousRoute()
+// console.log(previous.value)
+
+const items = computed(() => [
+    {
+        label: 'Головна',
+        to: '/',
+    },
+    {
+        label: routeLabel,
+        to: `/products/${route.params.location}`,
+    },
+    {
+        label: product.value?.product?.name_ukr ?? null,
+    },
+]
+)
+
+const categoriesList = computed(() => product.value?.product?.categories ?? [])
+
 
 watch(product, (updProduct) => {
     if (updProduct && updProduct.product) {
@@ -120,6 +156,8 @@ watch(product, (updProduct) => {
             productBrand: updProduct.brand,
             twitterCard: 'summary_large_image'
         });
+
+
 
     }
 })

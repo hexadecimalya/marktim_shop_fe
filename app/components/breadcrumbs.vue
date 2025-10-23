@@ -1,15 +1,13 @@
 <template>
-  <div class="m-2 md:mx-16 md:text-sm text-xs tracking-normal line-clamp-1 ">
-    Головна / Соуси та рослинна олія / Оливкова олія першого холодного....
-  </div>
+  <UBreadcrumb :items="items" :ui="{link: 'text-gray-600'}" />
 </template>
 
 <script setup>
+import { breadcrumb } from '#build/ui';
+
 
 const props = defineProps({
-  location: Object
+  items: Array
 })
-console.log(props.location)
 
 </script>
-

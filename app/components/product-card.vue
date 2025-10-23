@@ -2,22 +2,26 @@
     <div class="duration-200 hover:scale-102 border-1 border-gray-100 mx-auto hover:overflow-visible">
         <NuxtLink :to="`/products/${routeLocation}/${itemData.id}/`">
             <img :src="itemData.image" :alt="itemData.name" class="object-cover rounded-t-xl" />
-            <div class="px-4 py-3 flex flex-col content-stretch">
+            <div class="px-4 py-2 flex flex-col content-stretch">
                 <span class="mr-3 text-xs uppercase text-gray-600 font-semibold line-clamp-1">Rana</span>
                 <p
-                    class="text-sm text-gray-800 text-justify tracking-tight line-clamp-2 border-t border-gray-300 xl:min-h-[3rem] min-h-[4rem] mb-2">
+                    class="text-sm text-gray-800 text-justify tracking-tight line-clamp-2 border-t border-gray-300 min-h-[2.3rem]  mb-2">
                     {{
                         itemData.name
                     }} </p>
-                <div class="">
 
-                    <div class="flex items-center justify-evenly space-x-2">
-                        <p class="flex text-lg mt-3 font-bold" :class="isDiscount ? 'text-red-600' : ''">{{
-                            itemData.price }} <span class="text-sm">грн</span></p>
-                        <p v-if="isDiscount" class="flex text-md font-bold my-3 line-through">2000 <span
-                                class="text-sm ">грн</span></p>
+                <div class="flex items-center justify-evenly space-x-2">
+                    <div v-if="itemData.old_price" class="flex text-lg mt-3 font-bold line-through">{{
+                        itemData.old_price }} <span class="text-sm">грн</span></div>
+                    <div class="flex items-center justify-evenly">
+                        <div class="flex text-lg mt-3 font-bold" :class="{ 'text-red-600': itemData.old_price }"> {{
+                            itemData.price }} <span v-if="!itemData.bulk_price" class="text-sm">грн</span></div>
+                        <div v-if="itemData.bulk_price" class="flex text-lg mt-3 font-bold"
+                            :class="{ 'text-red-600': itemData.old_price }"> /{{
+                                itemData.bulk_price }} <span class="text-sm">грн</span></div>
                     </div>
                 </div>
+
             </div>
         </NuxtLink>
         <ClientOnly>
@@ -55,6 +59,7 @@ const itemData = {
     image: props.product.product.files[0].link,
     price: Math.trunc(props.product.sell_price),
     bulk_price: Math.trunc(props.product.bulk_price),
+    old_price: Math.trunc(props.product.old_price),
     isPreorder: isPreorderLocation
 }
 

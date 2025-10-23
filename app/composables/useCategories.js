@@ -1,4 +1,4 @@
-import useFetchData from "./use-fetchdata";
+import useFetchData from "./useFetchData";
 
 export default function useCategories() {
     const list = ref([])
@@ -8,19 +8,14 @@ export default function useCategories() {
     )
 
     watchEffect(() => {
-        if (Array.isArray(data.value)) {
-            list.value = data.value.filter(c => c?.id) // skip empty slugs
+        if (Array.isArray(data.value.data)) {
+            list.value = data.value.data.filter(c => c?.id) // skip empty slugs
         }
     })
     const bySlug = computed(() =>
         Object.fromEntries(list.value.map(c => [c.slug, c]))
     )
 
-// const findIdBySlug = (slug) => bySlug.value[slug]?.id ?? null
-
-    
-    // const findIdBySlug = (slug) =>
-    //     bySlug.value[slug]?.id ?? null
 
     return { list, bySlug }
 }

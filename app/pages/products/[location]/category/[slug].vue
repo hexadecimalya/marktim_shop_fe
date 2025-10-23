@@ -1,52 +1,103 @@
 <template>
-    <section class="container mt-8 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4">
-        <h1 class="text-xl md:ml-0 ml-2 md:text-3xl font-semibold mb-4">
-            {{ routeLocation === 'stock' ? 'Товари на складі'  : 'Під замовлення' }} </h1>
-        <h2>
-          {{ categoryName }}
-        </h2>
-        <template v-if="loading || !productList.length " >
-            <CardLoader />
-        </template>
-        <template v-else>
-            <section class="gap-4 grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3">
-                <ProductCard v-for="product in productList.slice(0, 40)" :key="product.id" :product="product" />
+    <div class="container mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4 mt-4">
+        <section v-if="categoryName && status !== 'pending' && productList.length !== 0">
+            <Breadcrumbs :items="items" class="mb-6" />
+            <section class="gap-4 grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3" v-if="categoryId">
+                <ProductCard v-for="product in productList" :key="product.id" :product="product" />
             </section>
-        </template>
-
-    </section>
-
-
+            <div class="mt-6 flex justify-center" v-if="!loading">
+                <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
+                    :items-per-page="limit" show-edges />
+            </div>
+        </section>
+        <section v-else-if="status !== 'pending' && productList.length === 0">
+            No products to show
+        </section>
+        <section v-else>
+            <HeaderLoader />
+            <CardLoader />
+        </section>
+    </div>
 </template>
+
 <script setup>
 
-import useFetchData from '@/composables/use-fetchdata';
 const route = useRoute()
 const routeLocation = computed(() => route.params.location) // stock or preorder
+
 const selectedSlug = computed(() => route.params.slug || '')
 
-const { bySlug } = useCategories()
-
-const categoryId = computed(() => bySlug.value[selectedSlug.value]?.id ?? null)
+const { data: categoriesRaw } = useNuxtData('categories') // sync access to cached value
+const list = computed(() => Array.isArray(categoriesRaw.value.data) ? categoriesRaw.value.data.filter(c => c?.id) : [])
+const bySlug = computed(() => Object.fromEntries(list.value.map(c => [c.slug, c])))
+const categoryId = computed(() => bySlug.value[route.params.slug]?.id ?? null)
 const categoryName = computed(() => bySlug.value[selectedSlug.value]?.name ?? null)
-// const selectedCategory = computed(() => findIdBySlug(selectedSlug.value))
-
+const routeLabel = routeLocation.value === 'stock' ? 'Товари на складі' : 'Під замовлення'
+const limit = 24
+const page = ref(1)
+const totalCount = computed(() => data.value?.count ?? 0)
 const url = computed(() => {
     const base = `https://marktim.shop/api/v1/public/${routeLocation.value}/`
-    return categoryId.value
-        ? `${base}?category=${encodeURIComponent(categoryId.value)}`
-        : base
+    return categoryId.value ? `${base}?category=${encodeURIComponent(categoryId.value)}&limit=${limit}&offset=${(page.value - 1) * limit}` : `${base}/?limit=${limit}&offset=${(page.value - 1) * limit}`
 })
 
-const key = computed(() => `products-${routeLocation.value}-${selectedSlug.value || 'all'}`)
-
-const { data, error: productError } = useFetchData(key, url)
-const loading = computed(() => !data.value && !productError.value && categoryId.value && categoryName.value)
+const key = computed(() => `products-${routeLocation.value}-${selectedSlug.value}-${page.value}`)
+const { data, error: requestError, status } = useFetchData(key, url)
+const loading = computed(() => !data.value && !requestError.value)
 const productList = computed(() => {
     return data.value?.data ?? []
 })
 
-console.log(selectedSlug.value)
-console.log(categoryId.value)
+const items = ref([
+    {
+        label: 'Головна',
+        to: '/',
+    },
+    {
+        label: routeLabel,
+        to: `/products/${route.params.location}`,
+    },
+    {
+        label: categoryName
+    },
+
+]
+)
+// SEO section
+
+const canonicalBase = computed(() => `'http://localhost:3000/products/${routeLocation.value}/category`)
+const canonicalUrl = computed(() => {
+  const slugPart = selectedSlug.value ? `/${selectedSlug.value}` : ''
+  const pagePart = page.value > 1 ? `?page=${page.value}` : ''
+  return `${canonicalBase.value}${slugPart}${pagePart}`
+})
+
+const seoTitle = computed(() => {
+  if (categoryName.value) return `${categoryName.value} — ${routeLabel} | 'MarkTim Shop'`
+  return `${routeLabel} | 'MarkTim Shop'`
+})
+
+const seoDescription = computed(() => {
+  if (categoryName.value) {
+    return `${categoryName.value} ${routeLocation.value === 'stock' ? 'в наявності' : 'під замовлення'} — обирайте з асортименту MarkTim Shop. Безпечна оплата й доставка по Україні.`
+  }
+  return `${routeLabel} у MarkTim Shop. Обирайте товари з доставкою по Україні.`
+})
+
+watchEffect(() => {
+  useSeoMeta({
+    title: seoTitle.value,
+    description: seoDescription.value,
+    ogTitle: seoTitle.value,
+    ogDescription: seoDescription.value,
+    ogImage: 'http://localhost:3000/og-default.png',
+    ogUrl: canonicalUrl.value,
+    canonical: canonicalUrl.value,
+    twitterCard: 'summary_large_image',
+    robots: 'index,follow'
+  })
+})
+
+
 
 </script>

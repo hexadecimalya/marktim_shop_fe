@@ -3,6 +3,8 @@
         <h1 class="text-2xl font-extrabold my-4">
             List of products
         </h1>
+
+        <div></div>
     </section>
 </template>
 <script setup>
