@@ -5,13 +5,20 @@
             <section class="gap-4 grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3" v-if="categoryId">
                 <ProductCard v-for="product in productList" :key="product.id" :product="product" />
             </section>
-            <div class="mt-6 flex justify-center" v-if="!loading">
-                <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
+            <div class="mt-6 flex justify-center" v-if="!loading ">
+                <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral" active-variant="subtle"
                     :items-per-page="limit" show-edges />
             </div>
         </section>
-        <section v-else-if="status !== 'pending' && productList.length === 0">
-            No products to show
+        <section v-else-if="status !== 'pending' && productList.length === 0" class="ml-2">
+            <div class="mb-6">
+                Продукти в даній категорії відсутні
+            </div>
+            <div class="w-54 mx-auto">
+                <AppButton>
+                    <NuxtLink to="/">на головну</NuxtLink>
+                </AppButton>
+            </div>
         </section>
         <section v-else>
             <HeaderLoader />
@@ -67,35 +74,38 @@ const items = ref([
 
 const canonicalBase = computed(() => `'http://localhost:3000/products/${routeLocation.value}/category`)
 const canonicalUrl = computed(() => {
-  const slugPart = selectedSlug.value ? `/${selectedSlug.value}` : ''
-  const pagePart = page.value > 1 ? `?page=${page.value}` : ''
-  return `${canonicalBase.value}${slugPart}${pagePart}`
+    const slugPart = selectedSlug.value ? `/${selectedSlug.value}` : ''
+    const pagePart = page.value > 1 ? `?page=${page.value}` : ''
+    return `${canonicalBase.value}${slugPart}${pagePart}`
 })
 
 const seoTitle = computed(() => {
-  if (categoryName.value) return `${categoryName.value} — ${routeLabel} | 'MarkTim Shop'`
-  return `${routeLabel} | 'MarkTim Shop'`
+    if (categoryName.value) return `${categoryName.value} — ${routeLabel}`
+    return `${routeLabel} | 'MarkTim Shop'`
 })
 
 const seoDescription = computed(() => {
-  if (categoryName.value) {
-    return `${categoryName.value} ${routeLocation.value === 'stock' ? 'в наявності' : 'під замовлення'} — обирайте з асортименту MarkTim Shop. Безпечна оплата й доставка по Україні.`
-  }
-  return `${routeLabel} у MarkTim Shop. Обирайте товари з доставкою по Україні.`
+    if (categoryName.value) {
+        return `${categoryName.value} ${routeLocation.value === 'stock' ? 'в наявності' : 'під замовлення'} — обирайте з асортименту MarkTim Shop. Безпечна оплата й доставка по Україні.`
+    }
+    return `Товари ${routeLabel} у MarkTim Shop. Обирайте найкращі товари з доставкою по Україні.`
 })
 
 watchEffect(() => {
-  useSeoMeta({
-    title: seoTitle.value,
-    description: seoDescription.value,
-    ogTitle: seoTitle.value,
-    ogDescription: seoDescription.value,
-    ogImage: 'http://localhost:3000/og-default.png',
-    ogUrl: canonicalUrl.value,
-    canonical: canonicalUrl.value,
-    twitterCard: 'summary_large_image',
-    robots: 'index,follow'
-  })
+    useSeoMeta({
+        title: seoTitle.value,
+        description: seoDescription.value,
+        ogTitle: seoTitle.value,
+        ogDescription: seoDescription.value,
+        ogImage: 'http://localhost:3000/og-default.png',
+        ogImageAlt: seoTitle.value,
+        ogUrl: canonicalUrl.value,
+        canonical: canonicalUrl.value,
+        twitterCard: 'summary_large_image',
+        twitterImage: 'http://localhost:3000/og-default.png',
+        twitterTitle: seoTitle.value,
+        twitterDescription: seoDescription.value,
+    })
 })
 
 

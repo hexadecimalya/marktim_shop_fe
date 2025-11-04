@@ -2,7 +2,7 @@
 
     <section class="w-5/6 lg:w-3/5 mx-auto">
         <h1 class="text-2xl font-extrabold my-4">
-            List of preorders
+            Список передзамовлень
         </h1>
         <div v-for="i in 10">
             <div class="grid grid-cols-5 my-2 items-center text-xs md:text-sm">
@@ -13,12 +13,12 @@
                     </p>
                 </div>
                 <div>
-                    <UButton variant="subtle">activate</UButton>
+                    <UButton variant="subtle" :color="isActive ?  'primary' : 'neutral' "> activate </UButton>
                 </div>
                 <div class="flex align-middle">
                     <UPopover>
                         <UButton size="sm md:md" variant="ghost" color="neutral">{{ selectedDate ?
-                            df.format(selectedDate.toDate(getLocalTimeZone())) : 'Select a date' }}</UButton>
+                            df.format(selectedDate.toDate(getLocalTimeZone())) : 'Обрати дату' }}</UButton>
                         <template #content>
                             <UCalendar v-model="selectedDate" color="neutral" class="inline-flex" />
                         </template>
@@ -35,7 +35,7 @@
 
 <script setup>
 import { CalendarDate, DateFormatter, getLocalTimeZone } from '@internationalized/date'
-
+const isActive = ref(false)
 const df = new DateFormatter('ua-UA', {
     dateStyle: 'medium'
 })

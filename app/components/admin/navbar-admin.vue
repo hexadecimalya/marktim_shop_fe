@@ -9,15 +9,15 @@
                 <DropdownMenu :items="itemsProducts" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
                     :content="{ align: 'start' }">
 
-                    <li class="cursor-default">Products</li>
+                    <li class="cursor-default">Продукти</li>
                 </DropdownMenu>
                 <DropdownMenu :items="itemsPreorders" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
                     :content="{ align: 'start' }">
-                    <li class="cursor-default">Preorders</li>
+                    <li class="cursor-default">Передзамовлення</li>
                 </DropdownMenu>
                <DropdownMenu :items="itemsSupplies" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
                     :content="{ align: 'start' }">
-                    <li class="cursor-default">Supplies</li>
+                    <li class="cursor-default">Поставки</li>
                 </DropdownMenu>
                 <li></li>
                 <li></li>
@@ -34,17 +34,17 @@
 import DropdownMenu from '@nuxt/ui/runtime/components/DropdownMenu.vue';
 const itemsPreorders = [
     {
-        label: 'List',
+        label: 'Всі',
         icon: 'i-lucide-align-justify',
         to: '/admin/preorders'
     },
     {
-        label: 'Create',
+        label: 'Створити',
         icon: 'i-lucide-plus',
         to: '/admin/preorders/create'
     },
     {
-        label: 'Sum up',
+        label: 'Підрахувати',
         icon: 'i-lucide-sigma',
         to: '/admin/preorders/sumup'
     }
@@ -52,12 +52,12 @@ const itemsPreorders = [
 
 const itemsProducts = [
     {
-        label: 'List',
+        label: 'Всі',
         icon: 'i-lucide-align-justify',
         to: '/admin/products'
     },
     {
-        label: 'Create',
+        label: 'Створити',
         icon: 'i-lucide-plus',
         to: '/admin/products/create'
     }
@@ -65,12 +65,12 @@ const itemsProducts = [
 
 const itemsSupplies = [
     {
-        label: 'List',
+        label: 'Всі',
         icon: 'i-lucide-align-justify',
         to: '/admin/supplies'
     },
     {
-        label: 'Create',
+        label: 'Створити',
         icon: 'i-lucide-plus',
         to: '/admin/supplies/create'
     }

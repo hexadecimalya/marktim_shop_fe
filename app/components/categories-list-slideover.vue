@@ -1,5 +1,5 @@
 <template>
-    <USlideover title="Категорії" :description="props.linkType.description">
+    <USlideover title="Категорії" :description="props.linkType.description" v-model:open="open">
         <li :class="[isActiveLink(props.linkType.link)
             ? linkVariant.active
             : linkVariant.inactive]">
@@ -8,20 +8,15 @@
         <template #body>
             <UCard variant="soft" :ui="{ body: { base: 'flex-1' }, root: 'border-none bg-white p-0' }">
                 <ul>
-                    <NuxtLink :to="props.linkType.link">
+                    <NuxtLink :to="props.linkType.link" @click="open = false" >
                         <li class="hover:font-medium leading-relaxed ">Всі товари
                         </li>
                     </NuxtLink>
-                    <NuxtLink v-for="category in categories" :key="category.id"
+                    <NuxtLink v-for="category in categories" :key="category.id" @click="open = false; $emit('link-click')" 
                         :to="`${props.linkType.link}/category/${category.slug}`">
                         <li class="hover:font-medium leading-relaxed
  ">{{ category.name }}</li>
                     </NuxtLink>
-                       <!-- <NuxtLink v-for="category in categories" :key="category.id"
-                        :to="{ path: `${props.linkType.link}`, query: { category: category.slug } }">
-                        <li class="hover:font-medium leading-relaxed
- ">{{ category.name }}</li>
-                    </NuxtLink> -->
                 </ul>
             </UCard>
         </template>
@@ -29,27 +24,13 @@
 </template>
 <script setup>
 
-import  useCategories  from '~/composables/useCategories';
-
-// let categories = [];
-
-const { list: categories } =  useCategories();
-console.log(categories.value)
-// const categories = Object.values(categoriesObj.value);
+import useCategories from '~/composables/useCategories';
+const open = ref(false)
 
 
-// const { data: categories, error: categoryError } = useFetchData(
-//     'categories', computed(() => 'https://marktim.shop/api/v1/public/categories/')
+const emit = defineEmits(['link-click'])
 
-// );
-
-
-
-// if (categoryError.value) {
-//     console.error('Error fetching categories:', categoryError.value);
-// } else {
-//     const setCats = useCategories(1, categories)
-// }
+const { list: categories } = useCategories();
 
 const props = defineProps({
     linkType: {

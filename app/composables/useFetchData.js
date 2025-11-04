@@ -6,7 +6,7 @@
 //   )
 //   return { data, error, status, refresh }
 // }
-  export default function useFetchData(key, url, options = {}) {
+export default function useFetchData(key, url, options = {}) {
   const { data, error, status, refresh } = useAsyncData(
     key,
     () => {
@@ -14,7 +14,10 @@
       if (!safeUrl || safeUrl.includes('NaN')) return Promise.resolve({})
       return $fetch(safeUrl, options)
     },
-    { watch: [url] }
+    {
+      watch: [url],
+      default: () => ({ data: [] })
+    }
   )
   return { data, error, status, refresh }
 }

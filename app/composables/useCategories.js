@@ -16,6 +16,5 @@ export default function useCategories() {
         Object.fromEntries(list.value.map(c => [c.slug, c]))
     )
 
-
     return { list, bySlug }
 }

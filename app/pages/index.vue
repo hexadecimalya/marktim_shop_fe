@@ -1,6 +1,11 @@
 <template>
-  <section class="container mt-8 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4">
-    <h1 class="text-xl md:ml-0 ml-2 md:text-3xl font-semibold mb-4">Нова поставка </h1>
+  <!-- <section class="container mt-0 sm:mt-4 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4"> -->
+  <section class="py-4 md:py-8 px-4 max-w-5xl mx-auto">
+    <h1 class="text-2xl md:text-3xl font-semibold py-4">
+      Нова поставка
+    </h1>
+    
+    
     <template v-if="loading || !productList.length">
       <CardLoader />
     </template>
@@ -8,9 +13,10 @@
       <section class="gap-4 grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3">
         <ProductCard v-for="product in productList.slice(0, 8)" :key="product.id" :product="product" />
       </section>
-        <div class="mt-6 flex justify-center" v-if="!loading ">
-                <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral" :items-per-page="limit" show-edges />
-            </div>
+      <div class="mt-6 flex justify-center" v-if="!loading">
+        <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral" active-variant="subtle"
+          :items-per-page="limit" show-edges />
+      </div>
     </template>
   </section>
 

@@ -1,7 +1,7 @@
 <template>
     <div
         class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-0 md:my-4 lg:my-12 sm:p-6 border-1 border-gray-200 rounded-sm">
-        <h1 class="font-semibold text-2xl mb-6">Оформити замовлення</h1>
+        <h1 class="font-semibold text-2xl mb-2 md:mb-6">Оформити замовлення</h1>
         <div v-if="guestMode" class="my-4 text-center  bg-mtgreen-50 p-4">
             <div class="bg-mtgreen-50 border-l-4 border-mtgreen-200 p-4 rounded text-sm">
                 <p>

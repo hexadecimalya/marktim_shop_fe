@@ -9,8 +9,9 @@
                 <ProductCard v-for="product in productList" :key="product.id" :product="product" />
                 <!-- <ProductCard v-for="product in productList.slice(0, 40)" :key="product.id" :product="product" /> -->
             </section>
-          <div class="mt-6 flex justify-center" v-if="!loading ">
-                <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral" :items-per-page="limit" show-edges />
+            <div class="mt-6 flex justify-center" v-if="!loading ">
+                <UPagination v-model:page="page" :show-controls="false" :total="totalCount" aactive-color="neutral" active-variant="subtle"
+                    :items-per-page="limit" show-edges />
             </div>
         </template>
     </section>
@@ -57,5 +58,32 @@ const items = ref([
 
 ]
 )
+
+// SEO section
+
+const canonicalUrl = computed(() => `'http://localhost:3000/products/${routeLocation.value}/`)
+const seoTitle = computed(() => {
+    return `Європейські продукти ${routeLabel.toLowerCase()} в MarkTim Shop`
+})
+
+const seoDescription = computed(() => {
+    return `Товари ${routeLabel.toLowerCase()} у MarkTim Shop. Обирайте найкращі товари з доставкою по Україні.`
+})
+
+watchEffect(() => {
+    useSeoMeta({
+        title: seoTitle.value,
+        description: seoDescription.value,
+        ogTitle: seoTitle.value,
+        ogDescription: seoDescription.value,
+        ogImage: 'http://localhost:3000/og-default.png',
+        ogUrl: canonicalUrl.value,
+        canonical: canonicalUrl.value,
+        twitterCard: 'summary_large_image',
+        twitterImage: 'http://localhost:3000/og-default.png',
+        twitterTitle: seoTitle.value,
+        twitterDescription: seoDescription.value,
+    })
+})
 
 </script>

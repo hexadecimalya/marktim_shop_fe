@@ -1,15 +1,13 @@
 <template>
 
-    <div v-if="product && product.product" class="container mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4 mt-4">
-        <Breadcrumbs :items="items"  />
-        <!-- <Breadcrumbs :items="items" class="mb-6 pt-4 mt-4 mx-4" /> -->
-        <!-- <div
-            class="lg:container sm:mt-8 mx-auto flex sm:flex-row flex-col justify-center bg-green-300 sm:bg-orange-200 md:bg-fuchsia-300 lg:bg-blue-200"> -->
-        <div class="lg:container sm:mt-8 mx-auto flex sm:flex-row flex-col justify-center">
+    <div v-if="product && product.product" class="container mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4 mt-0 sm:mt-4">
+        <Breadcrumbs class="hidden sm:inline-block" :items="items" />
+    
+        <div class="lg:container sm:mt-8 mt-0 mx-auto flex sm:flex-row flex-col justify-center">
             <img class="sm:w-1/2" :src="product.product.files[0].link" />
 
             <div class="p-4 lg:ml-4 md:w-2/5">
-                <h1 class="font-semibold uppercase">Тут має бути ваша фірма</h1>
+                <!-- <h1 class="font-semibold uppercase">Тут має бути ваша фірма</h1> -->
                 <h2 class="text-base my-2 font-normal text-justify">
                     {{ product.product.name_ukr }}
                 </h2>
@@ -36,7 +34,7 @@
                         icon="lucide-circle-plus" trailing>Додати до кошика
                     </AppButton>
                 </div>
-                <div v-else>
+                <div v-else class="mt-4 sm:mt-28 mb-4">
                     <NuxtLink to="/shopping-cart">
                         <UButton
                             class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
@@ -45,8 +43,8 @@
                 </div>
                 <div v-if="categoriesList.length">
                     <!-- Категорії: -->
-                    <UBadge class="mx-2 my-2 " size="md" color="neutral" variant="outline" v-for="category in categoriesList"
-                        :key="category.slug">
+                    <UBadge class="mx-2 my-2" size="md" color="neutral" variant="outline"
+                        v-for="category in categoriesList" :key="category.slug">
                         <NuxtLink :to="`/products/${routeLocation}/category/${category.slug}`">
                             {{ category.name }}
                         </NuxtLink>
@@ -68,7 +66,7 @@
     </div>
     <!-- <div v-else-if="productError" class="text-center text-4xl font-mono text-red-500 mt-8">Something went wrong
     </div> -->
- 
+
 </template>
 <script setup>
 import useFetchData from '~/composables/useFetchData'
@@ -140,26 +138,36 @@ const items = computed(() => [
 
 const categoriesList = computed(() => product.value?.product?.categories ?? [])
 
+// SEO section
 
-watch(product, (updProduct) => {
-    if (updProduct && updProduct.product) {
-        useSeoMeta({
-            title: updProduct.product.name_ukr || 'Цей смаколик саме доступний до замовлення',
-            description: `Купуйте ${updProduct.product.name_ukr} від ${updProduct.product.brand} у MarkTim Shop. Доставка по всій Україні.` || 'Від повсякденних продуктів до вишуканих делікатесів - у нашому магазині ви знайдете все для своєї кухні',
-            ogTitle: `${updProduct.product.name_ukr} – ${updProduct.brand} | MarkTim Shop`,
-            ogDescription: `Відкрийте ${product.category} від ${updProduct.brand} у MarkTim Shop! Європейська якість, швидка доставка.`,
-            ogImage: updProduct.product.files[0].link,
-            ogUrl: `https://marktim.shop/products/${routeLocation}/${product.id}`,
-            canonical: `https://marktim.shop/products/${routeLocation}/${product.id}`,
-            keywords: `${updProduct.product.name_ukr}, ${updProduct.brand}, ${updProduct.category}, купити, доставка по Україні`,
-            productPriceAmount: updProduct.sell_price,
-            productBrand: updProduct.brand,
-            twitterCard: 'summary_large_image'
-        });
-
-
-
-    }
+const canonicalUrl = computed(() => `http://localhost:3000/products/${routeLocation}/${route.params.id}`)
+const seoTitle = computed(() => {
+    return product.value?.product?.name_ukr || 'Цей смаколик саме доступний до замовлення'
 })
+
+const seoDescription = computed(() => {
+    return `Купуйте ${product.value?.product?.name_ukr} від Brand у MarkTim Shop за ${product.value.sell_price} грн. Доставка по всій Україні.` || `Від повсякденних продуктів до вишуканих делікатесів - обирайте найкращі товари з доставкою по Україні.`
+})
+
+const seoImage = computed(() => product.value?.product?.files[0].link)
+
+
+watchEffect(() => {
+    useSeoMeta({
+        title: seoTitle.value,
+        description: seoDescription.value,
+        ogTitle: seoTitle.value,
+        ogDescription: seoDescription.value,
+        ogImage: seoImage.value,
+        ogImageAlt: seoTitle.value,
+        ogUrl: canonicalUrl.value,
+        canonical: canonicalUrl.value,
+        twitterCard: 'summary_large_image',
+        twitterImage: seoImage.value,
+        twitterTitle: seoTitle.value,
+        twitterDescription: seoDescription.value,
+    })
+})
+
 
 </script>
