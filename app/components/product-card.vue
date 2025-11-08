@@ -1,7 +1,7 @@
 <template>
-    <div class="duration-200 hover:scale-102 border-1 rounded-sm border-gray-100 mx-auto hover:overflow-visible">
+    <div class="duration-200 hover:scale-102 border-1 rounded-md border-gray-100 mx-auto hover:overflow-visible mt-2">
         <NuxtLink :to="`/products/${routeLocation}/${itemData.id}/`">
-            <img :src="itemData.image" :alt="itemData.name" class="object-cover rounded-t-xl" />
+            <img :src="itemData.image" :alt="itemData.name" class="object-cover rounded-t-md" />
             <div class="px-4 py-2 flex flex-col content-stretch">
                 <!-- <span class="mr-3 text-xs uppercase text-gray-600 font-semibold line-clamp-1">Rana</span> -->
                 <p
@@ -10,13 +10,13 @@
                         itemData.name
                     }} </p>
 
-                <div class="flex items-center justify-evenly space-x-2">
-                    <div v-if="itemData.old_price" class="flex text-lg mt-3 font-bold line-through">{{
+                <div class="flex items-center justify-evenly space-x-2 ">
+                    <div v-if="itemData.old_price" class="flex text-lg font-bold line-through">{{
                         itemData.old_price }} <span class="text-sm">грн</span></div>
                     <div class="flex items-center justify-evenly">
-                        <div class="flex text-lg mt-3 font-bold" :class="{ 'text-red-600': itemData.old_price }"> {{
+                        <div class="flex text-lg font-bold" :class="{ 'text-red-600': itemData.old_price }"> {{
                             itemData.price }} <span v-if="!itemData.bulk_price" class="text-sm">грн</span></div>
-                        <div v-if="itemData.bulk_price" class="flex text-lg mt-3 font-bold"
+                        <div v-if="itemData.bulk_price" class="flex text-lg font-bold"
                             :class="{ 'text-red-600': itemData.old_price }"> /{{
                                 itemData.bulk_price }} <span class="text-sm">грн</span></div>
                     </div>
@@ -33,7 +33,8 @@
 
                 <NuxtLink v-else to="/shopping-cart">
                     <AppButton>
-                        оформити <UIcon name="i-lucide:circle-arrow-right"/> 
+                        оформити
+                        <UIcon name="i-lucide:circle-arrow-right" />
                     </AppButton>
                 </NuxtLink>
             </div>

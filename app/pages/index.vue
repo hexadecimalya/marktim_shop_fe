@@ -11,7 +11,7 @@
     </template>
     <template v-else>
       <section class="gap-4 grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3">
-        <ProductCard v-for="product in productList.slice(0, 8)" :key="product.id" :product="product" />
+        <ProductCard v-for="product in productList" :key="product.id" :product="product" />
       </section>
       <div class="mt-6 flex justify-center" v-if="!loading">
         <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral" active-variant="subtle"
@@ -33,8 +33,8 @@ const productList = computed(() => {
 })
 // create endpoint for supplies
 const { data, error: productError, pending: loading } = useFetchData(
-  'products',
-  computed(() => `https://marktim.shop/api/v1/public/stock/?limit=${limit}&offset=${(page.value - 1) * limit}`)
+  'active-supplies',
+  computed(() => `https://marktim.shop/api/v1/public/stock/active_supplies/?limit=${limit}&offset=${(page.value - 1) * limit}`)
 );
 
 useSeoMeta({
