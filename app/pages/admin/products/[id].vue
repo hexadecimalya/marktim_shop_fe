@@ -1,78 +1,76 @@
 <template>
-    <section class="w-5/6 lg:w-3/5 mx-auto">
-        <h1 class="text-2xl font-extrabold my-4">
-            Імʼя продукту
-        </h1>
-         <form @submit.prevent="handleSubmit" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                <UFormField label="Name (ukrainian)" name="name_ukr" required>
-                    <UInput v-model="newProductData.name_ukr" class="w-full" />
-                </UFormField>
-                <UFormField label="Brand"  required>
-                    <UInput v-model="newProductData.brand" class="w-full" placeholder="e.g. Deluxe" />
-                </UFormField>
-                <UFormField label="Name (ru)">
-                    <UInput v-model="newProductData.name_rus" class="w-full" />
-                </UFormField>
-                <UFormField label="Original name" name="name_orig">
-                    <UInput v-model="newProductData.name_orig" class="w-full" />
-                </UFormField>
-                <UFormField label="Fiscal name">
-                    <UInput v-model="newProductData.name_rus" class="w-full" placeholder="For alcohol only" />
-                </UFormField>
-                <UFormField label="Barcode">
-                    <UInput v-model="newProductData.barcode" class="w-full" />
-                </UFormField>
-                <UFormField label="Description">
-                    <UTextarea v-model="newProductData.description" :rows="4" size="xl" class="w-full" />
-                </UFormField>
-                <UFormField label="Categories" required>
-                    <USelectMenu placeholder="Select category" multiple :items="categories" value-key="id"
-                        label-key="name" v-model="newProductData.category" class="w-full" />
-                </UFormField>
-                <div class="grid grid-cols-3 gap-4">
-                    <UFormField label="Weight/Volume" required>
-                        <UInput v-model="newProductData.measurements" />
+    <ClientOnly>
+        <section v-if="!pending" class="w-5/6  mx-auto">
+            <h1 class="text-2xl font-extrabold my-4">
+                {{ productData.name_ukr ?? productData.name }}
+            </h1>
+            <form @submit.prevent="handleSubmit" class="space-y-6">
+                <pre>{{ data }}</pre>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+                    <UFormField label="Назва (укр)" name="name_ukr" required>
+                        <UInput class="w-full" v-model="formData.name_ukr" />
                     </UFormField>
-                    <UFormField label="Select unit" required>
-                        <USelect v-model="newProductData.units" :items="unitsList" class="w-24 h-8" />
+                    <UFormField label="Бренд" name="brand" required>
+                        <UInput v-model="formData.brand" class="w-full" placeholder="e.g. Deluxe" />
                     </UFormField>
-                    <!-- <UFormField label="Sold by weight?" required> -->
-                    <UCheckbox label="Sold by weight?" v-model="newProductData.loose" />
-                    <!-- </UFormField> -->
+                    <UFormField label="Назва (рос)" name="name_rus">
+                        <UInput v-model="formData.name_rus" class="w-full" />
+                    </UFormField>
+                    <UFormField label="Original name" name="name_orig">
+                        <UInput v-model="formData.name_orig" class="w-full" />
+                    </UFormField>
+                    <UFormField label="Фіскальна назва" name="name_fiscal">
+                        <UInput v-model="formData.name_fiscal" class="w-full" placeholder="For alcohol only" />
+                    </UFormField>
+                    <UFormField label="Штрихкод" name="barcode">
+                        <UInput v-model="formData.barcode" class="w-full" />
+                    </UFormField>
+                    <UFormField label="Description" name="description">
+                        <UTextarea v-model="formData.description" :rows="4" size="xl" class="w-full" />
+                    </UFormField>
+                    <UFormField label="Categories" required>
+                        <USelectMenu placeholder="Select category" multiple :items="categories" value-key="id"
+                            label-key="name" v-model="formData.category" class="w-full" />
+                    </UFormField>
+                    <div class="grid grid-cols-3 gap-4">
+                        <UFormField label="Weight/Volume"  required>
+                            <UInput v-model="formData.measurements" />
+                        </UFormField>
+                        <UFormField label="Select unit" required>
+                            <USelect v-model="formData.units" :items="unitsList" class="w-24 h-8" />
+                        </UFormField>
+                        <UCheckbox label="Sold by weight?" v-model="formData.loose" />
+                    </div>
+                </div>
+                <UFileUpload color="neutral" highlight label="Drop your image here"
+                    description="SVG, PNG, JPG or GIF (max. 2MB)" class="md:w-1/2 w-full min-h-92" />
+                <div class="text-center">
+
+                    <UButton>Зберегти зміни</UButton>
                 </div>
 
-            </div>
-            <UFileUpload color="neutral" highlight label="Drop your image here"
-                description="SVG, PNG, JPG or GIF (max. 2MB)" class="md:w-1/2 w-full min-h-92" />
-            <div class="text-center">
-                <!-- <pre>{{ newProductData }}</pre> -->
-                <UButton>Зберегти зміни</UButton>
-            </div>
-        </form>
-    </section>
+            </form>
+        </section>
+
+        <section v-else><AdminLoader/></section>
+    </ClientOnly>
 </template>
 <script setup>
+
+
 const unitsList = ['г', 'кг', 'мл', 'л', 'шт']
 const { list: categories } =  useCategories();
 
-// const catItems = [
-//     { id: 1, cat_name: 'Молочна продукція' },
-//     { id: 2, cat_name: 'М\'ясні вироби' },
-//     { id: 3, cat_name: 'Хлібобулочні вироби' },
-//     { id: 4, cat_name: 'Овочі та фрукти' },
-//     { id: 5, cat_name: 'Напої' },
-//     { id: 6, cat_name: 'Кондитерські вироби' },
-//     { id: 7, cat_name: 'Консерви' },
-//     { id: 8, cat_name: 'Заморожені продукти' },
-//     { id: 9, cat_name: 'Снеки та горіхи' },
-//     { id: 10, cat_name: 'Побутова хімія' }
-// ]
+const route = useRoute()
 
+const { data, pending } = useFetchData(
+    `admin-product-${route.params.id}`,
+    computed(() => `https://marktim.shop/api/v1/public/products2/${route.params.id}/`)
+)
 
-//fetch data
+const productData = computed(() => data?.value)
 
-const newProductData = reactive({
+const formData = reactive({
     name_ukr: '',
     name_rus: '',
     name_fiscal: '',
@@ -87,8 +85,24 @@ const newProductData = reactive({
     image: null
 })
 
-const handleSubmit = () => { }
+watch(productData, (p) => {
+  if (!p) return
 
+  Object.assign(formData, {
+    name_ukr: p.name_ukr ?? '',
+    name_rus: p.name ?? '',
+    name_fiscal: p.name_fiscal ?? '',
+    name_orig: p.name_original ?? '',
+    measurements: p.measurements ?? '',
+    units: p.units ?? unitsList[0],
+    brand: p.brand ?? '',
+    description: p.description ?? '',
+    barcode: p.barcode ?? '',
+    loose: p.loose ?? false,
+    category: p.categories?.map(c => c.name) ?? [],
+    image: p.image ?? null
+  })
+}, { immediate: true })
 
 definePageMeta({
     layout: 'admin'

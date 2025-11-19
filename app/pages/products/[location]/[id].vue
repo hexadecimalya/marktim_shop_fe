@@ -8,7 +8,7 @@
 
             <div class="p-4 lg:ml-4 md:w-2/5">
                 <!-- <h1 class="font-semibold uppercase">Тут має бути ваша фірма</h1> -->
-                <h2 class="text-base my-2 font-normal text-justify">
+                <h2 class="text-base my-2 font-medium text-justify">
                     {{ product.product.name_ukr }}
                 </h2>
                 <div class="text-xl sm:my-4 font-semibold">{{ Math.trunc(product.sell_price) }} грн {{

@@ -15,7 +15,7 @@
       </section>
       <div class="mt-6 flex justify-center" v-if="!loading">
         <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral" active-variant="subtle"
-          :items-per-page="limit" show-edges />
+          :items-per-page="limit" show-edges  @update:page="scrollToTop" />
       </div>
     </template>
   </section>
@@ -36,6 +36,7 @@ const { data, error: productError, pending: loading } = useFetchData(
   'active-supplies',
   computed(() => `https://marktim.shop/api/v1/public/stock/active_supplies/?limit=${limit}&offset=${(page.value - 1) * limit}`)
 );
+const scrollToTop = () => window.scrollTo({ top:0, behavior: 'smooth'})
 
 useSeoMeta({
   title: 'Головна сторінка',

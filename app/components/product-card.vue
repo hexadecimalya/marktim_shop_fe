@@ -1,11 +1,11 @@
 <template>
-    <div class="duration-200 hover:scale-102 border-1 rounded-md border-gray-100 mx-auto hover:overflow-visible mt-2">
+    <div class="duration-200 hover:scale-102 border rounded-md border-gray-100 mx-auto hover:overflow-visible mt-2">
         <NuxtLink :to="`/products/${routeLocation}/${itemData.id}/`">
             <img :src="itemData.image" :alt="itemData.name" class="object-cover rounded-t-md" />
-            <div class="px-4 py-2 flex flex-col content-stretch">
+            <div class="sm:px-4 px-1 py-2 flex flex-col content-stretch">
                 <!-- <span class="mr-3 text-xs uppercase text-gray-600 font-semibold line-clamp-1">Rana</span> -->
                 <p
-                    class="text-sm text-gray-800 text-justify tracking-tight line-clamp-2 border-t border-gray-300 min-h-[2.3rem]  mb-2">
+                    class="text-sm text-gray-800 line-clamp-2 border-t border-gray-100 min-h-10 mb-2">
                     {{
                         itemData.name
                     }} </p>

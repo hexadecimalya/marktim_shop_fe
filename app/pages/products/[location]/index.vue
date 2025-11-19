@@ -10,8 +10,8 @@
                 <!-- <ProductCard v-for="product in productList.slice(0, 40)" :key="product.id" :product="product" /> -->
             </section>
             <div class="mt-6 flex justify-center" v-if="!loading ">
-                <UPagination v-model:page="page" :show-controls="false" :total="totalCount" aactive-color="neutral" active-variant="subtle"
-                    :items-per-page="limit" show-edges />
+                <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral" active-variant="subtle"
+                    :items-per-page="limit" show-edges @update:page="scrollToTop" />
             </div>
         </template>
     </section>
@@ -38,10 +38,9 @@ const { data, error: productError } = useFetchData(key, url)
 const productList = computed(() => {
     return data.value?.data ?? []
 })
-
+const scrollToTop = () => window.scrollTo({ top:0, behavior: 'smooth'})
 const loading = computed(() => !data.value && !productError.value)
-// console.log(totalPages.value)
-// watchEffect(() => console.log('total count is:', totalCount.value))
+
 
 const items = ref([
     {

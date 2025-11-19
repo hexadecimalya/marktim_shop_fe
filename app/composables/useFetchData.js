@@ -7,7 +7,7 @@
 //   return { data, error, status, refresh }
 // }
 export default function useFetchData(key, url, options = {}) {
-  const { data, error, status, refresh } = useAsyncData(
+  const { data, error, pending, refresh } = useAsyncData(
     key,
     () => {
       const safeUrl = unref(url)
@@ -19,5 +19,5 @@ export default function useFetchData(key, url, options = {}) {
       default: () => ({ data: [] })
     }
   )
-  return { data, error, status, refresh }
+  return { data, error, pending, refresh }
 }

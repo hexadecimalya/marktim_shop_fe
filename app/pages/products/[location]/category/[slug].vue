@@ -7,7 +7,7 @@
             </section>
             <div class="mt-6 flex justify-center" v-if="!loading ">
                 <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral" active-variant="subtle"
-                    :items-per-page="limit" show-edges />
+                    :items-per-page="limit" show-edges  @update:page="scrollToTop" />
             </div>
         </section>
         <section v-else-if="status !== 'pending' && productList.length === 0" class="ml-2">
@@ -47,7 +47,7 @@ const url = computed(() => {
     const base = `https://marktim.shop/api/v1/public/${routeLocation.value}/`
     return categoryId.value ? `${base}?category=${encodeURIComponent(categoryId.value)}&limit=${limit}&offset=${(page.value - 1) * limit}` : `${base}/?limit=${limit}&offset=${(page.value - 1) * limit}`
 })
-
+const scrollToTop = () => window.scrollTo({ top:0, behavior: 'smooth'})
 const key = computed(() => `products-${routeLocation.value}-${selectedSlug.value}-${page.value}`)
 const { data, error: requestError, status } = useFetchData(key, url)
 const loading = computed(() => !data.value && !requestError.value)
