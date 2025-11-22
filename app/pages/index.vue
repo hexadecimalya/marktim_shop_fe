@@ -2,7 +2,7 @@
   <!-- <section class="container mt-0 sm:mt-4 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4"> -->
   <section class="py-4 md:py-8 px-4 max-w-5xl mx-auto">
     <h1 class="text-2xl md:text-3xl font-semibold py-4">
-      Нова поставка - test message
+      Нова поставка - test message 1
 
     </h1>
     
