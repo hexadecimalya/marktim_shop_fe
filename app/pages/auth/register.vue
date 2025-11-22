@@ -20,8 +20,6 @@
 
 </template>
 <script setup>
-import { reactive } from 'vue'
-import AppButton from '~/components/UI/app-button.vue';
 const state = reactive({
     email: '',
     password: ''

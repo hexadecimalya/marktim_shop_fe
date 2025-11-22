@@ -8,6 +8,7 @@
     <template v-if="!loading && cart.stockItems.length === 0 && cart.preorderItems.length === 0" class="py-12">
       <h2 class="text-xl font-medium text-gray-600 mb-2 text-center">Йой! В кошику пусто... </h2>
       <p class="text-gray-500 mb-6 text-center">Схоже, що сюди не додали жодного товару.</p>
+       <img src="@/assets/empty_bag.png" alt="" class="mx-auto m-4 h-48" />
       <div class="w-54 mx-auto mb-6">
         <AppButton>
           <NuxtLink to="/">Розпочати покупки</NuxtLink>

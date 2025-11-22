@@ -7,6 +7,7 @@
             <p class="text-lg text-gray-800 mb-6">
                 Ваше замовлення № <span class="font-semibold">123456</span> прийнято.
             </p>
+            
 
             <!-- Самовивіз -->
             <div v-if="showInfo.selectedDelivery === 'Я заберу замовлення самостійно в MarkTim'" class="bg-mtgreen-50 border-l-4 border-mtgreen-400 p-4 mb-4">
@@ -39,12 +40,12 @@
                     часом для уточнення деталей оплати та доставки.
                 </p>
             </div>
-
-
+            
             <p class="text-gray-600 mt-6">
                 Дякуємо, що обрали <span class="font-semibold text-gray-800">MarkTim</span>. Ми вже працюємо над
                 тим, щоб ви отримали своє замовлення якнайшвидше 💚
             </p>
+            <img src="@/assets/order_processing.png" alt="" class="mx-auto mt-4 h-48" />
         </div>
     </div>
 </template>
