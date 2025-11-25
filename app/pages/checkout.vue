@@ -90,7 +90,7 @@ const {
     preorderItems,
 } = storeToRefs(cart)
 
-
+const isProcessing = ref(false)
 const router = useRouter()
 const deliveryItems = ref(['Я заберу замовлення самостійно в MarkTim', 'Доставка по Україні'])
 // const guestMode = ref(true)
@@ -137,7 +137,7 @@ const validate = (state) => {
     }
     return errors
 }
-const isProcessing = ref(false)
+
 
 const handleSubmit = async () => {
     isProcessing.value = true
