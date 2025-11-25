@@ -1,11 +1,3 @@
-// export default function useFetchData(key, url, options = {}) {
-//   const { data, error, status, refresh } = useAsyncData(
-//     key,
-//     () => $fetch(unref(url), options),
-//     { watch: [url] } 
-//   )
-//   return { data, error, status, refresh }
-// }
 export default function useFetchData(key, url, options = {}) {
   const { data, error, pending, refresh } = useAsyncData(
     key,

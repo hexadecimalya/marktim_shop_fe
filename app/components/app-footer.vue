@@ -52,8 +52,9 @@
 
                 <UTooltip text="Viber">
                   <a href="https://invite.viber.com/?g2=AQBV7vVtBsCtzkjDXxda3N%2BpAMy9rCjwCr48sgTsS%2FfQeiCq3o7hE7CjNts5jsoh"
-                    target="_blank" rel="noopener noreferrer"></a>
-                  <UIcon name="i-mingcute:viber-messenger-fill" class="w-6 h-6 p-4 mx-4" />
+                    target="_blank" rel="noopener noreferrer">
+                    <UIcon name="i-mingcute:viber-messenger-fill" class="w-6 h-6 p-4 mx-4" />
+                  </a>
                 </UTooltip>
               </div>
             </div>
@@ -63,18 +64,16 @@
 
             <li class="flex">
               <UIcon name="i-heroicons:phone-16-solid" class="w-6 h-6 p-2 mx-4" />
-          <span
-                  class="hover:text-gray-900">
-                  +380 (66) 462 09 98
-                </span>
+              <span class="hover:text-gray-900">
+                +380 (66) 462 09 98
+              </span>
             </li>
 
             <li class="flex">
               <UIcon name="i-heroicons:envelope-16-solid" class="w-6 h-6 p-2 mx-4" />
-              <span
-                  class=" hover:text-gray-900">
-             marktim.shop@gmail.com</span>
-            
+              <span class=" hover:text-gray-900">
+                marktim.shop@gmail.com</span>
+
             </li>
           </ul>
         </div>

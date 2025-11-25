@@ -9,17 +9,19 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { useRuntimeConfig } from '#app'
+// import { useRuntimeConfig } from '#app'
 
-const config = useRuntimeConfig()
+// const config = useRuntimeConfig()
+// const selectedCity = defineModel(null);
+// const warehouse = defineModel('warehouse')
 
 const items = ref([])           
-const selectedCity = ref(null)  
+const selectedCity = defineModel('city')  
 const searchTerm = ref('')       
 const loading = ref(false)
 
 const warehouseItems = ref([])
-const selectedWarehouse = ref(null)
+const selectedWarehouse = defineModel('warehouse')
 const loadingWarehouses = ref(false)
 
 async function fetchCities(query) {

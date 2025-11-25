@@ -25,6 +25,7 @@
     </div>
 </template>
 <script setup>
+
 const linkVariant = {
   active: 'text-mtgreen-700 font-semibold underline underline-offset-4',
   inactive: 'text-gray-700 hover:text-mtgreen-600 hover:underline hover:underline-offset-4 transition-colors duration-200'

@@ -1,14 +1,14 @@
 <template>
   <!-- <div class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-2 md:my-4 lg:my-18 sm:p-6 border-2 border-gray-200/25 md:shadow-2xl"> -->
   <div
-    class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-0 md:my-4 lg:my-12 sm:p-6 border-0 sm:border-1 border-gray-200 rounded-sm  ">
+    class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-0 md:my-4 lg:my-12 sm:p-6 border-0 sm:border border-gray-200 rounded-sm  ">
     <h1 class="font-semibold text-2xl mb-6">Кошик</h1>
 
     <!-- Empty cart state -->
     <template v-if="!loading && cart.stockItems.length === 0 && cart.preorderItems.length === 0" class="py-12">
       <h2 class="text-xl font-medium text-gray-600 mb-2 text-center">Йой! В кошику пусто... </h2>
       <p class="text-gray-500 mb-6 text-center">Схоже, що сюди не додали жодного товару.</p>
-       <img src="@/assets/empty_bag.png" alt="" class="mx-auto m-4 h-48" />
+      <img src="@/assets/empty_bag.png" alt="" class="mx-auto m-4 h-48" />
       <div class="w-54 mx-auto mb-6">
         <AppButton>
           <NuxtLink to="/">Розпочати покупки</NuxtLink>
@@ -60,15 +60,15 @@
           <div class="w-full lg:w-80 lg:shrink-0 relative ">
             <h2 class="md:text-lg font-semibold mb-4">Замовлення</h2>
             <div class="space-y-2 mb-4 md:text-base text-sm">
-              <div class="flex justify-between">
+              <!-- <div class="flex justify-between">
                 <span class="text-gray-600">Сума</span>
                 <span class="font-medium">{{ stockSubtotal.toFixed(2) }} грн</span>
-              </div>
-              <div class="flex justify-between">
+              </div> -->
+              <!-- <div class="flex justify-between">
                 <span class="text-gray-600">Знижка -3%</span>
-                <!-- <span class="font-medium text-mtwine-800">- {{ stockDiscount.toFixed(2) }} грн</span> -->
-              </div>
-              <USeparator />
+                 <span class="font-medium text-mtwine-800">- {{ stockDiscount.toFixed(2) }} грн</span> 
+              </div> 
+              <USeparator /> -->
               <div class="pt-2 mt-2 flex justify-between">
                 <span class="font-medium">Всього</span>
                 <span class="font-bold">{{ stockSubtotal.toFixed(2) }} грн</span>
@@ -119,18 +119,18 @@
           <div class="w-full lg:w-80 lg:shrink-0 relative min-h-60">
             <h2 class="md:text-lg font-semibold mb-4">Замовлення</h2>
             <div class="space-y-2 mb-4 md:text-base text-sm">
-              <div class="flex justify-between">
+              <!-- <div class="flex justify-between">
                 <span class="text-gray-600">Сума</span>
                 <span class="font-medium">{{ preorderSubtotal.toFixed(2) }} грн</span>
-              </div>
-              <div class="flex justify-between">
-                <!-- <span class="text-gray-600">Знижка -3%</span> -->
-                <!-- <span class="font-medium text-mtwine-800">- {{ preorderDiscount.toFixed(2) }} грн</span> -->
-              </div>
-              <USeparator />
+              </div> -->
+              <!-- <div class="flex justify-between"> -->
+              <!-- <span class="text-gray-600">Знижка -3%</span> -->
+              <!-- <span class="font-medium text-mtwine-800">- {{ preorderDiscount.toFixed(2) }} грн</span> -->
+              <!-- </div> -->
+              <!-- <USeparator /> -->
               <div class="pt-2 mt-2 flex justify-between">
                 <span class="font-medium">Всього</span>
-                <!-- <span class="font-bold">{{ preorderSubtotal.toFixed(2) }} грн</span> -->
+                <span class="font-bold">{{ preorderSubtotal.toFixed(2) }} грн</span>
               </div>
             </div>
 
@@ -138,9 +138,9 @@
         </div>
       </div>
       <div class="md:w-56 mx-auto">
-        <NuxtLink to="/checkout">
-          <AppButton>продовжити</AppButton>
-        </NuxtLink>
+        <NuxtLink to="/checkout" class="w-full h-10 flex items-center justify-center gap-2 text-xs sm:text-sm font-medium uppercase rounded-md
+         bg-mtgreen-300/90 backdrop-blur-sm text-white hover:bg-mtgreen-400/90 shadow-[0_2px_6px_rgba(0,0,0,0.15)]
+         transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-mtgreen-200" >продовжити</NuxtLink>
       </div>
 
     </template>
@@ -154,10 +154,10 @@
 
 <script setup>
 import { storeToRefs } from 'pinia'
-import AppButton from '~/components/UI/app-button.vue';
 
 let loading = ref(true)
-
+// const router = useRouter()
+// const navigateToCheckout = () => router.push({ path: '/checkout' })
 const cart = useCartStore()
 const {
   stockItems,
@@ -183,28 +183,8 @@ const remove = (item) => {
   cart.removeItem(item.id)
 }
 
-// const route = useRoute()
-// const runtimeConfig = useRuntimeConfig()
-
-// const canonicalUrl = computed(() =>
-//   new URL(route.path, runtimeConfig.public.siteUrl).toString()
-// )
-
-
-useSeoMeta({
-  title: 'Оформлення замовлення',
-  description: 'Перевірте ваші товари, заповніть дані доставки і завершіть замовлення у MarkTim Shop — швидко, просто і зручно.',
-  ogTitle: 'Оформлення замовлення | MarkTim Shop',
-  ogDescription: 'Оформіть замовлення у MarkTim Shop всього за кілька кроків: товари, дані доставки та підтвердження.',
-  ogType: 'website',
-
-  // ogUrl: canonicalUrl.value,
-
-  twitterCard: 'summary_large_image',
-
-  robots: 'noindex, nofollow',
-  googleBot: 'noindex, nofollow, noimageindex',
-  // canonical: canonicalUrl.value
+useHead({
+  title: 'Оформити замовлення'
 })
 
 </script>

@@ -1,16 +1,16 @@
 <template>
     <div
-        class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-0 md:my-4 lg:my-12 sm:p-6  border-1 border-gray-200 rounded-sm  ">
+        class="max-w-4xl lg:max-w-6xl container mx-auto p-2 my-0 md:my-4 lg:my-12 sm:p-6  border border-gray-200 rounded-sm  ">
         <div class="my-4 text-center p-4">
 
             <h1 class="text-2xl font-bold  mb-4">Все минуло успішно :)</h1>
             <p class="text-lg text-gray-800 mb-6">
-                Ваше замовлення № <span class="font-semibold">123456</span> прийнято.
+                Ваше замовлення № <span class="font-semibold">{{ id }}</span> прийнято.
             </p>
             
 
             <!-- Самовивіз -->
-            <div v-if="showInfo.selectedDelivery === 'Я заберу замовлення самостійно в MarkTim'" class="bg-mtgreen-50 border-l-4 border-mtgreen-400 p-4 mb-4">
+            <div v-if="deliveryType === 'Я заберу замовлення самостійно в MarkTim'" class="bg-mtgreen-50 border-l-4 border-mtgreen-400 p-4 mb-4">
                 <h2 class="font-semibold text-mtgreen-400 text-lg mb-1">
                     <UIcon name="i-solar:bag-smile-linear" class="w-6 h-6" />
 
@@ -21,7 +21,7 @@
                 </h2>
                 <p class="text-gray-700">
                     Ви можете вирушати до магазину MarkTim в його робочі години — наші працівники вже обробляють ваше
-                    замовлення. Чекаємо на вас!
+                    замовлення. До зустрічі!
                 </p>
             </div>
 
@@ -50,12 +50,17 @@
     </div>
 </template>
 <script setup>
+const orderInfo = useState('orderInfo')
 const success = ref(true)
-const route = useRoute()
-const showInfo = route.query
+const {id, deliveryType} = orderInfo.value
 
 const store = useCartStore()
 if (success.value) {
     store.clearCart()
 }
+
+definePageMeta({ middleware: 'checkout' })
+useHead({
+  title: 'Замовлення в обробці'
+})
 </script>

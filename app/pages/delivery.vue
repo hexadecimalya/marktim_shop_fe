@@ -47,9 +47,9 @@
                 </h2>
                 <div class="grid grid-cols-2">
                     <div>понеділок-пʼятниця</div>
-                    <div class="font-medium">09:00 - 18:00</div>
+                    <div class="font-medium">09:00 - 19:00</div>
                     <div>субота та неділя</div>
-                    <div class="font-medium">09:00 - 14:00</div>
+                    <div class="font-medium">10:00 - 16:00</div>
                     <div>святкові дні</div>
                     <div class="font-medium">уточнюємо в соцмережах</div>
                 </div>
@@ -58,7 +58,8 @@
                     <p class="pb-4 border-b-2 border-dotted">
                         +380 (66) 462 09 98
                     </p>
-                    <p class="py-4 border-b-2 border-dotted"> buruksvetlana@gmail.com</p>
+                    <p class="py-4 border-b-2 border-dotted"> marktim.shop@gmail.com <br>
+                        buruksvetlana@gmail.com</p>
 
                 </div>
 

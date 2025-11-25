@@ -4,7 +4,7 @@
         <Breadcrumbs class="hidden sm:inline-block" :items="items" />
     
         <div class="lg:container sm:mt-8 mt-0 mx-auto flex sm:flex-row flex-col justify-center">
-            <img class="sm:w-1/2" :src="product.product.files[0].link" />
+            <img class="sm:w-1/2" :src="product.product.files[0]?.link ?? placeholder" />
 
             <div class="p-4 lg:ml-4 md:w-2/5">
                 <!-- <h1 class="font-semibold uppercase">Тут має бути ваша фірма</h1> -->
@@ -71,6 +71,7 @@
 <script setup>
 import useFetchData from '~/composables/useFetchData'
 import ProductLoader from '@/components/UI/product-loader.vue';
+import placeholder from '@/assets/image_placeholder_big.png'
 
 const route = useRoute()
 const routeLocation = route.params.location // stock or preorder
@@ -149,7 +150,7 @@ const seoDescription = computed(() => {
     return `Купуйте ${product.value?.product?.name_ukr} від Brand у MarkTim Shop за ${product.value.sell_price} грн. Доставка по всій Україні.` || `Від повсякденних продуктів до вишуканих делікатесів - обирайте найкращі товари з доставкою по Україні.`
 })
 
-const seoImage = computed(() => product.value?.product?.files[0].link)
+const seoImage = computed(() => product.value?.product?.files?.[0]?.link ?? "http://localhost:3000/og-default.png")
 
 
 watchEffect(() => {

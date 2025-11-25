@@ -1,6 +1,6 @@
 <template>
     <div class="container mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4 mt-4">
-        <section v-if="categoryName && status !== 'pending' && productList.length !== 0">
+        <section v-if="categoryName && !pending && productList.length !== 0">
             <Breadcrumbs :items="items" class="mb-6" />
             <section class="gap-4 grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3" v-if="categoryId">
                 <ProductCard v-for="product in productList" :key="product.id" :product="product" />
@@ -10,7 +10,7 @@
                     :items-per-page="limit" show-edges  @update:page="scrollToTop" />
             </div>
         </section>
-        <section v-else-if="status !== 'pending' && productList.length === 0" class="ml-2">
+        <section v-else-if="!pending && productList.length === 0" class="ml-2">
             <div class="mb-6">
                 Продукти в даній категорії відсутні
             </div>
@@ -31,7 +31,6 @@
 
 const route = useRoute()
 const routeLocation = computed(() => route.params.location) // stock or preorder
-
 const selectedSlug = computed(() => route.params.slug || '')
 
 const { data: categoriesRaw } = useNuxtData('categories') // sync access to cached value
@@ -49,7 +48,7 @@ const url = computed(() => {
 })
 const scrollToTop = () => window.scrollTo({ top:0, behavior: 'smooth'})
 const key = computed(() => `products-${routeLocation.value}-${selectedSlug.value}-${page.value}`)
-const { data, error: requestError, status } = useFetchData(key, url)
+const { data, error: requestError, pending } = useFetchData(key, url)
 const loading = computed(() => !data.value && !requestError.value)
 const productList = computed(() => {
     return data.value?.data ?? []

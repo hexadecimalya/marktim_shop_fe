@@ -4,7 +4,7 @@
             {{ error.statusCode }} :(
             </p>
             <img src="@/assets/error.png" alt="" class="mx-auto m-4 h-48" />
-            <p class="2xl  my-4">Йой! Щось пішло не туди...</p>
+            <p class="2xl  my-4">Лишенько! Щось пішло не туди...</p>
             
             <!-- <p class="font-semibold  my-2"> {{ error.message }}</p> -->
             <div class="w-62 mx-auto">

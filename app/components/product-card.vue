@@ -1,11 +1,10 @@
 <template>
     <div class="duration-200 hover:scale-102 border rounded-md border-gray-100 mx-auto hover:overflow-visible mt-2">
         <NuxtLink :to="`/products/${routeLocation}/${itemData.id}/`">
-            <img :src="itemData.image" :alt="itemData.name" class="object-cover rounded-t-md" />
+            <img :src="`${itemData.image}`" :alt="itemData.name" class="object-cover rounded-t-md" />
             <div class="sm:px-4 px-1 py-2 flex flex-col content-stretch">
                 <!-- <span class="mr-3 text-xs uppercase text-gray-600 font-semibold line-clamp-1">Rana</span> -->
-                <p
-                    class="text-sm text-gray-800 line-clamp-2 border-t border-gray-100 min-h-10 mb-2">
+                <p class="text-sm text-gray-800 line-clamp-2 border-t border-gray-100 min-h-10 mb-2">
                     {{
                         itemData.name
                     }} </p>
@@ -31,11 +30,12 @@
                     До кошика
                 </AppButton>
 
-                <NuxtLink v-else to="/shopping-cart">
-                    <AppButton>
-                        оформити
-                        <UIcon name="i-lucide:circle-arrow-right" />
-                    </AppButton>
+                <NuxtLink v-else to="/shopping-cart" class="w-full h-10 flex items-center justify-center gap-2 text-xs sm:text-sm font-medium uppercase rounded-md
+         bg-mtgreen-300/90 backdrop-blur-sm text-white hover:bg-mtgreen-400/90 shadow-[0_2px_6px_rgba(0,0,0,0.15)]
+         transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-mtgreen-200">
+                    оформити
+                    <UIcon name="i-lucide:circle-arrow-right" />
+
                 </NuxtLink>
             </div>
         </ClientOnly>
@@ -45,7 +45,7 @@
 
 // import { useCartStore } from '~/store/use-cart-store'
 import AppButton from './UI/app-button.vue'
-
+import placeholder from '@/assets/image_placeholder.png'
 const isDiscount = ref(false)
 const route = useRoute()
 const routeLocation = route.params.location || 'stock'
@@ -57,7 +57,7 @@ const props = defineProps({
 const itemData = {
     id: props.product.id,
     name: props.product.product.name_ukr || props.product.product.name,
-    image: props.product.product.files[0].link,
+    image: props.product.product.files?.[0]?.link ?? placeholder,
     price: Math.trunc(props.product.sell_price),
     bulk_price: Math.trunc(props.product.bulk_price),
     old_price: Math.trunc(props.product.old_price),
