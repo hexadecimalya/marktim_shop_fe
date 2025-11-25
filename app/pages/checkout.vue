@@ -73,7 +73,7 @@
             </div>
             <div class="w-48 mx-auto">
                 <AppButton type="submit" :disabled="isProcessing">
-                    підтвердити
+                    {{ !isProcessing ? 'підтвердити' : 'обробка' }}
                 </AppButton>
             </div>
         </UForm>

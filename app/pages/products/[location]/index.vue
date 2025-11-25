@@ -26,7 +26,6 @@ const routeLocation = computed(() => route.params.location)
 const limit = 24
 const page = ref(1)
 const totalCount = computed(() => data.value?.count ?? 0)
-// const totalPages = computed(() => Math.ceil(totalCount.value / limit))
 const url = computed(() => {
     return `https://marktim.shop/api/v1/public/${routeLocation.value}/?limit=${limit}&offset=${(page.value - 1) * limit}`
 }
