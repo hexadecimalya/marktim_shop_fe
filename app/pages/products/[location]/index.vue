@@ -1,6 +1,6 @@
 <template>
     <section class="container mt-8 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4">
-        <template v-if="loading || !productList.length">
+        <template v-if="pending || !productList.length">
             <CardLoader />
         </template>
         <template v-else>
@@ -9,7 +9,7 @@
                 <ProductCard v-for="product in productList" :key="product.id" :product="product" />
                 <!-- <ProductCard v-for="product in productList.slice(0, 40)" :key="product.id" :product="product" /> -->
             </section>
-            <div class="mt-6 flex justify-center" v-if="!loading ">
+            <div class="mt-6 flex justify-center" v-if="!pending ">
                 <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral" active-variant="subtle"
                     :items-per-page="limit" show-edges @update:page="scrollToTop" />
             </div>
@@ -33,12 +33,12 @@ const url = computed(() => {
 
 const key = computed(() => `products-${routeLocation.value}-page-${page.value}`)
 const routeLabel = routeLocation.value === 'stock' ? 'Товари на складі' : 'Під замовлення'
-const { data, error: productError } = useFetchData(key, url)
+const { data, pending, error: productError } = useFetchData(key, url)
 const productList = computed(() => {
     return data.value?.data ?? []
 })
 const scrollToTop = () => window.scrollTo({ top:0, behavior: 'smooth'})
-const loading = computed(() => !data.value && !productError.value)
+// const loading = computed(() => !data.value && !productError.value)
 
 
 const items = ref([
