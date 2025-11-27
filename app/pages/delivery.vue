@@ -73,9 +73,9 @@ useSeoMeta({
     ogTitle: 'Доставка та оплата | MarkTim Shop',
     description: 'Обирайте зручний спосіб доставки: по Україні за допомогою Нової пошти, Укрпошти, Delivery чи самовивіз зі магазину в м. Славутич. Оплата – банківським переказом або в магазині.',
     ogDescription: 'У MarkTim Shop ми зробили покупки максимально зручними: оберіть доставку по Україні через провідних перевізників або самовивіз з магазину в м. Славутич, а оплата доступна як банківським переказом, так і безпосередньо в магазині.',
-    ogImage: 'https://example.com/image.png',
+    ogImage: `${config.public.siteUrl}/og-default.png`,
     twitterCard: 'summary_large_image',
-    twitterImage: 'http://localhost:3000/og-default.png',
+    twitterImage: `${config.public.siteUrl}/og-default.png`,
     twitterTitle: 'Доставка та оплата | MarkTim Shop',
     twitterDescription: 'Обирайте зручний спосіб доставки: по Україні за допомогою Нової пошти, Укрпошти, Delivery чи самовивіз зі магазину в м. Славутич. Оплата – банківським переказом або в магазині.'
 

@@ -124,13 +124,16 @@
   <!-- </section> -->
 </template>
 <script setup>
-
+const config = useRuntimeConfig()
 useSeoMeta({
   title: 'Про нас',
   ogTitle: 'Про нас | MarkTim Shop – Європейський смак з душею',
   description: 'MarkTim – магазин, натхненний подорожами та родинними цінностями. Ми ретельно відбираємо європейські продукти, gourmet-делікатеси та подарункові набори, даруючи унікальний смак кожному клієнту.',
   ogDescription: 'Зануртесь у світ MarkTim – місця, де подорожі, родинні цінності та любов до смачної їжі створюють неповторний гастрономічний досвід. Відкрийте для себе преміальний асортимент європейських делікатесів.',
-  ogImage: 'https://example.com/image.png',
+  ogImage: `${config.public.siteUrl}/og-default.png`,
   twitterCard: 'summary_large_image',
+  twitterImage: `${config.public.siteUrl}/og-default.png`,
+  twitterTitle: 'Про нас | MarkTim Shop – Європейський смак з душею',
+  twitterDescription: 'MarkTim – магазин, натхненний подорожами та родинними цінностями. Ми ретельно відбираємо європейські продукти, gourmet-делікатеси та подарункові набори, даруючи унікальний смак кожному клієнту.',
 })
 </script>

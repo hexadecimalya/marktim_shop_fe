@@ -70,8 +70,8 @@ const items = ref([
 ]
 )
 // SEO section
-
-const canonicalBase = computed(() => `'http://localhost:3000/products/${routeLocation.value}/category`)
+const config = useRuntimeConfig()
+const canonicalBase = computed(() => `${config.public.siteUrl}/products/${routeLocation.value}/category`)
 const canonicalUrl = computed(() => {
     const slugPart = selectedSlug.value ? `/${selectedSlug.value}` : ''
     const pagePart = page.value > 1 ? `?page=${page.value}` : ''
@@ -96,12 +96,12 @@ watchEffect(() => {
         description: seoDescription.value,
         ogTitle: seoTitle.value,
         ogDescription: seoDescription.value,
-        ogImage: 'http://localhost:3000/og-default.png',
+        ogImage: `${config.public.siteUrl}/og-default.png`,
         ogImageAlt: seoTitle.value,
         ogUrl: canonicalUrl.value,
         canonical: canonicalUrl.value,
         twitterCard: 'summary_large_image',
-        twitterImage: 'http://localhost:3000/og-default.png',
+        twitterImage: `${config.public.siteUrl}/og-default.png`,
         twitterTitle: seoTitle.value,
         twitterDescription: seoDescription.value,
     })

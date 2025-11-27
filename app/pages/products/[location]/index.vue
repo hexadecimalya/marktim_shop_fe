@@ -58,8 +58,8 @@ const items = ref([
 )
 
 // SEO section
-
-const canonicalUrl = computed(() => `'http://localhost:3000/products/${routeLocation.value}/`)
+const config = useRuntimeConfig()
+const canonicalUrl = computed(() => `${config.public.siteUrl}/${routeLocation.value}/`)
 const seoTitle = computed(() => {
     return `Європейські продукти ${routeLabel.toLowerCase()} в MarkTim Shop`
 })
@@ -74,11 +74,11 @@ watchEffect(() => {
         description: seoDescription.value,
         ogTitle: seoTitle.value,
         ogDescription: seoDescription.value,
-        ogImage: 'http://localhost:3000/og-default.png',
+        ogImage: `${config.public.siteUrl}/og-default.png`,
         ogUrl: canonicalUrl.value,
         canonical: canonicalUrl.value,
         twitterCard: 'summary_large_image',
-        twitterImage: 'http://localhost:3000/og-default.png',
+        twitterImage: `${config.public.siteUrl}/og-default.png`,
         twitterTitle: seoTitle.value,
         twitterDescription: seoDescription.value,
     })

@@ -3,7 +3,10 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   runtimeConfig: {
-    npApiKey: process.env.NP_API_KEY,
+    // npApiKey: process.env.NP_API_KEY,
+    public: {
+       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://marktim.shop'
+    }
   },
   pages: true,
   colorMode: {

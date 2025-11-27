@@ -5,8 +5,8 @@
       Нова поставка
 
     </h1>
-    
-    
+
+
     <template v-if="loading || !productList.length">
       <CardLoader />
     </template>
@@ -15,8 +15,8 @@
         <ProductCard v-for="product in productList" :key="product.id" :product="product" />
       </section>
       <div class="mt-6 flex justify-center" v-if="!loading">
-        <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral" active-variant="subtle"
-          :items-per-page="limit" show-edges  @update:page="scrollToTop" />
+        <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
+          active-variant="subtle" :items-per-page="limit" show-edges @update:page="scrollToTop" />
       </div>
     </template>
   </section>
@@ -37,13 +37,20 @@ const { data, error: productError, pending: loading } = useFetchData(
   'active-supplies',
   computed(() => `https://marktim.shop/api/v1/public/stock/active_supplies/?limit=${limit}&offset=${(page.value - 1) * limit}`)
 );
-const scrollToTop = () => window.scrollTo({ top:0, behavior: 'smooth'})
-
+const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+const config = useRuntimeConfig()
 useSeoMeta({
   title: 'Головна сторінка',
   ogTitle: 'MarkTim Shop – Європейські товари високої якості',
   description: 'MarkTim – інтернет-магазин якісних європейських товарів. Широкий асортимент, гарантована якість та швидка доставка по Україні.',
   ogDescription: 'Відкрийте для себе світ європейської якості з MarkTim Shop. У нас ви знайдете унікальні товари, гарантований сервіс та швидку доставку. Зробіть перше замовлення і переконайтеся самі!',
+  ogImage: `${config.public.siteUrl}/og-default.png`,
+  twitterCard: 'summary_large_image',
+  twitterImage: `${config.public.siteUrl}/og-default.png`,
+  twitterTitle: 'MarkTim Shop – Європейські товари високої якості',
+  twitterDescription: 'MarkTim – інтернет-магазин якісних європейських товарів. Широкий асортимент, гарантована якість та швидка доставка по Україні.',
+
+
 })
 definePageMeta({ breadcrumbs: false })
 </script>

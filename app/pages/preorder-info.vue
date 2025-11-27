@@ -68,13 +68,17 @@
 </template>
 
 <script setup>
+const config = useRuntimeConfig()
 useSeoMeta({
   title: 'Передзамовлення — MarkTim',
   ogTitle: 'Передзамовлення | MarkTim — як замовити та передоплата',
   description: 'Дізнайтесь, як оформити передзамовлення в MarkTim: тематичні тижні, 25% передоплата, процес закупівлі та повернення коштів.',
   ogDescription: 'Оформіть передзамовлення в MarkTim — прозорий процес, передоплата 25%, закупівля протягом тижня та доставка після прибуття на склад.',
-  ogImage: 'https://example.com/preorder-image.png',
+  ogImage: `${config.public.siteUrl}/og-default.png`,
   twitterCard: 'summary_large_image',
+   twitterImage: `${config.public.siteUrl}/og-default.png`,
+  twitterTitle: 'Передзамовлення | MarkTim — як замовити та передоплата',
+  twitterDescription: 'Дізнайтесь, як оформити передзамовлення в MarkTim: тематичні тижні, 25% передоплата, процес закупівлі та повернення коштів.',
   meta: [
     { name: 'keywords', content: 'передзамовлення, MarkTim, передоплата, тематичні тижні, Смаки Італії, Смаки Франції' },
     { name: 'author', content: 'MarkTim' }
