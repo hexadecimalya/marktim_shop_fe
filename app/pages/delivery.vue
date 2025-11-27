@@ -68,6 +68,7 @@
     </section>
 </template>
 <script setup>
+const config = useRuntimeConfig()
 useSeoMeta({
     title: 'Доставка та оплата',
     ogTitle: 'Доставка та оплата | MarkTim Shop',

@@ -145,12 +145,13 @@ const config = useRuntimeConfig()
 
 const canonicalUrl = computed(() => `${config.public.siteUrl}/${routeLocation}/${route.params.id}`)
 const seoTitle = computed(() => {
-    return product.value?.product?.name_ukr || 'Цей смаколик саме доступний до замовлення'
+    return product.value?.product?.name_ukr || 'Цей смаколик доступний до замовлення'
 })
 
 const seoDescription = computed(() => {
     return `Купуйте ${product.value?.product?.name_ukr} від Brand у MarkTim Shop за ${product.value.sell_price} грн. Доставка по всій Україні.` || `Від повсякденних продуктів до вишуканих делікатесів - обирайте найкращі товари з доставкою по Україні.`
 })
+console.log(seoDescription.value)
 
 const seoImage = computed(() => product.value?.product?.files?.[0]?.link ?? `${config.public.siteUrl}/og-default.png`)
 
