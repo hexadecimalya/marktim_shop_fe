@@ -31,14 +31,14 @@
                     </div>
                     <AppButton @click="handleAddToCart"
                         class="w-full h-12 not-[]:rounded-xs uppercase text-xs font-medium tracking-normal justify-center"
-                        icon="lucide-circle-plus" trailing>Додати до кошика
+                        trailing>Додати до кошика
                     </AppButton>
                 </div>
                 <div v-else class="mt-4 sm:mt-28 mb-4">
                     <NuxtLink to="/shopping-cart">
                         <UButton
                             class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
-                            icon="lucide-circle-arrow-right" trailing>Оформити замовлення</UButton>
+                           trailing>Оформити замовлення</UButton>
                     </NuxtLink>
                 </div>
                 <div v-if="categoriesList.length">
