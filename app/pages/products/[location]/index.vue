@@ -41,7 +41,6 @@ const productList = computed(() => {
     return data.value?.data ?? []
 })
 const scrollToTop = () => window.scrollTo({ top:0, behavior: 'smooth'})
-// const loading = computed(() => !data.value && !productError.value)
 
 
 const items = ref([

@@ -34,7 +34,7 @@ const state = reactive({
 const handleLogin = () => {
     state.pending = true
     try {
-        console.log('loggin')
+        console.log('logging')
     }
     finally {
         state.pending = false

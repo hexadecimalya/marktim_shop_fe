@@ -36,6 +36,5 @@ const statusColor = computed(() => {
     }
 })
 
-// console.log(orderData)
 
 </script>

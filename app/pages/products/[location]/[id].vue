@@ -110,7 +110,7 @@ const handleAddToCart = () => {
 }
 
 
-// console.log(route)
+
 const { data, error: productError } = useFetchData(
     `product-${route.params.id}`, computed(() => `https://marktim.shop/api/v1/public/${routeLocation}/${route.params.id}/`)
 );
@@ -120,8 +120,6 @@ const product = computed(() => data.value ?? {})
 if (productError.value) {
     throw createError({ statusCode: 404, statusMessage: 'Такого продукту не знайдено' })
 }
-// const { previous, goBackFallback } = usePreviousRoute()
-// console.log(previous.value)
 
 const items = computed(() => [
     {
@@ -160,22 +158,25 @@ const seoDescription = computed(() =>
 const seoImage = computed(() => product.value?.product?.files?.[0]?.link ?? `${config.public.siteUrl}/og-default.png`)
 
 
-watchEffect(() => {
+watch(product, (newProduct) => {
+  if (newProduct?.product) {
     useSeoMeta({
-        title: seoTitle.value,
-        description: seoDescription.value,
-        ogTitle: seoTitle.value,
-        ogDescription: seoDescription.value,
-        ogImage: seoImage.value,
-        ogImageAlt: seoTitle.value,
-        ogUrl: canonicalUrl.value,
-        canonical: canonicalUrl.value,
-        twitterCard: 'summary_large_image',
-        twitterImage: seoImage.value,
-        twitterTitle: seoTitle.value,
-        twitterDescription: seoDescription.value,
+      title: seoTitle.value,
+      description: seoDescription.value,
+      ogTitle: seoTitle.value,
+      ogDescription: seoDescription.value,
+      ogImage: seoImage.value,
+      ogImageAlt: seoTitle.value,
+      ogUrl: canonicalUrl.value,
+      canonical: canonicalUrl.value,
+      twitterCard: 'summary_large_image',
+      twitterImage: seoImage.value,
+      twitterTitle: seoTitle.value,
+      twitterDescription: seoDescription.value,
     })
-})
+  }
+ 
+}, { immediate: true })
 
 
 </script>
