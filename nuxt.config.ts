@@ -27,12 +27,12 @@ export default defineNuxtConfig({
     },
   },
   modules: ["@nuxt/ui", "@pinia/nuxt", "@vueuse/nuxt", "@nuxt/icon"],
-  icon: {
-    mode: "svg", // ✅ IMPORTANT: NO API calls
-    serverBundle: {
-      collections: ["lucide", "solar"],
-    },
-  },
+  // icon: {
+  //   mode: "svg", // ✅ IMPORTANT: NO API calls
+    // serverBundle: {
+    //   collections: ["lucide", "solar"],
+    // },
+  // },
   vite: {
     plugins: [tailwindcss()],
   },
