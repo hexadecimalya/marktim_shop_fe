@@ -26,7 +26,7 @@ export default defineNuxtConfig({
       // link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
   },
-  modules: ["@nuxt/ui", "@pinia/nuxt", "@vueuse/nuxt"],
+  modules: ["@nuxt/ui", "@pinia/nuxt", "@vueuse/nuxt","@nuxt/icon" ],
   // icon: {
   //   mode: "svg", // ✅ IMPORTANT: NO API calls
     // serverBundle: {
