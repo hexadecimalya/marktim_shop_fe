@@ -5,8 +5,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // npApiKey: process.env.NP_API_KEY,
     public: {
-       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://marktim.shop'
-    }
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || "https://marktim.shop",
+    },
   },
   pages: true,
   colorMode: {
@@ -22,13 +22,16 @@ export default defineNuxtConfig({
   css: ["assets/css/main.css"],
   app: {
     head: {
-      title: 'MARKTIM SHOP', // default fallback title
-    }
+      title: "MARKTIM SHOP", // default fallback title
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    },
   },
   modules: ["@nuxt/ui", "@pinia/nuxt", "@vueuse/nuxt", "@nuxt/icon"],
   icon: {
     mode: "svg", // ✅ IMPORTANT: NO API calls
-    serverBundle: "local"
+    serverBundle: {
+      collections: ["lucide", "solar"],
+    },
   },
   vite: {
     plugins: [tailwindcss()],

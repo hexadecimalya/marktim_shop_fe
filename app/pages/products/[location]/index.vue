@@ -1,7 +1,10 @@
 <template>
     <section class="container mt-8 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4">
-        <template v-if="pending || !productList.length">
+        <template v-if="pending && !productList.length">
             <CardLoader />
+        </template>
+        <template v-else-if="!pending && !productList.length">
+            Нема активних передзамовлень
         </template>
         <template v-else>
             <Breadcrumbs :items="items" class="mb-6" />
