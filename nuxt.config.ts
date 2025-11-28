@@ -23,10 +23,10 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: "MARKTIM SHOP", // default fallback title
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+      // link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
   },
-  modules: ["@nuxt/ui", "@pinia/nuxt", "@vueuse/nuxt", "@nuxt/icon"],
+  modules: ["@nuxt/ui", "@pinia/nuxt", "@vueuse/nuxt"],
   // icon: {
   //   mode: "svg", // ✅ IMPORTANT: NO API calls
     // serverBundle: {
