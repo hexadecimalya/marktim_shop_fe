@@ -43,7 +43,6 @@
               <div>
                 <UTooltip text="Instagram">
                   <NuxtLink href="https://www.instagram.com/marktim.shop/" target="_blank" rel="noopener noreferrer">
-<!-- <UIcon name="i-lucide-instagram" class="w-6 h-6 p-4 mx-4" /> -->
                     <UIcon name="i-mingcute:instagram-fill" class="w-6 h-6 p-4 mx-4" />
                   </NuxtLink>
                 </UTooltip>
