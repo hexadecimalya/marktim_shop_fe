@@ -62,15 +62,13 @@
     </ClientOnly>
 </template>
 <script setup>
-import { reactive, computed, watchEffect } from 'vue'
-
 const unitsList = ['г', 'кг', 'мл', 'л', 'шт']
-const { list: categories } = useCategories()
+// const { list: categories } = await useCategories()
 const route = useRoute()
-
+const config = useRuntimeConfig()
 const { data, pending } = useFetchData(
   `admin-product-${route.params.id}`,
-  computed(() => `https://marktim.shop/api/v1/public/products2/${route.params.id}/`)
+  computed(() => `${config.public.siteUrl}/api/v1/public/products2/${route.params.id}/`)
 )
 
 const productData = computed(() => data?.value || {})

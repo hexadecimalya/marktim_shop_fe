@@ -7,7 +7,7 @@
             Нема активних передзамовлень
         </template>
         <template v-else>
-            <Breadcrumbs :items="items" class="mb-6" />
+            <Breadcrumbs :items="items" class="mb-6 ml-2" />
             <section class="gap-4 grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3">
                 <ProductCard v-for="product in productList" :key="product.id" :product="product" />
                 <!-- <ProductCard v-for="product in productList.slice(0, 40)" :key="product.id" :product="product" /> -->
@@ -22,21 +22,22 @@
 
 </template>
 <script setup>
-import CardLoader from '@/components/UI/card-loader.vue';
+
 import useFetchData from '~/composables/useFetchData';
+const config = useRuntimeConfig()
 const route = useRoute()
 const routeLocation = computed(() => route.params.location)
 const limit = 24
 const page = ref(1)
 const totalCount = computed(() => data.value?.count ?? 0)
 const url = computed(() => {
-    return `https://marktim.shop/api/v1/public/${routeLocation.value}/?limit=${limit}&offset=${(page.value - 1) * limit}`
+    return `${config.public.siteUrl}/api/v1/public/${routeLocation.value}/?limit=${limit}&offset=${(page.value - 1) * limit}`
 }
 )
 
 const key = computed(() => `products-${routeLocation.value}-page-${page.value}`)
 const routeLabel = routeLocation.value === 'stock' ? 'Товари на складі' : 'Під замовлення'
-const { data, pending, error: productError } = useFetchData(key, url)
+const { data, pending, error: productError } = await useFetchData(key, url)
 const productList = computed(() => {
     return data.value?.data ?? []
 })
@@ -60,7 +61,7 @@ const items = ref([
 )
 
 // SEO section
-const config = useRuntimeConfig()
+
 const canonicalUrl = computed(() => `${config.public.siteUrl}/${routeLocation.value}/`)
 const seoTitle = computed(() => {
     return `Європейські продукти ${routeLabel.toLowerCase()} в MarkTim Shop`
@@ -70,7 +71,7 @@ const seoDescription = computed(() => {
     return `Товари ${routeLabel.toLowerCase()} у MarkTim Shop. Обирайте найкращі товари з доставкою по Україні.`
 })
 
-watchEffect(() => {
+
     useSeoMeta({
         title: seoTitle.value,
         description: seoDescription.value,
@@ -84,6 +85,6 @@ watchEffect(() => {
         twitterTitle: seoTitle.value,
         twitterDescription: seoDescription.value,
     })
-})
+
 
 </script>

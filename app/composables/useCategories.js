@@ -1,11 +1,12 @@
 import useFetchData from "./useFetchData";
+import { useRuntimeConfig } from "#app";
 
-export default function useCategories() {
+export default async function useCategories() {
+    const config = useRuntimeConfig()
     const list = ref([])
 
-    const { data } = useFetchData('categories',
-        computed(() => 'https://marktim.shop/api/v1/public/categories/')
-    )
+    const { data } = await useFetchData('categories',
+        `${config.public.siteUrl}/api/v1/public/categories/`)
 
     watchEffect(() => {
         if (Array.isArray(data.value.data)) {

@@ -1,7 +1,7 @@
 <template>
     <div class="container mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4 mt-4">
         <section v-if="categoryName && !pending && productList.length !== 0">
-            <Breadcrumbs :items="items" class="mb-6" />
+            <Breadcrumbs :items="items" class="mb-6 ml-2" />
             <section class="gap-4 grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3" v-if="categoryId">
                 <ProductCard v-for="product in productList" :key="product.id" :product="product" />
             </section>
@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-
+const config = useRuntimeConfig()
 const route = useRoute()
 const routeLocation = computed(() => route.params.location) // stock or preorder
 const selectedSlug = computed(() => route.params.slug || '')
@@ -43,12 +43,12 @@ const limit = 24
 const page = ref(1)
 const totalCount = computed(() => data.value?.count ?? 0)
 const url = computed(() => {
-    const base = `https://marktim.shop/api/v1/public/${routeLocation.value}/`
+    const base = `${config.public.siteUrl}/api/v1/public/${routeLocation.value}/`
     return categoryId.value ? `${base}?category=${encodeURIComponent(categoryId.value)}&limit=${limit}&offset=${(page.value - 1) * limit}` : `${base}/?limit=${limit}&offset=${(page.value - 1) * limit}`
 })
 const scrollToTop = () => window.scrollTo({ top:0, behavior: 'smooth'})
 const key = computed(() => `products-${routeLocation.value}-${selectedSlug.value}-${page.value}`)
-const { data, error: requestError, pending } = useFetchData(key, url)
+const { data, error: requestError, pending } = await useFetchData(key, url)
 const loading = computed(() => !data.value && !requestError.value)
 const productList = computed(() => {
     return data.value?.data ?? []
@@ -70,7 +70,7 @@ const items = ref([
 ]
 )
 // SEO section
-const config = useRuntimeConfig()
+
 const canonicalBase = computed(() => `${config.public.siteUrl}/products/${routeLocation.value}/category`)
 const canonicalUrl = computed(() => {
     const slugPart = selectedSlug.value ? `/${selectedSlug.value}` : ''
@@ -90,7 +90,7 @@ const seoDescription = computed(() => {
     return `Товари ${routeLabel} у MarkTim Shop. Обирайте найкращі товари з доставкою по Україні.`
 })
 
-watchEffect(() => {
+
     useSeoMeta({
         title: seoTitle.value,
         description: seoDescription.value,
@@ -105,7 +105,7 @@ watchEffect(() => {
         twitterTitle: seoTitle.value,
         twitterDescription: seoDescription.value,
     })
-})
+
 
 
 

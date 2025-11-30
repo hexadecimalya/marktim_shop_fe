@@ -1,5 +1,5 @@
 <template>
-    <ClientOnly>
+    <!-- <ClientOnly> -->
         <section v-if="!pending" class="w-5/6  mx-auto">
             <h1 class="text-2xl font-extrabold my-4">
                 {{ productData.name_ukr ?? productData.name }}
@@ -53,19 +53,19 @@
         </section>
 
         <section v-else><AdminLoader/></section>
-    </ClientOnly>
+    <!-- </ClientOnly> -->
 </template>
 <script setup>
-
+const config = useRuntimeConfig()
 
 const unitsList = ['г', 'кг', 'мл', 'л', 'шт']
-const { list: categories } =  useCategories();
+const { list: categories } =  await useCategories();
 
 const route = useRoute()
 
-const { data, pending } = useFetchData(
+const { data, pending } = await useFetchData(
     `admin-product-${route.params.id}`,
-    computed(() => `https://marktim.shop/api/v1/public/products2/${route.params.id}/`)
+    computed(() => `${config.public.siteUrl}/api/v1/public/products2/${route.params.id}/`)
 )
 
 const productData = computed(() => data?.value)

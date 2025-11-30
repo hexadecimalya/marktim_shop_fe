@@ -24,6 +24,7 @@
 </template>
 
 <script setup>
+const config = useRuntimeConfig()
 import CardLoader from '@/components/UI/card-loader.vue';
 import useFetchData from '~/composables/useFetchData';
 const page = ref(1)
@@ -32,13 +33,13 @@ const limit = 24
 const productList = computed(() => {
   return data.value?.data ?? []
 })
-// create endpoint for supplies
-const { data, error: productError, pending: loading } = useFetchData(
+
+const { data, error: productError, pending: loading } = await useFetchData(
   'active-supplies',
-  computed(() => `https://marktim.shop/api/v1/public/stock/active_supplies/?limit=${limit}&offset=${(page.value - 1) * limit}`)
+  computed(() => `${config.public.siteUrl}/api/v1/public/stock/active_supplies/?limit=${limit}&offset=${(page.value - 1) * limit}`)
 );
 const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
-const config = useRuntimeConfig()
+
 useSeoMeta({
   title: 'Головна сторінка',
   ogTitle: 'MarkTim Shop – Європейські товари високої якості',

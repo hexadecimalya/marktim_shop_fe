@@ -1,8 +1,8 @@
 <template>
 
-    <div v-if="product && product.product" class="container mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4 mt-0 sm:mt-4">
+    <div v-if="!pending && product.product" class="container mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4 mt-0 sm:mt-4">
         <Breadcrumbs class="hidden sm:inline-block" :items="items" />
-    
+
         <div class="lg:container sm:mt-8 mt-0 mx-auto flex sm:flex-row flex-col justify-center">
             <img class="sm:w-1/2" :src="product.product.files[0]?.link ?? placeholder" />
 
@@ -38,11 +38,11 @@
                     <NuxtLink to="/shopping-cart">
                         <UButton
                             class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300  hover:bg-mtgreen-400"
-                           trailing>Оформити замовлення</UButton>
+                            trailing>Оформити замовлення</UButton>
                     </NuxtLink>
                 </div>
                 <div v-if="categoriesList.length">
-                    <!-- Категорії: -->
+
                     <UBadge class="mx-2 my-2" size="md" color="neutral" variant="outline"
                         v-for="category in categoriesList" :key="category.slug">
                         <NuxtLink :to="`/products/${routeLocation}/category/${category.slug}`">
@@ -54,17 +54,18 @@
             </div>
         </div>
         <div class="lg:container sm:mt-8 mx-auto p-4  ">
-            <h1 class="font-semibold text-2xl"> Загальна інформація</h1>
-            <div v-if="product.product.description" class="border-t border-dotted mt-2 py-2 text-justify">{{
+            <h1 class="font-semibold text-2xl mb-2"> Загальна інформація</h1>
+            <USeparator />
+            <div v-if="product.product.description" class="mt-2 py-2 text-justify">{{
                 product.product.description_ukr }}</div>
-            <div v-else class="border-t-2 border-dotted mt-2 py-2 text-justify text-sm">Потрібен детальніший опис чи
+            <div v-else class="mt-2 text-justify text-sm">Потрібен детальніший опис чи
                 порада? Зв’яжіться з нами – ми з радістю допоможемо!</div>
         </div>
     </div>
     <div v-else>
         <ProductLoader />
     </div>
-    <!-- <div v-else-if="productError" class="text-center text-4xl font-mono text-red-500 mt-8">Something went wrong
+    <!-- <div v-else-if="objectError" class="text-center text-4xl font-mono text-red-500 mt-8">Something went wrong
     </div> -->
 
 </template>
@@ -72,8 +73,7 @@
 import useFetchData from '~/composables/useFetchData'
 import ProductLoader from '@/components/UI/product-loader.vue';
 import placeholder from '@/assets/image_placeholder_big.png'
-// import { config } from 'process';
-
+const config = useRuntimeConfig()
 const route = useRoute()
 const routeLocation = route.params.location // stock or preorder
 const routeLabel = routeLocation === 'stock' ? 'Товари на складі' : 'Під замовлення'
@@ -109,16 +109,18 @@ const handleAddToCart = () => {
     }
 }
 
+const { data, error: objectError, pending } = await useFetchData(
+    `product-${route.params.id}`,
+    computed(() =>
+        `${config.public.siteUrl}/api/v1/public/${routeLocation}/${route.params.id}/`
+    )
+)
 
-
-const { data, error: productError } = useFetchData(
-    `product-${route.params.id}`, computed(() => `https://marktim.shop/api/v1/public/${routeLocation}/${route.params.id}/`)
-);
 
 const product = computed(() => data.value ?? {})
 
-if (productError.value) {
-    throw createError({ statusCode: 404, statusMessage: 'Такого продукту не знайдено' })
+if (objectError.value) {
+    throw createError({ statusCode: 404, message: 'Такого продукту не знайдено' })
 }
 
 const items = computed(() => [
@@ -139,44 +141,36 @@ const items = computed(() => [
 const categoriesList = computed(() => product.value?.product?.categories ?? [])
 
 // SEO section
-const config = useRuntimeConfig()
 
-const canonicalUrl = computed(() => `${config.public.siteUrl}/${routeLocation}/${route.params.id}`)
+
+const canonicalUrl = computed(() => `${config.public.siteUrl}/${routeLocation}/${prodId}/`)
 const seoTitle = computed(() => {
     return product.value?.product?.name_ukr || 'Цей смаколик доступний до замовлення'
 })
 
-// const seoDescription = computed(() => {
-//     return `Купуйте ${product.value?.product?.name_ukr} від Brand у MarkTim Shop за ${product.value.sell_price} грн. Доставка по всій Україні.` || `Від повсякденних продуктів до вишуканих делікатесів - обирайте найкращі товари з доставкою по Україні.`
-// })
 const seoDescription = computed(() =>
     product.value?.product?.name_ukr && product.value?.sell_price
-        ? `Купуйте ${product.value.product.name_ukr} від Brand у MarkTim Shop за ${product.value.sell_price} грн. Доставка по всій Україні.`
+        ? `Купуйте ${product.value.product.name_ukr} від у MarkTim Shop за ${product.value.sell_price} грн. Доставка по всій Україні.`
         : `Від повсякденних продуктів до вишуканих делікатесів - обирайте найкращі товари з доставкою по Україні.`
 )
 
 const seoImage = computed(() => product.value?.product?.files?.[0]?.link ?? `${config.public.siteUrl}/og-default.png`)
 
 
-watch(product, (newProduct) => {
-  if (newProduct?.product) {
-    useSeoMeta({
-      title: seoTitle.value,
-      description: seoDescription.value,
-      ogTitle: seoTitle.value,
-      ogDescription: seoDescription.value,
-      ogImage: seoImage.value,
-      ogImageAlt: seoTitle.value,
-      ogUrl: canonicalUrl.value,
-      canonical: canonicalUrl.value,
-      twitterCard: 'summary_large_image',
-      twitterImage: seoImage.value,
-      twitterTitle: seoTitle.value,
-      twitterDescription: seoDescription.value,
-    })
-  }
- 
-}, { immediate: true })
+useSeoMeta({
+    title: seoTitle.value,
+    description: seoDescription.value,
+    ogTitle: seoTitle.value,
+    ogDescription: seoDescription.value,
+    ogImage: seoImage.value,
+    ogImageAlt: seoTitle.value,
+    ogUrl: canonicalUrl.value,
+    canonical: canonicalUrl.value,
+    twitterCard: 'summary_large_image',
+    twitterImage: seoImage.value,
+    twitterTitle: seoTitle.value,
+    twitterDescription: seoDescription.value,
+})
 
 
 </script>

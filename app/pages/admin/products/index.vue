@@ -59,7 +59,7 @@
 </template>
 <script setup>
 import SearchBar from '~/components/UI/search-bar.vue';
-
+const config = useRuntimeConfig()
 definePageMeta({
     layout: 'admin'
 })
@@ -67,9 +67,9 @@ definePageMeta({
 const limit = 50
 const page = ref(1)
 const totalCount = computed(() => data.value?.count ?? 0)
-const url = computed(() => `https://marktim.shop/api/v1/public/products2/?limit=${limit}&offset=${(page.value - 1) * limit}`)
+const url = computed(() => `${config.public.siteUrl}/api/v1/public/products2/?limit=${limit}&offset=${(page.value - 1) * limit}`)
 const key = computed(() => `products-list-page-${page.value}`)
-const { data, error } = useFetchData(key, url)
+const { data, error } = await useFetchData(key, url)
 
 const productList = computed(() => data.value?.data ?? [])
 const loading = computed(() => !data.value && !productError.value)

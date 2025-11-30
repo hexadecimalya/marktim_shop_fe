@@ -82,7 +82,7 @@
 
 </template>
 <script setup>
-
+const config = useRuntimeConfig()
 const orderInfo = useState('orderInfo', ()=> null)
 const cart = useCartStore()
 const {
@@ -179,7 +179,7 @@ const handleSubmit = async () => {
         products
     }
     try {
-        const res = await $fetch('https://marktim.shop/api/v1/public/orders/', {
+        const res = await $fetch(`${config.public.siteUrl}/api/v1/public/orders/`, {
             method: 'POST',
             body: newOrder,
             headers: {
