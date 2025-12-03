@@ -1,21 +1,28 @@
-import useFetchData from "./useFetchData";
-import { useRuntimeConfig } from "#app";
+import { useRuntimeConfig } from '#app'
 
-export default async function useCategories() {
-    const config = useRuntimeConfig()
-    const list = ref([])
+export default function useCategories() {
+  const config = useRuntimeConfig()
 
-    const { data } = await useFetchData('categories',
-        `${config.public.siteUrl}/api/v1/public/categories/`)
+  const url = `${config.public.siteUrl}/api/v1/public/categories/`
 
-    watchEffect(() => {
-        if (Array.isArray(data.value.data)) {
-            list.value = data.value.data.filter(c => c?.id) // skip empty slugs
-        }
-    })
-    const bySlug = computed(() =>
-        Object.fromEntries(list.value.map(c => [c.slug, c]))
-    )
+  const { data, error } = useAsyncData(
+    'categories',
+     () => $fetch(url)
+  )
 
-    return { list, bySlug }
+  const list = computed(() =>
+    Array.isArray(data.value?.data)
+      ? data.value.data.filter(c => c?.id)
+      : []
+  )
+
+  const bySlug = computed(() =>
+    Object.fromEntries(list.value.map(c => [c.slug, c]))
+  )
+
+  return {
+    list,
+    bySlug,
+    error
+  }
 }

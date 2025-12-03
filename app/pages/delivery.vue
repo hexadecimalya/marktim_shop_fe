@@ -55,11 +55,13 @@
                 </div>
                 <h2 class="text-3xl font-semibold py-4">Питання? Ми на звʼязку</h2>
                 <div class="md:w-1/2 w-full ">
-                    <p class="pb-4 border-b-2 border-dotted">
+                    <p class="pb-4">
                         +380 (66) 462 09 98
                     </p>
-                    <p class="py-4 border-b-2 border-dotted"> marktim.shop@gmail.com <br>
+                    <USeparator />
+                    <p class="py-4"> marktim.shop@gmail.com <br>
                         buruksvetlana@gmail.com</p>
+                    <USeparator />
 
                 </div>
 

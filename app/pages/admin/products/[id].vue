@@ -1,110 +1,171 @@
 <template>
-    <!-- <ClientOnly> -->
-        <section v-if="!pending" class="w-5/6  mx-auto">
-            <h1 class="text-2xl font-extrabold my-4">
-                {{ productData.name_ukr ?? productData.name }}
-            </h1>
-            <form @submit.prevent="handleSubmit" class="space-y-6">
-                <pre>{{ data }}</pre>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                    <UFormField label="Назва (укр)" name="name_ukr" required>
-                        <UInput class="w-full" v-model="formData.name_ukr" />
+    <section v-if="product && product.id" class="w-5/6 mx-auto" :key="prodId">
+        <h1 class="text-2xl font-extrabold my-4">
+            {{ product.name_ukr ?? product.name }}
+        </h1>
+
+        <form @submit.prevent="handleSubmit" class="space-y-6">
+            <!-- <pre>{{ data }}</pre> -->
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <UFormField label="Назва (укр)" name="name_ukr" required>
+                    <UInput class="w-full" v-model="formData.name_ukr" />
+                </UFormField>
+
+                <UFormField label="Бренд" name="brand">
+                    <UInput v-model="formData.brand" class="w-full" placeholder="e.g. Deluxe" />
+                </UFormField>
+
+                <UFormField label="Назва (рос)" name="name_rus">
+                    <UInput v-model="formData.name_rus" class="w-full" />
+                </UFormField>
+
+                <UFormField label="Оригінальне імʼя" name="name_orig">
+                    <UInput v-model="formData.name_orig" class="w-full" />
+                </UFormField>
+
+                <UFormField label="Фіскальна назва" name="name_fiscal">
+                    <UInput v-model="formData.name_fiscal" class="w-full" placeholder="Лиш для алкоголю" />
+                </UFormField>
+
+                <UFormField label="Штрихкод" name="barcode">
+                    <UInput v-model="formData.barcode" class="w-full" />
+                </UFormField>
+
+                <UFormField label="Description" name="description">
+                    <UTextarea v-model="formData.description" :rows="4" size="xl" class="w-full" />
+                </UFormField>
+
+                <UFormField label="Категорії" name="category" required>
+                    <USelectMenu placeholder="Оберрати категорію" multiple :items="categories" value-key="id"
+                        label-key="name" v-model="formData.category" class="w-full" />
+                </UFormField>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <UFormField label="Вага/Обʼєм" name="measurment" required>
+                        <UInput v-model="formData.measurements" />
                     </UFormField>
-                    <UFormField label="Бренд" name="brand" required>
-                        <UInput v-model="formData.brand" class="w-full" placeholder="e.g. Deluxe" />
+
+                    <UFormField label="Одиниця" name="unit" required>
+                        <USelect v-model="formData.units" :items="unitsList" class="w-24 h-8" />
                     </UFormField>
-                    <UFormField label="Назва (рос)" name="name_rus">
-                        <UInput v-model="formData.name_rus" class="w-full" />
-                    </UFormField>
-                    <UFormField label="Original name" name="name_orig">
-                        <UInput v-model="formData.name_orig" class="w-full" />
-                    </UFormField>
-                    <UFormField label="Фіскальна назва" name="name_fiscal">
-                        <UInput v-model="formData.name_fiscal" class="w-full" placeholder="For alcohol only" />
-                    </UFormField>
-                    <UFormField label="Штрихкод" name="barcode">
-                        <UInput v-model="formData.barcode" class="w-full" />
-                    </UFormField>
-                    <UFormField label="Description" name="description">
-                        <UTextarea v-model="formData.description" :rows="4" size="xl" class="w-full" />
-                    </UFormField>
-                    <UFormField label="Categories" required>
-                        <USelectMenu placeholder="Select category" multiple :items="categories" value-key="id"
-                            label-key="name" v-model="formData.category" class="w-full" />
-                    </UFormField>
-                    <div class="grid grid-cols-3 gap-4">
-                        <UFormField label="Weight/Volume"  required>
-                            <UInput v-model="formData.measurements" />
-                        </UFormField>
-                        <UFormField label="Select unit" required>
-                            <USelect v-model="formData.units" :items="unitsList" class="w-24 h-8" />
-                        </UFormField>
-                        <UCheckbox label="Sold by weight?" v-model="formData.loose" />
-                    </div>
+
+                    <UCheckbox label="Ваговий товар?" v-model="formData.loose" />
                 </div>
-                <UFileUpload color="neutral" highlight label="Drop your image here"
-                    description="SVG, PNG, JPG or GIF (max. 2MB)" class="md:w-1/2 w-full min-h-92" />
-                <div class="text-center">
+            </div>
+            <div class="flex">
+                <img :src="formData.image" width="400" class="border rounded-md border-gray-300" />
 
-                    <UButton>Зберегти зміни</UButton>
-                </div>
+            </div>
+            <UFileUpload v-if="!formData.image" color="neutral" highlight label="Drop your image here"
+                description="SVG, PNG, JPG or GIF (max. 2MB)" class="md:w-1/2 w-full min-h-92" />
 
-            </form>
-        </section>
+            <div class="text-center mb-6">
+                <UButton type="submit">Зберегти зміни</UButton>
+            </div>
+        </form>
+    </section>
 
-        <section v-else><AdminLoader/></section>
-    <!-- </ClientOnly> -->
+    <section v-else-if="pending" class="w-5/6 mx-auto">
+        <AdminLoader />
+    </section>
+    <section v-else class="text-gray-500 mb-6 text-center">
+        <p >
+            При обробці запиту виникла помилка
+        </p>
+        <p>
+            {{ error }}
+        </p>
+
+    </section>
 </template>
+
 <script setup>
-const config = useRuntimeConfig()
+import useApiGet from '~/composables/useGetApi'
 
-const unitsList = ['г', 'кг', 'мл', 'л', 'шт']
-const { list: categories } =  await useCategories();
-
+// Route
 const route = useRoute()
+const prodId = route.params.id
 
-const { data, pending } = await useFetchData(
-    `admin-product-${route.params.id}`,
-    computed(() => `${config.public.siteUrl}/api/v1/public/products2/${route.params.id}/`)
+// Constants
+const unitsList = ['г', 'кг', 'мл', 'л', 'шт']
+
+const { list: categories } = useCategories()
+
+const { data, error, pending, refresh } = await useApiGet(
+    `admin-product-${prodId}`,
+    computed(() => `/api/v1/public/products2/${prodId}/`)
 )
 
-const productData = computed(() => data?.value)
+const product = computed(() => data.value ?? null)
+
 
 const formData = reactive({
-    name_ukr: '',
-    name_rus: '',
-    name_fiscal: '',
-    name_orig: '',
-    measurements: '',
-    units: unitsList[0],
-    brand: '',
-    description: '',
-    barcode: '',
-    loose: false,
-    category: [],
-    image: null
+    name_ukr: product.value?.name_ukr ?? '',
+    name_rus: product.value?.name ?? '',
+    name_fiscal: product.value?.name_fiscal ?? '',
+    name_orig: product.value?.name_original ?? '',
+    measurements: product.value?.measurements ?? '',
+    units: product.value?.units ?? unitsList[0],
+    brand: product.value?.brand ?? '',
+    description: product.value?.description ?? '',
+    barcode: product.value?.barcode ?? '',
+    loose: product.value?.loose ?? false,
+    category: product.value?.categories?.map((c) => c.id) ?? [],
+    image: product.value?.files[0]?.link ?? null
 })
 
-watch(productData, (p) => {
-  if (!p) return
 
-  Object.assign(formData, {
-    name_ukr: p.name_ukr ?? '',
-    name_rus: p.name ?? '',
-    name_fiscal: p.name_fiscal ?? '',
-    name_orig: p.name_original ?? '',
-    measurements: p.measurements ?? '',
-    units: p.units ?? unitsList[0],
-    brand: p.brand ?? '',
-    description: p.description ?? '',
-    barcode: p.barcode ?? '',
-    loose: p.loose ?? false,
-    category: p.categories?.map(c => c.name) ?? [],
-    image: p.image ?? null
-  })
-}, { immediate: true })
+// watch(
+//   () => product.value?.id,
+//   () => {
+//     if (!product.value?.id) return
+//     Object.assign(formData, {
+//       name_ukr: product.value?.name_ukr ?? '',
+//       name_rus: product.value?.name ?? '',
+//       name_fiscal: product.value?.name_fiscal ?? '',
+//       name_orig: product.value?.name_original ?? '',
+//       measurements: product.value?.measurements ?? '',
+//       units: product.value?.units ?? unitsList[0],
+//       brand: product.value?.brand ?? '',
+//       description: product.value?.description ?? '',
+//       barcode: product.value?.barcode ?? '',
+//       loose: product.value?.loose ?? false,
+//       category: product.value?.categories?.map((c: any) => c.id) ?? [],
+//       image: product.value?.image ?? null
+//     })
+//   },
+//   { immediate: false }
+// )
 
-definePageMeta({
-    layout: 'admin'
-})
+const handleSubmit = async () => {
+    const payload = {
+        name_ukr: formData.name_ukr,
+        name_rus: formData.name_rus,
+        name_fiscal: formData.name_fiscal,
+        name_orig: formData.name_orig,
+        measurements: formData.measurements,
+        units: formData.units,
+        brand: formData.brand,
+        description: formData.description,
+        barcode: formData.barcode,
+        loose: formData.loose,
+        category: formData.category,
+        image: formData.image
+    }
+
+    try {
+        await $fetch(`/api/v1/admin/products/${prodId}/`, {
+            method: 'PUT',
+            body: payload
+        })
+        // Optionally refresh product data to show updated server state
+        await refresh()
+    } catch (e) {
+        // Handle errors (toast, UI feedback)
+        console.error(e)
+    }
+}
+
+definePageMeta({ layout: 'admin' })
 </script>

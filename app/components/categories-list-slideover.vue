@@ -30,7 +30,7 @@ const open = ref(false)
 
 const emit = defineEmits(['link-click'])
 
-const { list: categories } = await useCategories();
+const { list: categories } =  useCategories();
 
 const props = defineProps({
     linkType: {

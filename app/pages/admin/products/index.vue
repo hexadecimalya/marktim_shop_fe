@@ -1,19 +1,19 @@
 <template>
     <section class="w-11/12 mx-auto">
         <h1 class="text-2xl font-extrabold my-4">Всі продукти</h1>
-        <SearchBar />
+   
         <!-- Table Header -->
         <div
             class="grid grid-cols-21 bg-mtgreen-100 border border-gray-200 rounded-t-lg p-3 text-sm font-semibold text-gray-700">
             <div class="">ID</div>
             <div class="col-span-10">Назва</div>
             <div class="col-span-8">Категорії</div>
-            <div>Файли</div>
+            <div><UIcon name="i-lucide:image"/></div>
             <div class="text-end">Дії</div>
         </div>
 
         <!-- Rows -->
-        <div v-if="!loading" class="divide-y divide-gray-100 border-x border-b border-gray-200 rounded-b-lg">
+        <div v-if="!pending && !error" class="divide-y divide-gray-100 border-x border-b border-gray-200 rounded-b-lg">
             <div v-for="product in productList" :key="product.id"
                 class="grid grid-cols-21 items-center px-1 py-1 text-sm font-slim">
                 <div class="font-semibold text-center hover:underline">
@@ -24,12 +24,12 @@
                     <u-badge v-for="category in product.categories" :key="category.id" color="neutral"
                         variant="subtle">{{ category.name }}</u-badge>
                 </div>
-                <div class="text-gray-500">2 файли</div>
+                <div class="text-gray-500">{{ product.files.length ? product.files.length : '-' }}</div>
 
                 <!-- Delete Modal -->
                 <div class="flex justify-end">
                     <UModal title="Підтвердити видалення">
-                        <UButton variant="ghost" color="error" icon="i-lucide:trash" class="!p-1.5" size="xs" />
+                        <UButton variant="ghost" color="error" icon="i-lucide:trash" class="p-1.5!" size="xs" />
 
                         <template #body>
                             <div class="h-24 flex items-center justify-center text-center text-gray-700">
@@ -48,10 +48,10 @@
             </div>
         </div>
 
-        <div v-else>loading...</div>
+        <div v-else-if="pending"><AdminLoader/></div>
     </section>
-    <div class="my-6 flex justify-center" v-if="!loading">
-        <UPagination v-model:page="page" :show-controls="false" :total="totalCount" aactive-color="neutral"
+    <div class="my-6 flex justify-center" v-if="!pending">
+        <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
             active-variant="subtle" :items-per-page="limit" show-edges />
     </div>
 
@@ -59,7 +59,7 @@
 </template>
 <script setup>
 import SearchBar from '~/components/UI/search-bar.vue';
-const config = useRuntimeConfig()
+import useApiGet from '~/composables/useGetApi';
 definePageMeta({
     layout: 'admin'
 })
@@ -67,12 +67,12 @@ definePageMeta({
 const limit = 50
 const page = ref(1)
 const totalCount = computed(() => data.value?.count ?? 0)
-const url = computed(() => `${config.public.siteUrl}/api/v1/public/products2/?limit=${limit}&offset=${(page.value - 1) * limit}`)
+const url = computed(() => `/api/v1/public/products2/?limit=${limit}&offset=${(page.value - 1) * limit}`)
 const key = computed(() => `products-list-page-${page.value}`)
-const { data, error } = await useFetchData(key, url)
+
+const { data, error, pending } = useApiGet(key, url)
 
 const productList = computed(() => data.value?.data ?? [])
-const loading = computed(() => !data.value && !productError.value)
 const handleDeleteProduct = (id) => { }
 
 </script>

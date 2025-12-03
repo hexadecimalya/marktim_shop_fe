@@ -9,15 +9,15 @@
                 <DropdownMenu :items="itemsProducts" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
                     :content="{ align: 'start' }">
 
-                    <li class="cursor-default">Продукти</li>
+                    <li class="cursor-pointer">Продукти</li>
                 </DropdownMenu>
                 <DropdownMenu :items="itemsPreorders" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
                     :content="{ align: 'start' }">
-                    <li class="cursor-default">Передзамовлення</li>
+                    <li class="cursor-pointer">Передзамовлення</li>
                 </DropdownMenu>
                <DropdownMenu :items="itemsSupplies" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
                     :content="{ align: 'start' }">
-                    <li class="cursor-default">Поставки</li>
+                    <li class="cursor-pointer">Поставки</li>
                 </DropdownMenu>
                 <li></li>
                 <li></li>

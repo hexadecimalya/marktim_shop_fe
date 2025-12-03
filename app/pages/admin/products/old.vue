@@ -63,7 +63,7 @@
 </template>
 <script setup>
 const unitsList = ['г', 'кг', 'мл', 'л', 'шт']
-// const { list: categories } = await useCategories()
+// const { list: categories } =  useCategories()
 const route = useRoute()
 const config = useRuntimeConfig()
 const { data, pending } = useFetchData(

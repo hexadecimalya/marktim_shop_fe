@@ -9,11 +9,6 @@
 </template>
 <script setup>
 const config = useRuntimeConfig()
-// const { data } = useFetchData('categories',
-//   computed(() => `${config.public.siteUrl}/api/v1/public/categories/`)
-// )
-
-// Link to Google Fonts
 useHead({
   titleTemplate: '%s | MarkTim Shop ', // %s is a template for STRING that will replaced at every page ;
   link: [

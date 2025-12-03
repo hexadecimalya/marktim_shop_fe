@@ -7,10 +7,11 @@
             <p class="text-lg text-gray-800 mb-6">
                 Ваше замовлення № <span class="font-semibold">{{ id }}</span> прийнято.
             </p>
-            
+
 
             <!-- Самовивіз -->
-            <div v-if="deliveryType === 'Я заберу замовлення самостійно в MarkTim'" class="bg-mtgreen-50 border-l-4 border-mtgreen-400 p-4 mb-4">
+            <div v-if="deliveryType === 'Я заберу замовлення самостійно в MarkTim'"
+                class="bg-mtgreen-50 border-l-4 border-mtgreen-400 p-4 mb-4">
                 <h2 class="font-semibold text-mtgreen-400 text-lg mb-1">
                     <UIcon name="i-solar:bag-smile-linear" class="w-6 h-6" />
 
@@ -40,7 +41,7 @@
                     часом для уточнення деталей оплати та доставки.
                 </p>
             </div>
-            
+
             <p class="text-gray-600 mt-6">
                 Дякуємо, що обрали <span class="font-semibold text-gray-800">MarkTim</span>. Ми вже працюємо над
                 тим, щоб ви отримали своє замовлення якнайшвидше 💚
@@ -52,7 +53,7 @@
 <script setup>
 const orderInfo = useState('orderInfo')
 const success = ref(true)
-const {id, deliveryType} = orderInfo.value
+const { id, deliveryType } = orderInfo.value
 
 const store = useCartStore()
 if (success.value) {
@@ -61,6 +62,6 @@ if (success.value) {
 
 definePageMeta({ middleware: 'checkout' })
 useHead({
-  title: 'Замовлення в обробці'
+    title: 'Замовлення в обробці'
 })
 </script>

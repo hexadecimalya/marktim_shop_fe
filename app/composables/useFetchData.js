@@ -1,5 +1,5 @@
 export default async function useFetchData(key, url, options = {}) {
-  const { data, error, pending, refresh } = await useAsyncData(
+  const { data, error, pending, status, refresh } = useAsyncData(
     key,
     () => {
       const safeUrl = unref(url)
@@ -11,5 +11,5 @@ export default async function useFetchData(key, url, options = {}) {
     //   transform: options.transform,
     }
   )
-  return { data, error, pending, refresh }
+  return { data, error, pending, status, refresh }
 }

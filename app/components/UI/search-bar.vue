@@ -1,20 +1,35 @@
 <template>
-  <div class="w-full mb-4">
-    <input
-      v-model="query"
-      type="text"
-      placeholder="Пошук ..."
-      class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-mtgreen-400 transition"
-    />
-    <i class="i-lucide:search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base"></i>
-  </div>
+  <form @submit.prevent="submit" class="w-full mb-4 flex flex-col justify-center md:mx-0 mx-4">
+    <UInput v-model="query" icon="i-lucide-search" class="md:w-full w-11/12" placeholder="Пошук..." variant="soft"
+      minlength="2" name="search" @keydown.enter.prevent="query.length >= 3 && submit()">
+      <template #trailing>
+        <UButton color="neutral" variant="link" size="md" type="submit" icon="i-lucide-circle-arrow-right"
+          aria-label="submit" :disabled="query.trim().length < 3" />
+      </template>
+    </UInput>
+
+    <p v-if="query.length > 0 && query.length < 3" class="text-xs text-red-500 mt-1 w-11/12 text-left">
+      Для пошуку введіть більше 2 літер</p>
+
+  </form>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-
 const emit = defineEmits(['update:search'])
 const query = ref('')
+const submit = () => {
+  if (query.value.trim().length < 3) {
+    query.value = ''
+    return
+  }
+  emit('update:search', query.value)
+  query.value = ''
+}
 
-watch(query, (val) => emit('update:search', val))
+
+// watchEffect(() => {
+//   console.log(query.value)
+// })
+
+// watch(query, (val) => emit('update:search', val))
 </script>
