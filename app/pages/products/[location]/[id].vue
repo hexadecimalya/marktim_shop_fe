@@ -11,7 +11,7 @@
           {{ product.product.name_ukr }}
         </h2>
 
-        <div class="text-xl sm:my-4 font-semibold">
+        <div class="text-xl sm:my-4 font-semibold justify">
           {{ Math.trunc(product.sell_price) }} грн
           {{ product.bulk_price ? `/ ${Math.trunc(product.bulk_price)} грн від 2 шт` : '' }}
         </div>
@@ -66,8 +66,9 @@
     <div class="lg:container sm:mt-8 mx-auto p-4">
       <h1 class="font-semibold text-2xl mb-2"> Загальна інформація</h1>
       <USeparator />
-      <div v-if="product.product.description" class="mt-2 py-2 text-justify">
-        {{ product.product.description_ukr }}
+
+      <div v-if="product.product.description_ukr" v-html="product.product.description_ukr" class="mt-2 py-2 text-justify">
+     
       </div>
       <div v-else class="mt-2 text-justify text-sm">
         Потрібен детальніший опис чи порада? Зв’яжіться з нами – ми з радістю допоможемо!
@@ -181,3 +182,6 @@ useSeoMeta({
 
 // watch(pending, (v) => console.log('product pending:', v))
 </script>
+<style scoped>
+
+</style>

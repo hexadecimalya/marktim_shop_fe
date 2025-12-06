@@ -1,6 +1,6 @@
 <template>
     <div class="relative flex xl:px-4 py-4 px-2">
-        <nav class="text-[15px] tracking-wide font-medium">
+        <nav class="text-[13px] font-medium uppercase">
             <ul class="space-y-2 md:space-y-0 md:space-x-4 lg:space-x-8 md:flex md:justify-between">
                 <li :class="[isActiveLink('/')
                     ? linkVariant.active
@@ -28,8 +28,8 @@
 
 
 const linkVariant = {
-  active: 'text-mtgreen-700 font-semibold underline underline-offset-4',
-  inactive: 'text-gray-700 hover:text-mtgreen-600 hover:underline hover:underline-offset-4 transition-colors duration-200'
+  active: 'text-gray-700 font-semibold underline underline-offset-4',
+  inactive: 'text-gray-700 hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200'
 }
 const emit = defineEmits(['link-click'])
 

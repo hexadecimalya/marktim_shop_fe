@@ -1,5 +1,6 @@
 <template>
   <div class="container mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4 mt-4">
+        <SearchBar />
     <section v-if="categoryName && !pending && productList.length !== 0">
       <Breadcrumbs :items="items" class="mb-6 ml-2" />
       <section class="gap-4 grid grid-cols-2 lg:grid-cols-4 md:grid-cols-3" v-if="categoryId">
@@ -45,12 +46,7 @@ const route = useRoute()
 const routeLocation = computed(() => route.params.location) 
 const selectedSlug = computed(() => route.params.slug || '')
 
-
-const { data: categoriesRaw } = useNuxtData('categories')
-const list = computed(() =>
-  Array.isArray(categoriesRaw.value?.data) ? categoriesRaw.value.data.filter(c => c?.id) : []
-)
-const bySlug = computed(() => Object.fromEntries(list.value.map(c => [c.slug, c])))
+const { bySlug } = await useCategories()
 const categoryId = computed(() => bySlug.value[selectedSlug.value]?.id ?? null)
 const categoryName = computed(() => bySlug.value[selectedSlug.value]?.name ?? null)
 
@@ -74,7 +70,7 @@ const url = computed(() => {
 const key = computed(() => `products-${routeLocation.value}-category-${selectedSlug.value}-page-${page.value}`)
 
 
-const { data, error: requestError, pending } = useApiGet(() => key.value, url)
+const { data, error: requestError, pending } =  useApiGet(() => key.value, url)
 
 
 const loading = computed(() => !data.value && !requestError.value)

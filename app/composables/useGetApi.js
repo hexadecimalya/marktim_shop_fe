@@ -12,7 +12,9 @@ export default function useApiGet(key, url, options = {}) {
       lazy: false,
       server: true,
       immediate: true,
+    
       default: () => null,
     }
   )
 }
+

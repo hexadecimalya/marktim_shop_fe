@@ -1,18 +1,13 @@
-import { useRuntimeConfig } from '#app'
-
-export default function useCategories() {
+export default async function useCategories() {
   const config = useRuntimeConfig()
 
   const url = `${config.public.siteUrl}/api/v1/public/categories/`
+  const res = await $fetch(url)
 
-  const { data, error } = useAsyncData(
-    'categories',
-     () => $fetch(url)
-  )
 
   const list = computed(() =>
-    Array.isArray(data.value?.data)
-      ? data.value.data.filter(c => c?.id)
+    Array.isArray(res?.data)
+      ? res.data.filter(c => c?.id)
       : []
   )
 
@@ -23,6 +18,5 @@ export default function useCategories() {
   return {
     list,
     bySlug,
-    error
   }
 }
