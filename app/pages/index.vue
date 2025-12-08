@@ -44,14 +44,14 @@ const url = computed(() =>
 
 const key = computed(() => `active-supplies-page-${page.value}`)
 
-// fetch (NO await) — composable should watch url for SSR & SEO-safe refetch
+
 const { data, pending: loading, error: productError } = useApiGet(() => key.value, url)
 
-// derived
+
 const productList = computed(() => data.value?.data ?? [])
 const totalCount = computed(() => data.value?.count ?? 0)
 
-// SEO (pass computed refs, not .value)
+
 const seoTitle = computed(() => 'Головна сторінка — MarkTim Shop')
 const seoDescription = computed(() =>
   'MarkTim – інтернет-магазин якісних європейських товарів. Широкий асортимент, гарантована якість та швидка доставка по Україні.'
@@ -72,13 +72,12 @@ useSeoMeta({
   twitterDescription: seoDescription
 })
 
-// optional: handle fetch errors server-side (SSR-friendly)
+
 watch(
   productError,
   (err) => {
     if (err) {
       console.error('Active supplies fetch error', err)
-      // optionally throw to surface 4xx/5xx on SSR:
       // const status = err.statusCode || err.status || 500
       // throw createError({ statusCode: status, message: err.message || 'Fetch error' })
     }

@@ -5,7 +5,7 @@
       placeholder="Пошук..."
       minlength="2"
       name="search"
-      @keydown.enter.prevent="query.length >= 3 && submit()"
+      @keydown.enter.prevent="query.trim().length >= 3 && submit()"
     >
       <template #trailing>
         <UButton

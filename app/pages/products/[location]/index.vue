@@ -1,7 +1,6 @@
 <template>
     <section class="container mt-2 md:mt-8 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4">
         <SearchBar />
-
         <template v-if="pending">
             <CardLoader />
         </template>
@@ -57,7 +56,8 @@ const { data, pending, error } = useApiGet(
     url
 )
 
-const productList = computed(() => data.value?.data || [])
+// const productList = computed(() => data.value?.data || [])
+const productList = computed(() => Array.isArray(data.value?.data) ? data.value.data : [])
 const totalCount = computed(() => data.value?.count || 0)
 
 const scrollToTop = () =>

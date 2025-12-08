@@ -2,27 +2,28 @@
     <div class="duration-200 hover:scale-102 border rounded-md border-gray-100 mx-auto hover:overflow-visible mt-2">
         <NuxtLink :to="`/products/${routeLocation}/${itemData.id}/`">
             <img :src="`${itemData.image}`" :alt="itemData.name" class="object-cover rounded-t-md" />
-            <div class="sm:px-4 px-1 py-2 flex flex-col content-stretch">
-                <!-- <span class="mr-3 text-xs uppercase text-gray-600 font-semibold line-clamp-1">Rana</span> -->
-                <p class="text-sm text-gray-800 line-clamp-2 border-t border-gray-100 min-h-10 mb-2">
-                    {{
-                        itemData.name
-                    }} </p>
-
-                <div class="flex items-center justify-evenly space-x-2 ">
-                    <div v-if="itemData.old_price" class="flex text-lg font-bold line-through">{{
-                        itemData.old_price }} <span class="text-sm">грн</span></div>
-                    <div class="flex items-center justify-evenly">
-                        <div class="flex text-lg font-bold" :class="{ 'text-red-600': itemData.old_price }"> {{
-                            itemData.price }} <span v-if="!itemData.bulk_price" class="text-sm">грн</span></div>
-                        <div v-if="itemData.bulk_price" class="flex text-lg font-bold"
-                            :class="{ 'text-red-600': itemData.old_price }"> /{{
-                                itemData.bulk_price }} <span class="text-sm">грн</span></div>
-                    </div>
-                </div>
-
-            </div>
         </NuxtLink>
+        <div class="sm:px-4 px-1 py-2 flex flex-col content-stretch">
+            <!-- <span class="mr-3 text-xs uppercase text-gray-600 font-semibold line-clamp-1">Rana</span> -->
+            <p class="text-sm text-gray-800 line-clamp-2 border-t border-gray-100 min-h-10 mb-2">
+                {{
+                    itemData.name
+                }} </p>
+
+            <div class="flex items-center justify-evenly space-x-2 ">
+                <div v-if="itemData.old_price" class="flex text-lg font-bold line-through">{{
+                    itemData.old_price }} <span class="text-sm">грн</span></div>
+                <div class="flex items-center justify-evenly">
+                    <div class="flex text-lg font-bold" :class="{ 'text-red-600': itemData.old_price }"> {{
+                        itemData.price }} <span v-if="!itemData.bulk_price" class="text-sm">грн</span></div>
+                    <div v-if="itemData.bulk_price" class="flex text-lg font-bold"
+                        :class="{ 'text-red-600': itemData.old_price }"> /{{
+                            itemData.bulk_price }} <span class="text-sm">грн</span></div>
+                </div>
+            </div>
+
+        </div>
+
         <ClientOnly>
             <div class="w-8/9 mx-auto mb-2
         ">
@@ -34,7 +35,7 @@
          bg-mtgreen-300/90 backdrop-blur-sm text-white hover:bg-mtgreen-400/90 shadow-[0_2px_6px_rgba(0,0,0,0.15)]
          transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-mtgreen-200">
                     оформити
-                 
+
 
                 </NuxtLink>
             </div>

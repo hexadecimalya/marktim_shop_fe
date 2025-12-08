@@ -11,8 +11,8 @@
                 <ProductCard v-for="product in productList" :key="product.id" :product="product" />
             </section>
             <div class="mt-6 flex justify-center" v-if="!pending">
-                <UPagination v-model:page="page" :show-controls="false" :total="totalCount" :items-per-page="limit"
-                    show-edges active-variant="subtle" active-color="neutral" @update:page="scrollToTop" />
+                   <UPagination v-model:page="page" :total="totalCount" :items-per-page="limit" active-variant="subtle"
+                    active-color="neutral" :show-controls="false" show-edges @update:page="scrollToTop" />
             </div>
         </template>
 
@@ -35,26 +35,32 @@
 import { useRoute } from 'vue-router'
 import useApiGet from '~/composables/useGetApi'
 
-const limit = 25
+const limit = 24
 const route = useRoute()
 const routeLocation = computed(() => route.params.location)
 const page = ref(Number(route.query.page ?? 1))
 const searchTerm = computed(() => (route.query.q ?? '').toString())
 
+
 const url = computed(() => {
     const offset = (page.value - 1) * limit
     const base = `/api/v1/public/${routeLocation.value}/`
-    return searchTerm.value.length > 2
-        ? `${base}?filter_param=${encodeURIComponent(searchTerm.value)}&limit=${limit}&offset=${offset}`
-        : `${base}?limit=${limit}&offset=${offset}`
+    // return searchTerm.value.length > 2
+    //     ? `${base}?filter_param=${encodeURIComponent(searchTerm.value)}&limit=${limit}&offset=${offset}&full_data_set=true`
+    //     : `${base}?limit=${limit}&offset=${offset}&full_data_set=true`
+        return  `${base}?filter_param=${encodeURIComponent(searchTerm.value)}&limit=${limit}&offset=${offset}&full_data_set=true`
 })
 
 const cacheKey = computed(() => `products-${routeLocation.value}-search-${searchTerm.value}-page-${page.value}`)
 const { data, pending, error, refresh } = useApiGet(cacheKey, url)
 
-const productList = computed(() => data.value?.data || [])
+
+
+const productList = computed(() => data.value?.data ?? [])
 
 const totalCount = computed(() => data.value?.count || 0)
+
+
 
 const items = computed(() => [
     { label: 'Головна', to: '/' },
