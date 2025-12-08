@@ -182,9 +182,9 @@ const handleSubmit = async () => {
         const res = await $fetch(`${config.public.siteUrl}/api/v1/public/orders/`, {
             method: 'POST',
             body: newOrder,
-            headers: {
-                'Content-Type': 'application/json',
-            }
+            // headers: {
+            //     'Content-Type': 'application/json',
+            // }
         })
         orderInfo.value = {
             id: res.id,
