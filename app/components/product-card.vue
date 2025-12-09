@@ -1,5 +1,5 @@
 <template>
-    <div class="duration-200 hover:scale-102 border rounded-md border-gray-100 mx-auto hover:overflow-visible mt-2">
+    <div class="duration-200 hover:scale-102 border rounded-md border-gray-100 mx-auto hover:overflow-visible ">
         <NuxtLink :to="`/products/${routeLocation}/${itemData.id}/`">
             <img :src="`${itemData.image}`" :alt="itemData.name" class="object-cover rounded-t-md" />
         </NuxtLink>

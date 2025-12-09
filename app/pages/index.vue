@@ -1,5 +1,5 @@
 <template>
-  <section class="py-4 md:py-8 px-4 max-w-5xl mx-auto">
+  <section class="container mt-2 md:mt-8 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4">
     <h1 class="text-2xl md:text-3xl font-semibold py-4">Нова поставка</h1>
 
     <template v-if="loading || !productList.length">
@@ -29,15 +29,13 @@
 
 <script setup>
 
-import useApiGet from '~/composables/useGetApi'
 const config = useRuntimeConfig()
+import useApiGet from '~/composables/useGetApi'
 
-// pagination & UI
 const page = ref(1)
 const limit = 24
 const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
-// computed URL + key (reactive)
 const url = computed(() =>
   `/api/v1/public/stock/active_supplies/?limit=${limit}&offset=${(page.value - 1) * limit}`
 )
@@ -64,8 +62,8 @@ useSeoMeta({
   ogTitle: seoTitle,
   ogDescription: seoDescription,
   ogImage: ogImage,
-  ogUrl: computed(() => `${config.public.siteUrl}/`),
-  canonical: computed(() => `${config.public.siteUrl}/`),
+  ogUrl: 'https://marktim.shop',
+  canonical: 'https://marktim.shop',
   twitterCard: 'summary_large_image',
   twitterImage: ogImage,
   twitterTitle: seoTitle,

@@ -40,8 +40,8 @@
       </div>
       <div class="md:w-1/2 mt-8 md:mt-0">
         <img
-          src="https://images.unsplash.com/photo-1557236751-b60abca1479e?q=80&w=3147&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="Сімейна історія" class="shadow-md" />
+          src="@/assets/hands_together.jpg"
+          alt="Руки разом" class="shadow-md" />
       </div>
     </div>
   </section>
@@ -109,8 +109,8 @@
 
       <div class="md:w-1/2">
         <img
-          src="https://images.unsplash.com/photo-1706378398576-57a21244ef7a?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="Подарункові пакування" class="shadow-lg" />
+          src="@/assets/evropeiskii_dvoryk.jpeg"
+          alt="Європейський дворик з оливками" class="shadow-lg" />
       </div>
     </div>
   </section>
