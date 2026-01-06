@@ -58,9 +58,9 @@
 </template>
 <script setup>
 
-definePageMeta({
-    layout: 'admin'
-})
+// definePageMeta({
+//     layout: 'admin'
+// })
 const { list: categories } = useCategories();
 
 

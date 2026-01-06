@@ -5,7 +5,13 @@
             <UIcon name="i-heroicons:bars-3-16-solid" class="w-6 h-6 ml-4" />
         </MobileMenuSlideover>
         <nav>
+            
             <ul class="flex space-x-4 mx-4">
+                   <DropdownMenu :items="itemsSales" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
+                    :content="{ align: 'start' }">
+
+                    <li class="cursor-pointer">Продажі</li>
+                </DropdownMenu>
                 <DropdownMenu :items="itemsProducts" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
                     :content="{ align: 'start' }">
 
@@ -36,30 +42,41 @@ const itemsPreorders = [
     {
         label: 'Всі',
         icon: 'i-lucide-align-justify',
-        to: '/admin/preorders'
+        to: '/admin2/preorders'
     },
     {
         label: 'Створити',
         icon: 'i-lucide-plus',
-        to: '/admin/preorders/create'
+        to: '/admin2/preorders/create'
     },
     {
         label: 'Підрахувати',
         icon: 'i-lucide-sigma',
-        to: '/admin/preorders/sumup'
+        to: '/admin2/preorders/sumup'
     }
 ]
-
-const itemsProducts = [
-    {
+const itemsSales = [
+       {
         label: 'Всі',
         icon: 'i-lucide-align-justify',
-        to: '/admin/products'
+        to: '/admin2/sales'
     },
     {
         label: 'Створити',
         icon: 'i-lucide-plus',
-        to: '/admin/products/create'
+        to: '/admin2/sales/create'
+    }
+]
+const itemsProducts = [
+    {
+        label: 'Всі',
+        icon: 'i-lucide-align-justify',
+        to: '/admin2/products'
+    },
+    {
+        label: 'Створити',
+        icon: 'i-lucide-plus',
+        to: '/admin2/products/create'
     }
 ]
 
@@ -67,12 +84,12 @@ const itemsSupplies = [
     {
         label: 'Всі',
         icon: 'i-lucide-align-justify',
-        to: '/admin/supplies'
+        to: '/admin2/supplies'
     },
     {
         label: 'Створити',
         icon: 'i-lucide-plus',
-        to: '/admin/supplies/create'
+        to: '/admin2/supplies/create'
     }
 ]
 

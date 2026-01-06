@@ -3,7 +3,7 @@
         <h1 class="text-2xl font-extrabold my-4">
             {{ product.name_ukr ?? product.name }}
         </h1>
-
+<pre>{{ product }}</pre>
         <form @submit.prevent="handleSubmit" class="space-y-6">
             <!-- <pre>{{ data }}</pre> -->
 
@@ -36,9 +36,15 @@
                     <UTextarea v-model="formData.description" :rows="4" size="xl" class="w-full" />
                 </UFormField>
 
-                <UFormField label="Категорії" name="category" required>
-                    <USelectMenu placeholder="Оберрати категорію" multiple :items="categories" value-key="id"
+                <!-- <UFormField label="Категорії" name="category" required>
+                    <USelectMenu placeholder="Обрати категорію" multiple :items="categories" value-key="id"
                         label-key="name" v-model="formData.category" class="w-full" />
+                </UFormField> -->
+                <UFormField label="Категорії" name="category" required>
+                    <USelectMenu v-if="Array.isArray(categories) && categories.length" placeholder="Обрати категорію"
+                        multiple :items="categories" value-key="id" label-key="name" v-model="formData.category"
+                        class="w-full" />
+                    <div v-else>завантаження...</div>
                 </UFormField>
 
                 <div class="grid grid-cols-3 gap-4">
@@ -66,11 +72,11 @@
         </form>
     </section>
 
-    <section v-else-if="pending" class="w-5/6 mx-auto">
+    <section v-else-if="loading" class="w-5/6 mx-auto">
         <AdminLoader />
     </section>
     <section v-else class="text-gray-500 mb-6 text-center">
-        <p >
+        <p>
             При обробці запиту виникла помилка
         </p>
         <p>
@@ -81,7 +87,8 @@
 </template>
 
 <script setup>
-import useApiGet from '~/composables/useGetApi'
+
+
 
 // Route
 const route = useRoute()
@@ -90,53 +97,38 @@ const prodId = route.params.id
 // Constants
 const unitsList = ['г', 'кг', 'мл', 'л', 'шт']
 
-const { list: categories } = useCategories()
+const { list: categories } = await useCategories()
 
-const { data, error, pending, refresh } = await useApiGet(
-    `admin-product-${prodId}`,
+const { data, error, loading, refresh } = useFetchData(
     computed(() => `/api/v1/public/products2/${prodId}/`)
 )
 
 const product = computed(() => data.value ?? null)
 
+const mapProductToForm = (product) => {
+    return {
+        name_ukr: product?.name_ukr ?? '',
+        name_rus: product?.name ?? '',
+        name_fiscal: product?.name_fiscal ?? '',
+        name_orig: product?.name_original ?? '',
+        measurements: product?.measurements ?? '',
+        units: product?.units ?? unitsList[0],
+        brand: product?.brand ?? '',
+        description: product?.description ?? '',
+        barcode: product?.barcode ?? '',
+        loose: product?.loose ?? false,
+        category: product?.categories?.map(c => c.id) ?? [],
+        image: product?.files?.[0]?.link ?? null
+    }
+}
 
-const formData = reactive({
-    name_ukr: product.value?.name_ukr ?? '',
-    name_rus: product.value?.name ?? '',
-    name_fiscal: product.value?.name_fiscal ?? '',
-    name_orig: product.value?.name_original ?? '',
-    measurements: product.value?.measurements ?? '',
-    units: product.value?.units ?? unitsList[0],
-    brand: product.value?.brand ?? '',
-    description: product.value?.description ?? '',
-    barcode: product.value?.barcode ?? '',
-    loose: product.value?.loose ?? false,
-    category: product.value?.categories?.map((c) => c.id) ?? [],
-    image: product.value?.files[0]?.link ?? null
+
+const formData = reactive(mapProductToForm(product.value))
+watchEffect(() => {
+    if (product.value?.id) {
+        Object.assign(formData, mapProductToForm(product.value))
+    }
 })
-
-
-// watch(
-//   () => product.value?.id,
-//   () => {
-//     if (!product.value?.id) return
-//     Object.assign(formData, {
-//       name_ukr: product.value?.name_ukr ?? '',
-//       name_rus: product.value?.name ?? '',
-//       name_fiscal: product.value?.name_fiscal ?? '',
-//       name_orig: product.value?.name_original ?? '',
-//       measurements: product.value?.measurements ?? '',
-//       units: product.value?.units ?? unitsList[0],
-//       brand: product.value?.brand ?? '',
-//       description: product.value?.description ?? '',
-//       barcode: product.value?.barcode ?? '',
-//       loose: product.value?.loose ?? false,
-//       category: product.value?.categories?.map((c: any) => c.id) ?? [],
-//       image: product.value?.image ?? null
-//     })
-//   },
-//   { immediate: false }
-// )
 
 const handleSubmit = async () => {
     const payload = {
@@ -155,7 +147,7 @@ const handleSubmit = async () => {
     }
 
     try {
-        await $fetch(`/api/v1/admin/products/${prodId}/`, {
+        await $fetch(`/api/v1/public/products2/${prodId}/`, {
             method: 'PUT',
             body: payload
         })
@@ -167,5 +159,5 @@ const handleSubmit = async () => {
     }
 }
 
-definePageMeta({ layout: 'admin' })
+// definePageMeta({ layout: 'admin' })
 </script>

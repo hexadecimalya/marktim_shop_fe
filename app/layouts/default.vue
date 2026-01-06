@@ -1,14 +1,16 @@
 <template>
+  <!-- <NavbarAdmin v-if="routeLocation.startsWith('/admin2')"/> -->
   <MenuBar />
-  <!-- <Search /> -->
-
   <slot />
 
-  <div class="h-8"></div>
+  <div class="h-8">
+    
+  </div>
   <AppFooter />
 </template>
 <script setup>
 const config = useRuntimeConfig()
+
 useHead({
   titleTemplate: '%s | MarkTim Shop ', // %s is a template for STRING that will replaced at every page ;
   link: [

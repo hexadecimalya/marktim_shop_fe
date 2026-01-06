@@ -1,23 +1,25 @@
 <template>
     <section class="w-11/12 mx-auto">
         <h1 class="text-2xl font-extrabold my-4">Всі продукти</h1>
-   
+        <SearchBarAdmin @update:search="onSearch" />
         <!-- Table Header -->
         <div
             class="grid grid-cols-21 bg-mtgreen-100 border border-gray-200 rounded-t-lg p-3 text-sm font-semibold text-gray-700">
             <div class="">ID</div>
             <div class="col-span-10">Назва</div>
             <div class="col-span-8">Категорії</div>
-            <div><UIcon name="i-lucide:image"/></div>
+            <div>
+                <UIcon name="i-lucide:image" />
+            </div>
             <div class="text-end">Дії</div>
         </div>
 
         <!-- Rows -->
-        <div v-if="!pending && !error" class="divide-y divide-gray-100 border-x border-b border-gray-200 rounded-b-lg">
+        <div v-if="!loading && !error" class="divide-y divide-gray-100 border-x border-b border-gray-200 rounded-b-lg">
             <div v-for="product in productList" :key="product.id"
                 class="grid grid-cols-21 items-center px-1 py-1 text-sm font-slim">
                 <div class="font-semibold text-center hover:underline">
-                    <NuxtLink :to="`/admin/products/${product.id}`">{{ product.id }}</NuxtLink>
+                    <NuxtLink :to="`/admin2/products/${product.id}`">{{ product.id }}</NuxtLink>
                 </div>
                 <div class="col-span-10 font-medium">{{ product.name_ukr ? product.name_ukr : product.name }}</div>
                 <div class="col-span-8 text-gray-500 space-x-0.5">
@@ -48,9 +50,11 @@
             </div>
         </div>
 
-        <div v-else-if="pending"><AdminLoader/></div>
+        <div v-else-if="loading">
+            <AdminLoader />
+        </div>
     </section>
-    <div class="my-6 flex justify-center" v-if="!pending">
+    <div class="my-6 flex justify-center" v-if="!loading">
         <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
             active-variant="subtle" :items-per-page="limit" show-edges />
     </div>
@@ -58,21 +62,37 @@
 
 </template>
 <script setup>
-import SearchBar from '~/components/UI/search-bar.vue';
-import useApiGet from '~/composables/useGetApi';
-definePageMeta({
-    layout: 'admin'
-})
+
+const searchTerm = ref('')
+const page = ref(1)
+const onSearch = (value) => {
+    searchTerm.value = value
+    page.value = 1 // reset pagination on new search
+}
+
 
 const limit = 50
-const page = ref(1)
+
 const totalCount = computed(() => data.value?.count ?? 0)
-const url = computed(() => `/api/v1/public/products2/?limit=${limit}&offset=${(page.value - 1) * limit}`)
-const key = computed(() => `products-list-page-${page.value}`)
+// const url = computed(() => `/api/v1/public/products2/?limit=${limit}&offset=${(page.value - 1) * limit}`)
+const url = computed(() => {
+    const offset = (page.value - 1) * limit
+    const base = `/api/v1/public/products2/?ordering=-id`
+    return searchTerm.value.length >= 3
+        ? `${base}?filter_param=${encodeURIComponent(searchTerm.value)}`
+        : `${base}`
+})
 
-const { data, error, pending } = useApiGet(key, url)
+const { data, error, loading } = useAuthFetchData(
+    url
+)
 
+
+// console.log(data.value)
 const productList = computed(() => data.value?.data ?? [])
+
+// watchEffect(()=> console.log(productListReversed.value) )
+
 const handleDeleteProduct = (id) => { }
 
 </script>
