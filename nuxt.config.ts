@@ -5,8 +5,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // npApiKey: process.env.NP_API_KEY,
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE,
-      siteUrl:  "https://marktim.shop",
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || "https://marktim.shop/api/v1",
+      siteUrl:  "https://marktim.shop"
     },
   },
   pages: true,
