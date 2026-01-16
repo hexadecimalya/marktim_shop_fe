@@ -96,6 +96,7 @@ const route = useRoute()
 const routeLocation = computed(() => route.params.location) // 'stock' or 'preorder'
 const prodId = computed(() => Number(route.params.id))
 
+
 const routeLabel = computed(() =>
     routeLocation.value === 'stock' ? 'Товари на складі' : 'Під замовлення'
 )
@@ -136,7 +137,7 @@ const handleAddToCart = () => {
 }
 
 
-const url = computed(() => `/api/v1/public/${routeLocation.value}/${route.params.id}/`)
+const url = computed(() => `/public/${routeLocation.value}/${route.params.id}/`)
 
 const { data, pending, error, refresh } = useApiGet(
     () => `product-${route.params.id}`,

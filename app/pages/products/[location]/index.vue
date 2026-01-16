@@ -48,7 +48,7 @@ const routeLocation = computed(() => route.params.location)
 
 const url = computed(() => {
     const offset = (page.value - 1) * limit
-    return `/api/v1/public/${routeLocation.value}/?limit=${limit}&offset=${offset}`
+    return `/public/${routeLocation.value}/?limit=${limit}&offset=${offset}`
 })
 
 const { data, pending, error } = useApiGet(

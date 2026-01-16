@@ -38,8 +38,9 @@
                         <UIcon name="i-solar:minus-square-bold" class="sm:w-6 sm:h-6  w-7 h-7 opacity-80" />
                       </button>
                       <span class="text-gray-700">{{ item.quantity }}</span>
-                      <button @click="updateQty(item, item.quantity + 1)" class="mx-2 flex items-center">
-                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7 opacity-80" />
+                      <button @click="updateQty(item, item.quantity + 1)" :disabled="item.quantity >= item.maxQuantity"
+                        class="mx-2 flex items-center">
+                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7" :class="[item.quantity >= item.maxQuantity ? 'opacity-50' : 'opacity-80']"  />
                       </button>
                     </div>
                     <div @click="remove(item)" class="underline cursor-pointer">Видалити</div>
@@ -93,11 +94,12 @@
                     <div class="font-semibold flex items-center my-1">
                       <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
                         class="mr-2 flex items-center">
-                        <UIcon name="i-solar:minus-square-bold" class="sm:w-6 sm:h-6  w-7 h-7 opacity-80" />
+                        <UIcon name="i-solar:minus-square-bold" class="sm:w-6 sm:h-6  w-7 h-7" />
                       </button>
                       <span class="text-gray-700">{{ item.quantity }}</span>
-                      <button @click="updateQty(item, item.quantity + 1)" class="mx-2 flex items-center">
-                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7 opacity-80" />
+                      <button @click="updateQty(item, item.quantity + 1)" :disabled="item.quantity >= item.maxQuantity"
+                        class="mx-2 flex items-center">
+                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7"/>
                       </button>
                     </div>
                     <div @click="remove(item)" class="underline cursor-pointer">Видалити</div>
@@ -145,9 +147,6 @@
       </div>
 
     </template>
-    <!-- <template v-if="goShipping">
-      Shipping
-    </template> -->
   </div>
 
 
@@ -156,26 +155,63 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 
+const config = useRuntimeConfig()
 let loading = ref(true)
-// const router = useRouter()
-// const navigateToCheckout = () => router.push({ path: '/checkout' })
+
 const cart = useCartStore()
 const {
   stockItems,
   preorderItems,
   stockSubtotal,
   preorderSubtotal,
-  // stockDiscount,
-  // preorderDiscount,
-  // stockTotal,
+  // actualQuantity,
   preorderTotal
 } = storeToRefs(cart)
 
-onMounted(() => {
+const syncWithBackend = async () => {
+  const config = useRuntimeConfig()
+
+  const ids = stockItems.value.map(i => i.id)
+  if (!ids.length) return
+
+  const payload = {
+    product_ids: ids
+  }
+
+  const res = await $fetch(
+    `${config.public.apiBase}/public/stock/check_stock/`,
+    {
+      method: 'POST',
+      body: payload,
+    }
+  )
+
+  Object.entries(res).forEach(([id, serverItem]) => {
+    const productId = Number(id)
+    // actualQuantity.value = serverItem.units_amount
+
+    const localItem = stockItems.value.find(i => i.id === productId)
+    if (!localItem) return
+    localItem.maxQuantity = serverItem.units_amount
+
+    if (localItem.price !== serverItem.sell_price) {
+      localItem.price = serverItem.sell_price
+    }
+
+
+    if (serverItem.units_amount <= 0) {
+      removeItem(productId)
+    } else if (localItem.quantity > serverItem.units_amount) {
+      localItem.quantity = serverItem.units_amount
+    }
+  })
+}
+
+onMounted(async () => {
+  syncWithBackend()
   loading.value = false
 })
-
-
+// console.log(actualQuantity.value)
 const updateQty = (item, newQty) => {
   cart.updateQuantity(item.id, newQty)
 }

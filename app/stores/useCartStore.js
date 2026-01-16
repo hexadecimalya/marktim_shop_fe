@@ -7,7 +7,6 @@ export const useCartStore = defineStore('cart', () => {
 
   const stockItems = ref([])
   const preorderItems = ref([])
-
   const totalQtyStockItems = computed(() => stockItems.value.reduce((sum, i) => sum + i.quantity, 0))
   const totalQtyPreorderItems = computed(() => preorderItems.value.reduce((sum, i) => sum + i.quantity, 0))
 
@@ -31,33 +30,44 @@ export const useCartStore = defineStore('cart', () => {
     preorderItems.value.reduce((sum, i) =>
       sum + (i.quantity === 1 ? i.price * i.quantity : i.bulk_price * i.quantity), 0)
   )
+const syncWithBackend = async () => {
+  const config = useRuntimeConfig()
 
-  // const subtotal = computed(() => stockSubtotal.value + preorderSubtotal.value)
+  const ids = stockItems.value.map(i => i.id)
+  if (!ids.length) return
 
-  // const totalQuantity = computed(
-  //   () => totalQtyStockItems.value + totalQtyPreorderItems.value
-  // )
+  const payload = {
+    product_ids: ids
+  }
 
-  // const stockDiscount = computed(() => stockSubtotal.value * 0.03)
-  // const preorderDiscount = computed(
-  //   () => preorderSubtotal.value * 0.03
-  // )
-  // const stockTotal = computed(() => stockSubtotal.value - stockDiscount.value)
-  // const preorderTotal = computed(
-  //   () => preorderSubtotal.value - preorderDiscount.value
-  // )
-  // const stockTotal = computed(() => stockSubtotal.value - stockDiscount.value)
+  const res = await $fetch(
+    `${config.public.apiBase}/public/stock/check_stock/`,
+    {
+      method: 'POST',
+      body: payload,
+    }
+  )
 
-  // const discount = computed(
-  //   () => stockDiscount.value + preorderDiscount.value
-  // )
-  // const total = computed(
-  //   () => stockTotal.value + preorderTotal.value
-  // )
+  Object.entries(res).forEach(([id, serverItem]) => {
+    const productId = Number(id)
+    actualQuantity.value = serverItem.units_amount
+
+    const localItem = stockItems.value.find(i => i.id === productId)
+    if (!localItem) return
+
+ 
+    if (localItem.price !== serverItem.sell_price) {
+      localItem.price = serverItem.sell_price
+    }
 
 
-
-
+    if (serverItem.units_amount <= 0) {
+      removeItem(productId)
+    } else if (localItem.quantity > serverItem.units_amount) {
+      localItem.quantity = serverItem.units_amount
+    }
+  })
+}
 
   const updateQuantity = (id, qty) => {
     const item = stockItems.value.find(i => i.id === id) ||
@@ -65,7 +75,8 @@ export const useCartStore = defineStore('cart', () => {
     if (!item) return
     if (qty <= 0) {
       removeItem(id)
-    } else {
+    } 
+    else {
       item.quantity = qty
     }
   }
@@ -99,6 +110,7 @@ export const useCartStore = defineStore('cart', () => {
     updateQuantity,
     removeItem,
     clearCart,
+ 
   }
 }, {
   persist: true

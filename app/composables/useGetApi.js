@@ -4,7 +4,7 @@ export default function useApiGet(key, url, options = {}) {
   return useAsyncData(
     key,
     () => $fetch(url.value || url, {
-      baseURL: config.public.siteUrl,
+      baseURL: config.public.apiBase,
       ...options,
     }),
     {
