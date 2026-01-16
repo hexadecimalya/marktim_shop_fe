@@ -37,7 +37,7 @@ const limit = 24
 const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
 const url = computed(() =>
-  `/api/v1/public/stock/active_supplies/?limit=${limit}&offset=${(page.value - 1) * limit}`
+  `/public/stock/active_supplies/?limit=${limit}&offset=${(page.value - 1) * limit}`
 )
 
 const key = computed(() => `active-supplies-page-${page.value}`)

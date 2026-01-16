@@ -57,7 +57,7 @@ const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
 
 const url = computed(() => {
-  const base = `/api/v1/public/${routeLocation.value}/`
+  const base = `/public/${routeLocation.value}/`
   const offset = (page.value - 1) * limit
 
   if (categoryId.value) {

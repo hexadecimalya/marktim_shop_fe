@@ -1,7 +1,7 @@
 export default async function useCategories() {
   const config = useRuntimeConfig()
 
-  const url = `${config.public.siteUrl}/api/v1/public/categories/`
+  const url = `${config.public.apiBase}/public/categories/`
   const res = await $fetch(url)
 
 

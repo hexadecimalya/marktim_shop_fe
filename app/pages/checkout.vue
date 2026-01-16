@@ -179,12 +179,9 @@ const handleSubmit = async () => {
         products
     }
     try {
-        const res = await $fetch(`${config.public.siteUrl}/api/v1/public/orders/`, {
+        const res = await $fetch(`${config.public.apiBase}/public/orders/`, {
             method: 'POST',
             body: newOrder,
-            // headers: {
-            //     'Content-Type': 'application/json',
-            // }
         })
         orderInfo.value = {
             id: res.id,

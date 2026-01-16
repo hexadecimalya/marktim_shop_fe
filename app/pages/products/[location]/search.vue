@@ -44,7 +44,7 @@ const searchTerm = computed(() => (route.query.q ?? '').toString())
 
 const url = computed(() => {
     const offset = (page.value - 1) * limit
-    const base = `/api/v1/public/${routeLocation.value}/`
+    const base = `/${routeLocation.value}/`
     // return searchTerm.value.length > 2
     //     ? `${base}?filter_param=${encodeURIComponent(searchTerm.value)}&limit=${limit}&offset=${offset}&full_data_set=true`
     //     : `${base}?limit=${limit}&offset=${offset}&full_data_set=true`
