@@ -172,7 +172,7 @@ const seoTitle = computed(() => product.value?.product?.name_ukr || product.valu
 const seoDescription = computed(() =>
     (product.value?.product?.name && product.value?.sell_price)
         ? `Купуйте ${product.value.product.name_ukr || product.value.product.name} від у MarkTim Shop за ${product.value.sell_price} грн. Доставка по всій Україні.`
-        : `Від повсякденних продуктів до вишуканих делікатесів - обирайте найкращі товари з доставкою по Україні.`
+        : `Від повсякденних продуктів до вишуканих делікатесів - обирайте лиш найкращі товари з доставкою по Україні.`
 )
 const seoImage = computed(() => product.value?.product?.files?.[0]?.link ?? `${config.public.siteUrl}/og-default.png`)
 
