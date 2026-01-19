@@ -54,7 +54,7 @@
                 </div>
                 <p v-if="product.units_amount <= 0" class="font-semibold my-2">Нема в наявності</p>
                 <div v-if="categoriesList.length">
-                    <UBadge class="my-2" size="md" color="neutral" variant="outline" v-for="category in categoriesList"
+                    <UBadge class="my-2 mr-2" size="md" color="neutral" variant="outline" v-for="category in categoriesList"
                         :key="category.slug">
                         <NuxtLink :to="`/products/${routeLocation}/category/${category.slug}`">
                             {{ category.name }}
