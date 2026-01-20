@@ -200,7 +200,7 @@ const syncWithBackend = async () => {
 
 
     if (serverItem.units_amount <= 0) {
-      removeItem(productId)
+       cart.removeItem(productId)
     } else if (localItem.quantity > serverItem.units_amount) {
       localItem.quantity = serverItem.units_amount
     }
@@ -211,7 +211,7 @@ onMounted(async () => {
   syncWithBackend()
   loading.value = false
 })
-// console.log(actualQuantity.value)
+
 const updateQty = (item, newQty) => {
   cart.updateQuantity(item.id, newQty)
 }

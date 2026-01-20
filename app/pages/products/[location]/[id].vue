@@ -165,8 +165,7 @@ const items = computed(() => [
 ])
 
 const categoriesList = computed(() => product.value?.product?.categories ?? [])
-watchEffect(() => console.log(categoriesList.value)
-)
+
 const canonicalUrl = computed(() => `${config.public.siteUrl}/${routeLocation.value}/${prodId.value}/`)
 const seoTitle = computed(() => product.value?.product?.name_ukr || product.value?.product?.name || 'Цей смаколик доступний до замовлення')
 const seoDescription = computed(() =>
