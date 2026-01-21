@@ -53,7 +53,7 @@ pipeline {
             } catch (err) {
                 sh '''
                 curl -X POST -H 'Content-type: application/json' \
-                --data '{"text":"❌ Smoke test FAILED for branch: ${BRANCH_NAME}. Check this: ${BUILD_URL}"}' \
+                --data '{"text":"❌ Smoke test FAILED for branch: ${BRANCH_NAME}. Check: ${BUILD_URL}"}' \
                 $SLACK_WEBHOOK
                 '''
                 error "Smoke test failed"
