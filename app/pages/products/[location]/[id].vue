@@ -152,7 +152,7 @@ watch(
     (err) => {
         if (err) {
             const status = err.statusCode || err.status || 404
-            throw createError({ statusCode: status, message: err.message || 'Такого продукту не знайдено' })
+            throw createError({ statusCode: status, message: 'Такого продукту не знайдено' })
         }
     },
     { immediate: true }

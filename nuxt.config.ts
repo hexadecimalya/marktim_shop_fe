@@ -5,8 +5,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // npApiKey: process.env.NP_API_KEY,
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || "https://marktim.shop/api/v1",
-      siteUrl:  "https://marktim.shop"
+      apiBase:
+        process.env.NUXT_PUBLIC_API_BASE || "https://marktim.shop/api/v1",
+      siteUrl: "https://marktim.shop",
     },
   },
   pages: true,
@@ -27,11 +28,17 @@ export default defineNuxtConfig({
       // link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
   },
-  modules: ["@nuxt/ui", "@pinia/nuxt", "@vueuse/nuxt","@nuxt/icon" ],
-    icon: {
-    // mode: "svg", 
+  modules: [
+    "@nuxt/ui",
+    "@pinia/nuxt",
+    "@vueuse/nuxt",
+    "@nuxt/icon",
+    "@sentry/nuxt/module",
+  ],
+  icon: {
+    // mode: "svg",
     serverBundle: {
-      collections: ["lucide", "solar", "mingcute", "solar" ],
+      collections: ["lucide", "solar", "mingcute", "solar"],
     },
   },
   vite: {
