@@ -51,16 +51,10 @@ pipeline {
           } catch (err) {
             sh """
               curl -X POST -H 'Content-type: application/json' \
-              --data '{\"text\":\"❌ Smoke test FAILED for branch: ${env.BRANCH_NAME}. Check the Jenkins job\"}' \
+              --data '{\"text\":\"❌ Smoke test FAILED for branch: ${env.BRANCH_NAME}. Check: ${env.BUILD_URL}\"}' \
               $SLACK_WEBHOOK
             """
             error "Smoke test failed"
-          }
-            sh """
-              curl -X POST -H 'Content-type: application/json' \
-              --data '{\"text\":\"✅ Smoke test PASSED for branch: ${env.BRANCH_NAME}\"}' \
-              $SLACK_WEBHOOK
-            """
           }
         }
       }
@@ -71,7 +65,7 @@ pipeline {
     success {
       sh """
         curl -X POST -H 'Content-type: application/json' \
-        --data '{\"text\":\"✅ Staging build SUCCESS for branch: ${env.BRANCH_NAME}\"}' \
+        --data '{\"text\":\"✅ Staging build SUCCESS for branch: ${env.BRANCH_NAME}. Check: ${env.BUILD_URL}\"}' \
         $SLACK_WEBHOOK
       """
     }
@@ -79,7 +73,7 @@ pipeline {
     failure {
       sh """
         curl -X POST -H 'Content-type: application/json' \
-        --data '{\"text\":\"❌ Staging build FAILED for branch: ${env.BRANCH_NAME}. Check the Jenkins job\"}' \
+        --data '{\"text\":\"❌ Staging build FAILED for branch: ${env.BRANCH_NAME}. Check: ${env.BUILD_URL}\"}' \
         $SLACK_WEBHOOK
       """
     }
