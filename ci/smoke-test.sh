@@ -1,9 +1,15 @@
 #!/bin/bash
 set -e
 
-URL="https://staging.marktim.shop/api/health"
+#URL="https://staging.marktim.shop/api/health"
+URL="$1"
 MAX_RETRIES=3
 SLEEP=3
+
+if [ -z "$URL" ]; then
+    echo "❌ No URL provided" 
+    exit 1 
+fi
 
 echo "Running smoke tests against $URL"
 sleep 15
