@@ -6,6 +6,7 @@ pipeline {
     NODE_PATH = "/home/webber/.nvm/versions/node/${NODE_VERSION}/bin"
     PATH = "${NODE_PATH}:${env.PATH}"
     SLACK_WEBHOOK = credentials('slack-webhook')
+    NODE_OPTIONS = "--max-old-space-size=4096"
   }
 
   stages {
@@ -54,6 +55,12 @@ pipeline {
               $SLACK_WEBHOOK
             """
             error "Smoke test failed"
+          }
+            sh """
+              curl -X POST -H 'Content-type: application/json' \
+              --data '{\"text\":\"✅ Smoke test PASSED for branch: ${env.BRANCH_NAME}\"}' \
+              $SLACK_WEBHOOK
+            """
           }
         }
       }
