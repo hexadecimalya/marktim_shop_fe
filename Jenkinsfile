@@ -1,15 +1,16 @@
-def envConfig = [ 
-    staging: [ 
-        url: "https://staging.marktim.shop/api/health", 
-        service: "marktim_shop_fe_staging.service", 
-        branch: "staging", 
-        name: "STAGING" ], 
-    main: [ 
-        url: "https://marktim.shop/api/health", 
-        service: "marktim_shop_fe.service", 
-        branch: "main", 
-        name: "PRODUCTION" ] ] 
+def envConfig = [
+    staging: [
+        url: "https://staging.marktim.shop/api/health",
+        service: "marktim_shop_fe_staging.service",
+        branch: "staging",
+        name: "STAGING" ],
+    main: [
+        url: "https://marktim.shop/api/health",
+        service: "marktim_shop_fe.service",
+        branch: "main",
+        name: "PRODUCTION" ] ]
 
+def cfg = [:]
 
 pipeline {
   agent any
@@ -49,7 +50,7 @@ pipeline {
       }
     }
 
-    stage("Deploy to $cfg.name") {
+    stage('Deploy') {
       steps {
         sh """
           echo "Deploying to ${cfg.name}"
@@ -64,7 +65,7 @@ pipeline {
       }
     }
 
-    stage("Smoke tests ($cfg.name)") {
+    stage('Smoke tests') {
       steps {
         script {
           try {
@@ -86,7 +87,7 @@ pipeline {
     success {
       sh """
         curl -X POST -H 'Content-type: application/json' \
-        --data '{\"text\":\"✅ ${cfg.name} build SUCCESS for branch: ${env.BRANCH_NAME}. Check: ${env.BUILD_URL}\"}' \
+        --data '{\"text\":\"✅ Build SUCCESS for branch: ${env.BRANCH_NAME}. Check: ${env.BUILD_URL}\"}' \
         $SLACK_WEBHOOK
       """
     }
@@ -94,7 +95,7 @@ pipeline {
     failure {
       sh """
         curl -X POST -H 'Content-type: application/json' \
-        --data '{\"text\":\"❌ ${cfg.name}  build FAILED for branch: ${env.BRANCH_NAME}. Check: ${env.BUILD_URL}\"}' \
+        --data '{\"text\":\"❌ Build FAILED for branch: ${env.BRANCH_NAME}. Check: ${env.BUILD_URL}\"}' \
         $SLACK_WEBHOOK
       """
     }
