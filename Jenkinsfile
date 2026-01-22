@@ -1,29 +1,16 @@
 def envConfig = [
-  staging: [
-    url: "https://staging.marktim.shop/health",
-    service: "marktim_shop_fe_staging.service",
-    branch: "staging",
-    name: "STAGING"
-  ],
-  main: [
-    url: "https://marktim.shop/health",
-    service: "marktim_shop_fe.service",
-    branch: "main",
-    name: "PRODUCTION"
-  ]
-]
+    staging: [
+        url: "https://staging.marktim.shop/api/health",
+        service: "marktim_shop_fe_staging.service",
+        branch: "staging",
+        name: "STAGING" ],
+    main: [
+        url: "https://marktim.shop/api/health",
+        service: "marktim_shop_fe.service",
+        branch: "main",
+        name: "PRODUCTION" ] ]
 
 def cfg = [:]
-
-def notifySlack = { msg ->
-  withCredentials([string(credentialsId: 'slack-webhook', variable: 'SLACK')]) {
-    sh """
-      curl -X POST -H 'Content-type: application/json' \
-      --data '{\"text\":\"${msg}\"}' \
-      \$SLACK
-    """
-  }
-}
 
 pipeline {
   agent any
@@ -117,14 +104,18 @@ pipeline {
 
   post {
     success {
-      script {
-        notifySlack("✅ Build SUCCESS for ${env.BRANCH_NAME}. ${env.BUILD_URL}")
-      }
+      sh """
+        curl -X POST -H 'Content-type: application/json' \
+        --data '{\"text\":\"✅ Build SUCCESS for branch: ${env.BRANCH_NAME}. Check: ${env.BUILD_URL}\"}' \
+        $SLACK_WEBHOOK
+      """
     }
     failure {
-      script {
-        notifySlack("❌ Build FAILED for ${env.BRANCH_NAME}. ${env.BUILD_URL}")
-      }
+      sh """
+        curl -X POST -H 'Content-type: application/json' \
+        --data '{\"text\":\"❌ Build FAILED for branch: ${env.BRANCH_NAME}. Check: ${env.BUILD_URL}\"}' \
+        $SLACK_WEBHOOK
+      """
     }
   }
 }
