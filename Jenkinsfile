@@ -1,11 +1,11 @@
 def envConfig = [
     staging: [
-        url: "https://staging.marktim.shop/api/health",
+        url: "https://staging.marktim.shop/",
         service: "marktim_shop_fe_staging.service",
         branch: "staging",
         name: "STAGING" ],
     main: [
-        url: "https://marktim.shop/api/health",
+        url: "https://marktim.shop/",
         service: "marktim_shop_fe.service",
         branch: "main",
         name: "PRODUCTION" ] ]
