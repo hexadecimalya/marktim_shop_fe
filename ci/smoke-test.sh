@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-#URL="https://staging.marktim.shop/api/health"
+#URL="https://staging.marktim.shop/health"
 URL="$1"
 MAX_RETRIES=3
 SLEEP=3
