@@ -20,6 +20,7 @@ pipeline {
     NODE_PATH = "/home/webber/.nvm/versions/node/${NODE_VERSION}/bin"
     PATH = "${NODE_PATH}:${env.PATH}"
     NODE_OPTIONS = "--max-old-space-size=4096"
+    SLACK_WEBHOOK = credentials('slack-webhook')
   }
 
   stages {
