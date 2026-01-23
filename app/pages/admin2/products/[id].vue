@@ -147,7 +147,7 @@ const handleSubmit = async () => {
     }
 
     try {
-        await $fetch(`/api/v1/public/products2/${prodId}/`, {
+        await $fetch(`/admin/products/${prodId}/`, {
             method: 'PUT',
             body: payload
         })

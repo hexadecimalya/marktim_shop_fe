@@ -1,6 +1,5 @@
 <template>
-    <div v-if="!pending && product.product"
-        class="container mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4 mt-0 sm:mt-4">
+    <div v-if="!pending && product.product" class="container mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4 mt-0 sm:mt-4">
         <Breadcrumbs class="hidden sm:inline-block" :items="items" />
 
         <div class="lg:container sm:mt-8 mt-0 mx-auto flex sm:flex-row flex-col justify-center">
@@ -11,49 +10,52 @@
                     {{ product.product.name_ukr || product.product.name }}
                 </h2>
 
+
                 <div class="text-xl sm:my-4 font-semibold justify">
                     {{ Math.trunc(product.sell_price) }} грн
                     {{ product.bulk_price ? `/ ${Math.trunc(product.bulk_price)} грн від 2 шт` : '' }}
                 </div>
+                <div v-if="!product.units_amount <= 0">
+                    <div v-if="!isInCart" class="my-4">
+                        <div class="text-xs font-medium mb-0">кількість</div>
+                        <div
+                            class="flex flex-row h-12 w-full rounded-md relative bg-transparent my-4 border border-gray-100 ">
+                            <button class="hover:bg-gray-200 h-full w-1/3 rounded-l cursor-pointer outline-none"
+                                @click="decQuantity">
+                                <span class="m-auto text-2xl">−</span>
+                            </button>
 
-                <div v-if="!isInCart" class="my-4">
-                    <div class="text-xs font-medium mb-0">кількість</div>
-                    <div
-                        class="flex flex-row h-12 w-full rounded-md relative bg-transparent my-4 border border-gray-100 ">
-                        <button class="hover:bg-gray-200 h-full w-1/3 rounded-l cursor-pointer outline-none"
-                            @click="decQuantity">
-                            <span class="m-auto text-2xl">−</span>
-                        </button>
+                            <input
+                                class="outline-none focus:outline-none text-center w-1/3 font-semibold text-md flex items-center"
+                                name="custom-input-number" :value="quantity" />
 
-                        <input
-                            class="outline-none focus:outline-none text-center w-1/3 font-semibold text-md flex items-center"
-                            name="custom-input-number" :value="quantity" />
+                            <button class="hover:bg-gray-200 h-full w-1/3 rounded-r cursor-pointer"
+                                @click="incQuantity">
+                                <span class="m-auto text-2xl">+</span>
+                            </button>
+                        </div>
 
-                        <button class="hover:bg-gray-200 h-full w-1/3 rounded-r cursor-pointer" @click="incQuantity">
-                            <span class="m-auto text-2xl">+</span>
-                        </button>
+                        <AppButton @click="handleAddToCart"
+                            class="w-full h-12 not-[]:rounded-xs uppercase text-xs font-medium tracking-normal justify-center"
+                            trailing>
+                            Додати до кошика
+                        </AppButton>
                     </div>
 
-                    <AppButton @click="handleAddToCart"
-                        class="w-full h-12 not-[]:rounded-xs uppercase text-xs font-medium tracking-normal justify-center"
-                        trailing>
-                        Додати до кошика
-                    </AppButton>
+                    <div v-else class="mt-4 sm:mt-28 mb-4">
+                        <NuxtLink to="/shopping-cart">
+                            <UButton
+                                class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300 hover:bg-mtgreen-400"
+                                trailing>
+                                Оформити замовлення
+                            </UButton>
+                        </NuxtLink>
+                    </div>
                 </div>
-
-                <div v-else class="mt-4 sm:mt-28 mb-4">
-                    <NuxtLink to="/shopping-cart">
-                        <UButton
-                            class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300 hover:bg-mtgreen-400"
-                            trailing>
-                            Оформити замовлення
-                        </UButton>
-                    </NuxtLink>
-                </div>
-
+                <p v-if="product.units_amount <= 0" class="font-semibold my-2">Нема в наявності</p>
                 <div v-if="categoriesList.length">
-                    <UBadge class="mx-2 my-2" size="md" color="neutral" variant="outline"
-                        v-for="category in categoriesList" :key="category.slug">
+                    <UBadge class="my-2 mr-2" size="md" color="neutral" variant="outline" v-for="category in categoriesList"
+                        :key="category.slug">
                         <NuxtLink :to="`/products/${routeLocation}/category/${category.slug}`">
                             {{ category.name }}
                         </NuxtLink>
@@ -72,7 +74,7 @@
 
             </div>
             <div v-else class="mt-2 text-justify text-sm">
-                Потрібен детальніший опис чи порада? Зв’яжіться з нами – ми з радістю допоможемо!
+                Потрібен детальніший опис чи порада? Зв’яжіться з нами – ми залюбки допоможемо!
             </div>
         </div>
     </div>
@@ -84,7 +86,7 @@
 </template>
 
 <script setup>
-import useApiGet from '~/composables/useGetApi' // your composable (uses useAsyncData internally)
+import useApiGet from '~/composables/useGetApi'
 import ProductLoader from '@/components/UI/product-loader.vue'
 import placeholder from '@/assets/image_placeholder_big.png'
 
@@ -107,7 +109,12 @@ const isInCart = computed(() =>
 
 
 const quantity = ref(1)
-const incQuantity = () => { quantity.value++ }
+const incQuantity = () => {
+    if (quantity.value < product.value.units_amount) {
+        quantity.value++
+    }
+    else return
+}
 const decQuantity = () => { quantity.value = Math.max(1, quantity.value - 1) }
 
 const handleAddToCart = () => {
@@ -145,7 +152,7 @@ watch(
     (err) => {
         if (err) {
             const status = err.statusCode || err.status || 404
-            throw createError({ statusCode: status, message: err.message || 'Такого продукту не знайдено' })
+            throw createError({ statusCode: status, message: 'Такого продукту не знайдено' })
         }
     },
     { immediate: true }
@@ -164,7 +171,7 @@ const seoTitle = computed(() => product.value?.product?.name_ukr || product.valu
 const seoDescription = computed(() =>
     (product.value?.product?.name && product.value?.sell_price)
         ? `Купуйте ${product.value.product.name_ukr || product.value.product.name} від у MarkTim Shop за ${product.value.sell_price} грн. Доставка по всій Україні.`
-        : `Від повсякденних продуктів до вишуканих делікатесів - обирайте найкращі товари з доставкою по Україні.`
+        : `Від повсякденних продуктів до вишуканих делікатесів - обирайте лиш найкращі товари з доставкою по Україні.`
 )
 const seoImage = computed(() => product.value?.product?.files?.[0]?.link ?? `${config.public.siteUrl}/og-default.png`)
 

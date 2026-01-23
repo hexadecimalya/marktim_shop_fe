@@ -124,6 +124,7 @@
   <!-- </section> -->
 </template>
 <script setup>
+
 const config = useRuntimeConfig()
 useSeoMeta({
   title: 'Про нас',
