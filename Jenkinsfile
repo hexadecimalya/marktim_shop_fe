@@ -28,11 +28,10 @@ pipeline {
     stage('Init') {
       steps {
         script {
-          if (!envConfig.containsKey(env.BRANCH_NAME)) {
-            currentBuild.result = 'ABORTED'
-            echo "Branch ${env.BRANCH_NAME} is not deployable"
-            return
-
+            if (!(env.BRANCH_NAME in ['staging', 'main'])) {
+              echo "Branch ${env.BRANCH_NAME} is not allowed. Skipping pipeline."
+              currentBuild.result = 'NOT_BUILT'
+              error('Pipeline stopped: unsupported branch')
           }
           cfg = envConfig[env.BRANCH_NAME]
         }
