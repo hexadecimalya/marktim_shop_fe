@@ -29,7 +29,10 @@ pipeline {
       steps {
         script {
           if (!envConfig.containsKey(env.BRANCH_NAME)) {
-            error "Branch ${env.BRANCH_NAME} is not deployable"
+            currentBuild.result = 'ABORTED'
+            echo "Branch ${env.BRANCH_NAME} is not deployable"
+            return
+
           }
           cfg = envConfig[env.BRANCH_NAME]
         }
@@ -85,7 +88,6 @@ pipeline {
         }
       }
     }
-
     stage('Smoke tests') {
       steps {
         script {
@@ -112,11 +114,14 @@ pipeline {
       """
     }
     failure {
-      sh """
+        sh """
         curl -X POST -H 'Content-type: application/json' \
         --data '{\"text\":\"❌ Build FAILED for branch: ${env.BRANCH_NAME}. Check: ${env.BUILD_URL}\"}' \
         $SLACK_WEBHOOK
       """
-    }
+      }
+    aborted { 
+      echo "Pipeline aborted — no Slack notification needed." 
+      }
   }
 }
