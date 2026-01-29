@@ -103,4 +103,7 @@ const preordersList = computed(() => {
 
 const value = ref(false)
 const selectedDate = shallowRef(new CalendarDate(2022, 1, 10))
+definePageMeta({
+  layout: 'admin'
+})
 </script>

@@ -81,5 +81,7 @@ const newProductData = reactive({
 })
 
 const handleSubmit = () => { }
-
+definePageMeta({
+  layout: 'admin'
+})
 </script>

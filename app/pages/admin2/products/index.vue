@@ -94,5 +94,7 @@ const productList = computed(() => data.value?.data ?? [])
 // watchEffect(()=> console.log(productListReversed.value) )
 
 const handleDeleteProduct = (id) => { }
-
+definePageMeta({
+  layout: 'admin'
+})
 </script>

@@ -159,5 +159,7 @@ const handleSubmit = async () => {
     }
 }
 
-// definePageMeta({ layout: 'admin' })
+definePageMeta({
+  layout: 'admin'
+})
 </script>

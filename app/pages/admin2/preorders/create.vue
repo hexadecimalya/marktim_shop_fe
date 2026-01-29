@@ -142,4 +142,7 @@ const togglePreorder = () => {
     modalOpened.value = false
     preorderInit.value = true
 }
+definePageMeta({
+  layout: 'admin'
+})
 </script>

@@ -246,5 +246,7 @@ function submitSale() {
 function holdReceipt() {
   console.log('HOLD', { items: items.value })
 }
-
+definePageMeta({
+  layout: 'admin'
+})
 </script>

@@ -83,5 +83,7 @@ watch(preorderData, (val) => { if (val?.products) { productList.value = val.prod
 const savePreorder = () => {
   //krya
 }
-
+definePageMeta({
+  layout: 'admin'
+})
 </script>

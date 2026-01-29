@@ -66,7 +66,7 @@ const isProcessing = ref(false)
 const onSubmit = async () => {
   try {
     isProcessing.value = true
-    const res = await $fetch(`${config.public.siteUrl}/api/v1/auth/token/`, {
+    const res = await $fetch(`${config.public.apiBase}/auth/token/`, {
       method: 'POST',
       body: {
         username: state.login,
@@ -100,5 +100,7 @@ const onSubmit = async () => {
 }
 
 
-
+definePageMeta({
+  layout: 'auth'
+})
 </script>
