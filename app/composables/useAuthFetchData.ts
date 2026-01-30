@@ -13,7 +13,7 @@ export function useAuthFetchData<T = any>(
 ) {
   const userStore = useUserStore()
   const runtimeConfig = useRuntimeConfig()
-  const baseURL = runtimeConfig.public.siteUrl
+  const baseURL = runtimeConfig.public.apiBase
 
   const data = ref<T | null>(null)
   const error = ref<any>(null)

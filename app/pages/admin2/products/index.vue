@@ -77,7 +77,7 @@ const totalCount = computed(() => data.value?.count ?? 0)
 // const url = computed(() => `/api/v1/public/products2/?limit=${limit}&offset=${(page.value - 1) * limit}`)
 const url = computed(() => {
     const offset = (page.value - 1) * limit
-    const base = `/api/v1/public/products2/?ordering=-id`
+    const base = `/public/products2/?ordering=-id`
     return searchTerm.value.length >= 3
         ? `${base}?filter_param=${encodeURIComponent(searchTerm.value)}`
         : `${base}`

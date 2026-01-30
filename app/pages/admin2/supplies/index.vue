@@ -3,9 +3,9 @@
         <h1 class="text-2xl font-extrabold my-4">
             Список поставок
         </h1>
-        <div v-for="supply in dummySupply">
+        <div v-for="supply in suppliesList">
             <div class="grid grid-cols-7 my-2 items-center text-xs md:text-sm">
-                <div>{{ supply.date }}</div>
+                <div>{{ supply.created }}</div>
                 <div>
                     <!-- <UCheckbox v-model="value" color="neutral" /> -->
                     <p>
@@ -41,6 +41,10 @@
             <USeparator />
         </div>
     </section>
+     <div class="my-6 flex justify-center" v-if="!loading">
+        <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
+            active-variant="subtle" :items-per-page="limit" show-edges />
+    </div>
 </template>
 
 <script setup>
@@ -49,6 +53,24 @@ const isActive = ref(false)
 const handleDeleteSupply = (id) => {
     console.log('deleted')
 }
+
+const page = ref(1)
+const limit = 50
+const totalCount = computed(() => data.value?.count ?? 0)
+const url = computed(() => {
+    // const offset = (page.value - 1) * limit
+    const base = `/deliveries`
+    return base
+})
+
+const { data, error, loading } = useAuthFetchData(
+    url
+)
+
+
+// console.log(data.value)
+const suppliesList = computed(() => data.value?.data ?? [])
+
 
 const dummySupply = [
   {
