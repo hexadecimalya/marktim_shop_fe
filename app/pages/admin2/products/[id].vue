@@ -99,8 +99,8 @@ const unitsList = ['г', 'кг', 'мл', 'л', 'шт']
 
 const { list: categories } = await useCategories()
 
-const { data, error, loading, refresh } = useFetchData(
-    computed(() => `/api/v1/public/products2/${prodId}/`)
+const { data, error, loading, refresh } = useAuthFetchData(
+    computed(() => `/public/products2/${prodId}/`)
 )
 
 const product = computed(() => data.value ?? null)
@@ -151,10 +151,10 @@ const handleSubmit = async () => {
             method: 'PUT',
             body: payload
         })
-        // Optionally refresh product data to show updated server state
+       
         await refresh()
     } catch (e) {
-        // Handle errors (toast, UI feedback)
+     
         console.error(e)
     }
 }

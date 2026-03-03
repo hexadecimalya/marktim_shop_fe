@@ -1,98 +1,78 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-// REMAKE
+import { ref } from 'vue'
 
 export const useCreatePreorderStore = defineStore('new-preorder', () => {
+  const preorderItems = ref([])
+  const exchangeRate = ref(null)
+  const preorderIsInitialized = ref(false)
+  const preorderName = ref(undefined)
 
-  // values
+  const calculatePrices = (product) => {
+    const rate = exchangeRate.value
+    if (!rate) return product 
 
-  const preorderItems = ref({})
+    const calculateFloatingRate = (zlPrice) => {
+        if (zlPrice < 2.49) return 1.4
+        else if (zlPrice < 6.99) return 1.3
+        else if (zlPrice < 8.49) return 1.28
+        else return 1.27
+    }
 
-  // funcs
+    const margin = 1.25 * 1.1
+    const reg = parseFloat(product.regular_price) || 0
+    const promo = parseFloat(product.promo_price) || 0
+
+    if (promo > 0) {
+        product.sell_price = Math.ceil(promo * rate * margin * calculateFloatingRate(promo))
+        product.old_price = reg > 0 ? Math.ceil(reg * rate * margin * calculateFloatingRate(reg)) : null
+    } else {
+        product.sell_price = reg > 0 ? Math.ceil(reg * rate * margin * calculateFloatingRate(reg)) : 0
+        product.old_price = null
+    }
+
+    product.bulk_price = product.sell_price ? Math.ceil(product.sell_price * 0.95) : 0
+
+    return product
+}
 
   const addItem = (product) => {
-    const list = preorderItems
-    list.value.push({ ...product })
-  }
-
-    const removeItem = (id) => {
-    stockItems.value = stockItems.value.filter(i => i.id !== id)
-    preorderItems.value = preorderItems.value.filter(i => i.id !== id)
-  }
-
-  const preorderSubtotal = computed(() =>
-    preorderItems.value.reduce((sum, i) =>
-      sum + (i.quantity === 1 ? i.price * i.quantity : i.bulk_price * i.quantity), 0)
-  )
-
-  // const subtotal = computed(() => stockSubtotal.value + preorderSubtotal.value)
-
-  // const totalQuantity = computed(
-  //   () => totalQtyStockItems.value + totalQtyPreorderItems.value
-  // )
-
-  // const stockDiscount = computed(() => stockSubtotal.value * 0.03)
-  // const preorderDiscount = computed(
-  //   () => preorderSubtotal.value * 0.03
-  // )
-  // const stockTotal = computed(() => stockSubtotal.value - stockDiscount.value)
-  // const preorderTotal = computed(
-  //   () => preorderSubtotal.value - preorderDiscount.value
-  // )
-  // const stockTotal = computed(() => stockSubtotal.value - stockDiscount.value)
-
-  // const discount = computed(
-  //   () => stockDiscount.value + preorderDiscount.value
-  // )
-  // const total = computed(
-  //   () => stockTotal.value + preorderTotal.value
-  // )
-
-
-
-
-
-  const updateQuantity = (id, qty) => {
-    const item = stockItems.value.find(i => i.id === id) ||
-      preorderItems.value.find(i => i.id === id)
-    if (!item) return
-    if (qty <= 0) {
-      removeItem(id)
+    const exists = preorderItems.value.find(item => item.id === product.id)
+    if (!exists) {
+      preorderItems.value.push({ ...product })
     } else {
-      item.quantity = qty
+      const index = preorderItems.value.findIndex(item => item.id === product.id)
+      preorderItems.value[index] = { ...product }
     }
   }
 
-  // const removeItem = (id) => {
-  //   stockItems.value = stockItems.value.filter(i => i.id !== id)
-  //   preorderItems.value = preorderItems.value.filter(i => i.id !== id)
-  // }
-
-  const clearCart = () => {
-    stockItems.value = []
-    preorderItems.value = []
+  const removeItem = (id) => {
+    preorderItems.value = preorderItems.value.filter(item => item.id !== id)
   }
+
+  const setExchangeRate = (val) => {
+    exchangeRate.value = parseFloat(val)
+    preorderIsInitialized.value = true
+    // preorderItems.value = preorderItems.value.map(item => calculatePrices(item))
+  }
+
+  const clearPreorder = () => {
+    preorderItems.value = []
+    preorderIsInitialized.value = false
+    preorderName.value = undefined
+    exchangeRate.value = null
+  }
+
 
   return {
-    stockItems,
     preorderItems,
-    // totalQuantity,
-    totalQtyStockItems,
-    totalQtyPreorderItems,
-    stockSubtotal,
-    preorderSubtotal,
-    // subtotal,
-    // stockDiscount,
-    // preorderDiscount,
-    // stockTotal,
-    // preorderTotal,
-    // discount,
-    // total,
+    exchangeRate,
+    preorderIsInitialized,
+    preorderName,
     addItem,
-    updateQuantity,
     removeItem,
-    clearCart,
+    setExchangeRate,
+    clearPreorder,
+    calculatePrices,
+
   }
-}, {
-  persist: true
-})
+}, { persist: true })
