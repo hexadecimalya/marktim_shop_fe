@@ -5,7 +5,8 @@
             <div>
                 <UModal v-model:open="modalOpened" title="Тип передзамовлення" v-if="!preorderIsInitialized"
                     description="Оберіть тип">
-                    <UButton label="Створити" color="neutral" variant="subtle" v-if="!preorderIsInitialized" icon="i-lucide-clipboard-list" />
+                    <UButton label="Створити" color="neutral" variant="subtle" v-if="!preorderIsInitialized"
+                        icon="i-lucide-clipboard-list" />
                     <template #body>
                         <UForm :state="formInitState" @submit="initPreorder">
                             <URadioGroup v-model="formInitState.selectedType" :items="formInitState.preorderType" />
@@ -25,7 +26,7 @@
                     Переглянути передзамовлення
                 </h2> -->
 
-                        <UAccordion :items="accordionItems" :key="preorderItems">
+                        <UAccordion :items="accordionItems">
                             <template #preorder-content>
                                 <div
                                     class="grid grid-cols-14 bg-gray-600 rounded-t-lg p-3 text-sm font-semibold text-white mt-2">
@@ -36,6 +37,7 @@
                                     <div>Опт</div>
                                     <div>Закуп (zl)</div>
                                     <div>Промо (zl)</div>
+
                                     <div class="text-end">
                                         <UIcon name="i-lucide:image" />
                                     </div>
@@ -48,7 +50,7 @@
 
                                         <div class="flex justify-center">
                                             <UButton icon="i-lucide:trash-2" color="error" variant="ghost" size="sm"
-                                                @click="store.removeItem(product.id)" />
+                                                @click.stop="store.removeItem(product.id)" />
                                         </div>
 
                                         <div class="col-span-7 font-medium truncate">
@@ -64,6 +66,7 @@
                                             @change="store.calculatePrices(product)" />
                                         <UInput v-model="product.promo_price"
                                             @change="store.calculatePrices(product)" />
+
 
                                         <div class="flex justify-end">
                                             <img :src="product?.files?.[0]?.link || placeholder"
@@ -87,7 +90,8 @@
                             <div class="flex justify-end items-end space-x-2">
                                 <UButton label="Зберегти все" variant="subtle" color="primary" @click="handlePreorder"
                                     :loading="isProcessing" />
-                                <UButton label="Скинути" @click="store.clearPreorder" color="neutral" variant="subtle" />
+                                <UButton label="Скинути" @click="store.clearPreorder" color="neutral"
+                                    variant="subtle" />
                             </div>
                         </div>
 
@@ -105,7 +109,7 @@
 
             </div>
 
-            <div class="grid grid-cols-14 bg-gray-700 rounded-t-lg p-3 text-sm font-semibold text-white mt-4">
+            <div class="grid grid-cols-16 bg-gray-700 rounded-t-lg p-3 text-sm font-semibold text-white mt-4">
                 <div class="flex justify-center">Дії</div>
                 <div class="col-span-7">Назва</div>
                 <div>Стара</div>
@@ -113,6 +117,7 @@
                 <div>Опт</div>
                 <div>Закуп (zl)</div>
                 <div>Промо (zl)</div>
+                <div class="col-span-2 text-center">Тип промо</div>
                 <div class="text-end">
                     <UIcon name="i-lucide:image" />
                 </div>
@@ -121,7 +126,7 @@
             <section v-if="!loading && !error">
                 <div class="divide-y divide-gray-100 border-x border-b border-gray-200 rounded-b-lg">
                     <div v-for="product in productList" :key="product.id"
-                        class="grid grid-cols-14 items-center p-1 text-sm gap-x-1 hover:bg-gray-50 transition-colors">
+                        class="grid grid-cols-16 items-center p-1 text-sm gap-x-1 hover:bg-gray-50 transition-colors">
 
                         <div class="flex justify-center">
                             <UCheckbox :disabled="!product.regular_price && !product.sell_price"
@@ -142,9 +147,12 @@
 
                         <UInput v-model="product.regular_price" @change="store.calculatePrices(product)" />
                         <UInput v-model="product.promo_price" @change="store.calculatePrices(product)" />
-
+                        <div class="col-span-2 flex justify-center">
+                            <USelect :items="selectPromoItems" v-model="product.promoSelected" @change="store.calculatePromo(product)" label-key="label"
+                                value-key="value" class="w-24" />
+                        </div>
                         <div class="flex justify-end">
-                            <img :src="product?.files?.[0]?.link || placeholder"
+                            <img :src="product?.files?.[0]?.link || placeholder" :class="{'' : placeholder, 'hover:scale-350 hover:inset-10 duration-200 ease-out' : product?.files?.[0]?.link }"
                                 class="w-10 h-10 object-cover rounded shadow-sm" />
                         </div>
                     </div>
@@ -168,14 +176,19 @@ import placeholder from '@/assets/image_placeholder.png'
 const store = useCreatePreorderStore()
 const { preorderItems, preorderName, exchangeRate, preorderIsInitialized } = storeToRefs(store)
 
+const selectPromoItems = ref([
+    { label: '-', value: 0 }, { label: '2nd -50%', value: 1 }, { label: '2nd -60%', value: 2 }, { label: '2nd -70%', value: 3 }, { label: '2+1', value: 4 }])
 
+
+
+const promoSelected = ref(selectPromoItems.value[0].label)
 // Initial State
 const modalOpened = ref(false)
 const isProcessing = ref(false)
 const accordionItems = computed(() => [{
     label: `Показати обрані товари (${preorderItems.value.length})`,
     icon: 'i-lucide-smile',
-    slot: 'preorder-content', 
+    slot: 'preorder-content',
     defaultOpen: true
 }])
 
@@ -228,7 +241,8 @@ watch(data, (newData) => {
                 sell_price: null,
                 bulk_price: null,
                 regular_price: product.regular_price ?? null,
-                promo_price: null
+                promo_price: null,
+                promoSelected: 0
             }
     })
 })
