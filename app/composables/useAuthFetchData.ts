@@ -18,12 +18,14 @@ export function useAuthFetchData<T = any>(
   const data = ref<T | null>(null);
   const error = ref<any>(null);
   const loading = ref(false);
-  
+  let cancelled = false;
+  onScopeDispose(() => {
+    cancelled = true;
+  });
 
-  // ensure store initialized from cookies
-  if (!userStore.user.access_token) {
-    userStore.initStore();
-  }
+  // if (!userStore.user.access_token) {
+  //   userStore.initStore();
+  // }
 
   async function tryRefresh(): Promise<boolean> {
     const refreshToken = userStore.user.refresh_token;
@@ -49,55 +51,60 @@ export function useAuthFetchData<T = any>(
     }
   }
 
-  const load = async () => {
-    loading.value = true;
-    error.value = null;
+  const resolveUrl = () =>
+    typeof url === "function" ? url() : isRef(url) ? url.value : url;
+
+const load = async () => {
+    loading.value = true
+    error.value = null
 
     try {
-      const finalUrl =
-        typeof url === "function" ? url() : isRef(url) ? url.value : url;
-
-      const options: Parameters<typeof $fetch<T>>[1] = {
-        baseURL,
-        ...opts,
-        headers: {
-          ...(opts?.headers ?? {}),
-          ...(userStore.user.access_token
-            ? { Authorization: `Bearer ${userStore.user.access_token}` }
-            : {}),
-        },
-      };
-
-      data.value = await $fetch<T>(finalUrl, options);
-    } catch (err: any) {
-      const status = err?.status || err?.response?.status;
-
-      if (status === 401) {
-        const refreshed = await tryRefresh();
-
-        if (refreshed) {
-          data.value = await $fetch<T>(
-            typeof url === "function" ? url() : isRef(url) ? url.value : url,
-            {
-              baseURL,
-              ...opts,
-              headers: {
+        const finalUrl = resolveUrl()
+        const options: Parameters<typeof $fetch<T>>[1] = {
+            baseURL,
+            ...opts,
+            headers: {
                 ...(opts?.headers ?? {}),
-                Authorization: `Bearer ${userStore.user.access_token}`,
-              },
-            },
-          );
-        } else {
-          userStore.logOut();
-          await navigateTo("/admin2/login");
+                ...(userStore.user.access_token
+                    ? { Authorization: `Bearer ${userStore.user.access_token}` }
+                    : {})
+            }
         }
-      } else {
-        error.value = err;
-      }
+
+        try {
+            const result = await $fetch<T>(finalUrl, options)
+            if (!cancelled) data.value = result
+
+        } catch (err: any) {
+            const status = err?.status || err?.response?.status
+
+            if (status === 401) {
+                const refreshed = await tryRefresh()
+
+                if (refreshed) {
+                    // retry with fresh token
+                    const result = await $fetch<T>(resolveUrl(), {
+                        baseURL,
+                        ...opts,
+                        headers: {
+                            ...(opts?.headers ?? {}),
+                            Authorization: `Bearer ${userStore.user.access_token}`
+                        }
+                    })
+                    if (!cancelled) data.value = result
+                } else {
+                    userStore.logOut()
+                    await navigateTo('/admin2/login')
+                }
+            } else {
+                if (!cancelled) error.value = err
+            }
+        }
+
     } finally {
-      loading.value = false;
+        if (!cancelled) loading.value = false  // ← covers both first request and retry
     }
-  };
+}
 
   // auto-refetch on URL change
   if (isRef(url) || typeof url === "function") {
@@ -105,7 +112,7 @@ export function useAuthFetchData<T = any>(
   } else {
     load();
   }
- 
+
   return {
     data,
     error,

@@ -17,13 +17,13 @@ export const useCreatePreorderStore = defineStore('new-preorder', () => {
     if (promoType === 0) {
       product.promo_price = null
     } else if (promoType === 1) {
-      product.promo_price = parseFloat(((reg + reg * 0.5) / 2).toFixed(3))
+      product.promo_price = parseFloat(((reg + reg * 0.5) / 2).toFixed(2))
     } else if (promoType === 2) {
-      product.promo_price = parseFloat(((reg + reg * 0.4) / 2).toFixed(3))
+      product.promo_price = parseFloat(((reg + reg * 0.4) / 2).toFixed(2))
     } else if (promoType === 3) {
-      product.promo_price = parseFloat(((reg + reg * 0.3) / 2).toFixed(3))
+      product.promo_price = parseFloat(((reg + reg * 0.3) / 2).toFixed(2))
     } else if (promoType === 4) {
-      product.promo_price = parseFloat(((reg * 2) / 3).toFixed(3))
+      product.promo_price = parseFloat(((reg * 2) / 3).toFixed(2))
     }
 
     return calculatePrices(product)
@@ -46,10 +46,10 @@ export const useCreatePreorderStore = defineStore('new-preorder', () => {
     const promo = parseFloat(product.promo_price) || 0;
 
     if (promo > 0) {
-      product.sell_price = Math.ceil(promo * rate * margin * calculateFloatingRate(promo))
-      product.old_price = reg > 0 ? Math.ceil(reg * rate * margin * calculateFloatingRate(reg)) : null
+      product.sell_price = Math.ceil(promo * rate * margin * calculateFloatingRate(promo)) 
+      product.old_price = reg > 0 ? Math.ceil(reg * rate * margin * calculateFloatingRate(reg)) : null 
     } else {
-      product.sell_price = reg > 0 ? Math.ceil(reg * rate * margin * calculateFloatingRate(reg)) : 0
+      product.sell_price = reg > 0 ? Math.ceil(reg * rate * margin * calculateFloatingRate(reg)) : 0 
       product.old_price = null
     }
 

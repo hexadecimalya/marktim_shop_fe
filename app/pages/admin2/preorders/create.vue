@@ -148,11 +148,13 @@
                         <UInput v-model="product.regular_price" @change="store.calculatePrices(product)" />
                         <UInput v-model="product.promo_price" @change="store.calculatePrices(product)" />
                         <div class="col-span-2 flex justify-center">
-                            <USelect :items="selectPromoItems" v-model="product.promoSelected" @change="store.calculatePromo(product)" label-key="label"
-                                value-key="value" class="w-24" />
+                            <USelect :items="selectPromoItems" v-model="product.promoSelected"
+                                @change="store.calculatePromo(product)" label-key="label" value-key="value"
+                                class="w-24" />
                         </div>
                         <div class="flex justify-end">
-                            <img :src="product?.files?.[0]?.link || placeholder" :class="{'' : placeholder, 'hover:scale-350 hover:inset-10 duration-200 ease-out' : product?.files?.[0]?.link }"
+                            <img :src="product?.files?.[0]?.link || placeholder"
+                                :class="{ '': placeholder, 'hover:scale-350 hover:inset-10 duration-200 ease-out': product?.files?.[0]?.link }"
                                 class="w-10 h-10 object-cover rounded shadow-sm" />
                         </div>
                     </div>
@@ -173,6 +175,7 @@
 
 <script setup>
 import placeholder from '@/assets/image_placeholder.png'
+const { execute } = useAuthFetchMulti()
 const store = useCreatePreorderStore()
 const { preorderItems, preorderName, exchangeRate, preorderIsInitialized } = storeToRefs(store)
 
@@ -290,22 +293,17 @@ const handlePreorder = async () => {
                 promotion_price: parseFloat(item.promo_price) || null
             }))
         }
-
-        const runtimeConfig = useRuntimeConfig()
-        const userStore = useUserStore()
-
-        const response = await $fetch('/preorders/', {
-            baseURL: runtimeConfig.public.apiBase,
+        console.log(payload)
+        console.log(JSON.stringify(payload, null, 2))
+        const response = await execute('/preorders/', {
             method: 'POST',
             body: payload,
-            headers: {
-                Authorization: `Bearer ${userStore.user.access_token}`
-            }
         })
+
         store.clearPreorder()
         formInitState.exchangeRate = null
-        console.log(response)
-        // console.log(payload)
+        // console.log(response)
+
 
     } catch (e) {
         console.log(e)
