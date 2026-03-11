@@ -33,6 +33,7 @@ export const useUserStore = defineStore('user', () => {
                 user.value[key] = null
                 useCookie(key, cookieOpts).value = null
             })
+             navigateTo("/admin2/login");
         } catch (error) {}
     }
 

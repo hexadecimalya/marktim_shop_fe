@@ -30,14 +30,18 @@
             </ul>
         </nav>
         <div class="flex w-24 flex-none justify-evenly">
-            <NuxtLink to="/auth/login">
+            <button @click="userStore.logOut()">
                 <UIcon name="i-solar:logout-2-linear" class="w-6 h-6 bg-white" />
-            </NuxtLink>
+            </button>
         </div>
     </div>
 </template>
 <script setup>
 import DropdownMenu from '@nuxt/ui/runtime/components/DropdownMenu.vue';
+const userStore = useUserStore()
+
+
+
 const itemsPreorders = [
     {
         label: 'Всі',
