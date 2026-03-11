@@ -44,24 +44,22 @@ pipeline {
       }
     }
 
-    stage('Build') {
-      steps {
-        script {
-          def code = sh(
-            script: '''
-              set -e
-              npm ci
-              npm run build
-            ''',
-            returnStatus: true
-          )
-          if (code != 0) {
-            notifySlack("❌ Build FAILED during Build stage for ${env.BRANCH_NAME}. ${env.BUILD_URL}")
-            error "Build failed with exit code ${code}"
-          }
-        }
-      }
+   stage('Build') {
+  steps {
+    script {
+      def code = sh(
+        script: """
+          sudo -u webber bash -lc 'export PATH=${NODE_PATH}:\$PATH && \
+            cd /home/webber/Projects/marktim_fe/${cfg.branch} && \
+            git pull origin ${cfg.branch} && \
+            npm ci && \
+            npm run build'
+        """,
+        returnStatus: true
+      )
     }
+  }
+}
 
     stage('Deploy') {
       steps {
@@ -69,11 +67,6 @@ pipeline {
           def code = sh(
             script: """
               echo "Deploying to ${cfg.name}"
-
-              sudo -u webber bash -lc 'export PATH=${NODE_PATH}:\$PATH && \
-                cd /home/webber/Projects/marktim_shop_fe && \
-                git pull origin ${cfg.branch}'
-
               sudo systemctl daemon-reload
               sudo systemctl restart ${cfg.service}
             """,
