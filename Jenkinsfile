@@ -45,39 +45,27 @@ pipeline {
     }
 
    stage('Build') {
-  steps {
-    script {
-      def code = sh(
-        script: """
-          sudo -u webber bash -lc 'export PATH=${NODE_PATH}:\$PATH && \
-            cd /home/webber/Projects/marktim_fe/${cfg.branch} && \
-            git pull origin ${cfg.branch} && \
-            npm ci && \
-            npm run build'
-        """,
-        returnStatus: true
-      )
+      steps {
+        sh '''
+          set -e
+          npm ci
+          npm run build
+        '''
+      }
     }
-  }
-}
 
     stage('Deploy') {
       steps {
-        script {
-          def code = sh(
-            script: """
-              echo "Deploying to ${cfg.name}"
-              sudo systemctl daemon-reload
-              sudo systemctl restart ${cfg.service}
-            """,
-            returnStatus: true
-          )
-
-          if (code != 0) {
-            notifySlack("❌ Deployment FAILED for ${env.BRANCH_NAME}. ${env.BUILD_URL}")
-            error "Deployment failed with exit code ${code}"
-          }
-        }
+        sh """
+          echo "Deploying to ${cfg.name}"
+          sudo -u webber bash -lc "
+            export PATH=${NODE_PATH}:\$PATH
+            cd /home/webber/Projects/marktim_fe/${cfg.branch}
+            git pull origin ${cfg.branch}
+          "
+          sudo systemctl daemon-reload
+          sudo systemctl restart ${cfg.service}
+        """
       }
     }
     stage('Smoke tests') {
