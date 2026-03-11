@@ -1,10 +1,19 @@
+import { useUserStore } from "~/stores/useUserStore";
+
 export default defineNuxtRouteMiddleware((to) => {
-    const userStore = useUserStore()
-    userStore.initStore()  
+  const userStore = useUserStore();
 
-    const isAuthenticated = Boolean(userStore.user.access_token)
-    const isLoginPage = to.path === '/admin2/login'
+  if (!userStore.user.access_token) {
+    userStore.initStore();
+  }
 
-    if (isAuthenticated && isLoginPage) return navigateTo('/admin2')
-    if (!isAuthenticated && !isLoginPage) return navigateTo('/admin2/login')
-})
+  const isAuthenticated = Boolean(userStore.user.access_token);
+  const isLoginPage = to.path === "/admin2/login";
+
+  if (isLoginPage && !isAuthenticated) {
+    return;
+  } else if (isLoginPage && isAuthenticated) {
+    return navigateTo("/admin2");
+  } else if (to.path.startsWith("/admin2/") && !isAuthenticated)
+    return navigateTo("/admin2/login");
+});
