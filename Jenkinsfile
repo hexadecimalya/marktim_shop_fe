@@ -52,6 +52,7 @@ pipeline {
 
               sudo -u webber bash -lc '
                 export PATH=${NODE_PATH}:\$PATH &&
+                export NODE_OPTIONS="--max-old-space-size=3072" &&
                 cd ${cfg.dir} &&
                 git pull origin ${cfg.branch} &&
                 npm ci &&
