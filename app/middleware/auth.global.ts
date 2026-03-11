@@ -14,6 +14,6 @@ export default defineNuxtRouteMiddleware((to) => {
     return;
   } else if (isLoginPage && isAuthenticated) {
     return navigateTo("/admin2");
-  } else if (to.path.startsWith("/admin2/") && !isAuthenticated)
+  } else if (to.path.startsWith("/admin2") && !isAuthenticated)
     return navigateTo("/admin2/login");
 });
