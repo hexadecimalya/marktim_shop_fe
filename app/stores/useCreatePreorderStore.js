@@ -15,14 +15,17 @@ export const useCreatePreorderStore = defineStore('new-preorder', () => {
     const promoType = product.promoSelected ?? 0
 
     if (promoType === 0) {
-      product.promo_price = null
-    } else if (promoType === 1) {
-      product.promo_price = parseFloat(((reg + reg * 0.5) / 2).toFixed(2))
+      product.promo_price = null 
+    }
+      else if (promoType === 1) {
+      product.promo_price = parseFloat(((reg + reg * 0.6) / 2).toFixed(2))
     } else if (promoType === 2) {
-      product.promo_price = parseFloat(((reg + reg * 0.4) / 2).toFixed(2))
+      product.promo_price = parseFloat(((reg + reg * 0.5) / 2).toFixed(2))
     } else if (promoType === 3) {
-      product.promo_price = parseFloat(((reg + reg * 0.3) / 2).toFixed(2))
+      product.promo_price = parseFloat(((reg + reg * 0.4) / 2).toFixed(2))
     } else if (promoType === 4) {
+      product.promo_price = parseFloat(((reg + reg * 0.3) / 2).toFixed(2))
+    } else if (promoType === 5) {
       product.promo_price = parseFloat(((reg * 2) / 3).toFixed(2))
     }
 

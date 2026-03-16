@@ -180,7 +180,7 @@ const store = useCreatePreorderStore()
 const { preorderItems, preorderName, exchangeRate, preorderIsInitialized } = storeToRefs(store)
 
 const selectPromoItems = ref([
-    { label: '-', value: 0 }, { label: '2nd -50%', value: 1 }, { label: '2nd -60%', value: 2 }, { label: '2nd -70%', value: 3 }, { label: '2+1', value: 4 }])
+    { label: '-', value: 0 }, { label: '2nd -40%', value: 1 }, { label: '2nd -50%', value: 2 }, { label: '2nd -60%', value: 3 }, { label: '2nd -70%', value: 4 }, { label: '2+1', value: 5 }])
 
 
 
