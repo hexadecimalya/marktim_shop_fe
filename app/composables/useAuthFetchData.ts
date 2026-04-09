@@ -13,6 +13,7 @@ export function useAuthFetchData<T = any>(
 ) {
   const userStore = useUserStore();
   const runtimeConfig = useRuntimeConfig();
+  const router = useRouter()
   const baseURL = runtimeConfig.public.apiBase;
 
   const data = ref<T | null>(null);
@@ -23,9 +24,9 @@ export function useAuthFetchData<T = any>(
     cancelled = true;
   });
 
-  // if (!userStore.user.access_token) {
-  //   userStore.initStore();
-  // }
+  if (!userStore.user.access_token) {
+    userStore.initStore();
+  }
 
   async function tryRefresh(): Promise<boolean> {
     const refreshToken = userStore.user.refresh_token;
@@ -94,7 +95,7 @@ const load = async () => {
                     if (!cancelled) data.value = result
                 } else {
                     userStore.logOut()
-                    await navigateTo('/admin2/login')
+                    router.push('/admin2/login')
                 }
             } else {
                 if (!cancelled) error.value = err
@@ -102,7 +103,7 @@ const load = async () => {
         }
 
     } finally {
-        if (!cancelled) loading.value = false  // ← covers both first request and retry
+        if (!cancelled) loading.value = false  
     }
 }
 

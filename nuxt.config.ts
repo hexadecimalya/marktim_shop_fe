@@ -3,11 +3,14 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   runtimeConfig: {
-    // npApiKey: process.env.NP_API_KEY,
     public: {
       apiBase:
         process.env.NUXT_PUBLIC_API_BASE || "https://marktim.shop/api/v1",
       siteUrl: "https://marktim.shop",
+    },
+    sentry: {
+      dsn: process.env.NODE_ENV === "production" ? process.env.SENTRY_DSN : "",
+      tracesSampleRate: process.env.NODE_ENV === "production" ? 1.0 : 0,
     },
   },
   pages: true,
@@ -35,6 +38,7 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@sentry/nuxt/module",
   ],
+
   icon: {
     // mode: "svg",
     serverBundle: {
@@ -45,10 +49,11 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
     optimizeDeps: {
       include: [
-        '@vue/devtools-core',
-        '@vue/devtools-kit',
-        'pinia-plugin-persistedstate',
-      ]
-    }
+        "@vue/devtools-core",
+        "@vue/devtools-kit",
+        "pinia-plugin-persistedstate",
+        "zod",
+      ],
+    },
   },
 });

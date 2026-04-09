@@ -4,7 +4,7 @@
         <SearchBarAdmin @update:search="onSearch" />
         <!-- Table Header -->
         <div
-            class="grid grid-cols-21 bg-mtgreen-100 border border-gray-200 rounded-t-lg p-3 text-sm font-semibold text-gray-700">
+            class="grid grid-cols-21 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
             <div class="">ID</div>
             <div class="col-span-10">Назва</div>
             <div class="col-span-8">Категорії</div>
@@ -56,13 +56,15 @@
     </section>
     <div class="my-6 flex justify-center" v-if="!loading">
         <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
-            active-variant="subtle" :items-per-page="limit" show-edges />
+            active-variant="subtle" :items-per-page="limit" show-edges  @update:page="scrollToTop" />
     </div>
 
 
 </template>
 <script setup>
-
+const scrollToTop = () =>
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    
 const searchTerm = ref('')
 const page = ref(1)
 const onSearch = (value) => {
@@ -74,13 +76,12 @@ const onSearch = (value) => {
 const limit = 50
 
 const totalCount = computed(() => data.value?.count ?? 0)
-// const url = computed(() => `/api/v1/public/products2/?limit=${limit}&offset=${(page.value - 1) * limit}`)
 const url = computed(() => {
     const offset = (page.value - 1) * limit
     const base = `/public/products2/?order_by=-id`
     return searchTerm.value.length >= 3
-        ? `${base}?filter_param=${encodeURIComponent(searchTerm.value)}`
-        : `${base}`
+        ? `${base}&filter_param=${encodeURIComponent(searchTerm.value)}`
+        : `${base}&offset=${offset}`
 })
 
 const { data, error, loading } = useAuthFetchData(

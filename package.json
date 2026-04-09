@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@google-cloud/translate": "^9.3.0",
     "@iconify-json/lucide": "^1.2.76",
     "@iconify-json/mingcute": "^1.2.5",
     "@iconify-json/solar": "^1.2.2",

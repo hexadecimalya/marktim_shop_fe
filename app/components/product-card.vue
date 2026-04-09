@@ -1,5 +1,5 @@
 <template>
-    <div class="duration-200 hover:scale-102 border rounded-md border-gray-100 mx-auto hover:overflow-visible hover: ">
+    <div class="duration-200 hover:scale-102 border rounded-md border-gray-100 mx-auto hover:overflow-visible ">
         <div class="relative group">
             <NuxtLink :to="`/products/${routeLocation}/${itemData.id}/`">
                 <img :src="`${itemData.image}`" :alt="itemData.name" class="object-cover rounded-t-md" />
@@ -29,7 +29,7 @@
                             <UIcon name="i-lucide:candy-off" class="w-4 h-4 text-pink-600" />
                         </div>
                     </UTooltip>
-                    <UTooltip v-if="vegan" text="Без глютену">
+                    <UTooltip v-if="vegan" text="Веган">
                         <div class="bg-green-100 rounded-full p-1.5 shadow-sm">
                             <UIcon name="i-lucide:leaf" class="w-4 h-4 text-green-600" />
                         </div>

@@ -22,10 +22,6 @@
                 </UModal>
                 <div v-if="preorderIsInitialized">
                     <section v-if="preorderItems.length" class="mt-4 bg-mtgreen-100 p-4 rounded-md">
-                        <!-- <h2 class="text-xl font-bold mb-2 flex items-center gap-2">
-                    Переглянути передзамовлення
-                </h2> -->
-
                         <UAccordion :items="accordionItems">
                             <template #preorder-content>
                                 <div
@@ -109,7 +105,7 @@
 
             </div>
 
-            <div class="grid grid-cols-16 bg-gray-700 rounded-t-lg p-3 text-sm font-semibold text-white mt-4">
+            <div class="grid grid-cols-16 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold  tracking-wider text-gray-500">
                 <div class="flex justify-center">Дії</div>
                 <div class="col-span-7">Назва</div>
                 <div>Стара</div>
@@ -302,7 +298,7 @@ const handlePreorder = async () => {
 
         store.clearPreorder()
         formInitState.exchangeRate = null
-        // console.log(response)
+      
 
 
     } catch (e) {

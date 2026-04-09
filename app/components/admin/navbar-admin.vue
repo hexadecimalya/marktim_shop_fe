@@ -25,6 +25,10 @@
                     :content="{ align: 'start' }">
                     <li class="cursor-pointer">Поставки</li>
                 </DropdownMenu>
+                 <DropdownMenu :items="itemsEntities" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
+                    :content="{ align: 'start' }">
+                    <li class="cursor-pointer">Довідники</li>
+                </DropdownMenu>
                 <li></li>
                 <li></li>
             </ul>
@@ -94,6 +98,24 @@ const itemsSupplies = [
         label: 'Створити',
         icon: 'i-lucide-plus',
         to: '/admin2/supplies/create'
+    }
+]
+
+const itemsEntities = [
+     {
+        label: 'Категорії',
+        icon: 'i-lucide-chart-bar-stacked',
+        to: '/admin2/entities/categories'
+    },
+    {
+        label: 'Контрагенти',
+        icon: 'i-lucide-users',
+        to: '/admin2/entities/counterparties'
+    },
+    {
+        label: 'Бренди',
+        icon: 'i-lucide-scroll-text',
+        to: '/admin2/entities/brands'
     }
 ]
 
