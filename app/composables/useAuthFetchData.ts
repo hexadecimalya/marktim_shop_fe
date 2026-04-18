@@ -13,7 +13,7 @@ export function useAuthFetchData<T = any>(
 ) {
   const userStore = useUserStore();
   const runtimeConfig = useRuntimeConfig();
-  const router = useRouter()
+  const router = useRouter();
   const baseURL = runtimeConfig.public.apiBase;
 
   const data = ref<T | null>(null);
@@ -55,57 +55,55 @@ export function useAuthFetchData<T = any>(
   const resolveUrl = () =>
     typeof url === "function" ? url() : isRef(url) ? url.value : url;
 
-const load = async () => {
-    loading.value = true
-    error.value = null
+  const load = async () => {
+    loading.value = true;
+    error.value = null;
 
     try {
-        const finalUrl = resolveUrl()
-        const options: Parameters<typeof $fetch<T>>[1] = {
-            baseURL,
-            ...opts,
-            headers: {
+      const finalUrl = resolveUrl();
+      const options: Parameters<typeof $fetch<T>>[1] = {
+        baseURL,
+        ...opts,
+        headers: {
+          ...(opts?.headers ?? {}),
+          ...(userStore.user.access_token
+            ? { Authorization: `Bearer ${userStore.user.access_token}` }
+            : {}),
+        },
+      };
+
+      try {
+        const result = await $fetch<T>(finalUrl, options);
+        if (!cancelled) data.value = result;
+      } catch (err: any) {
+        const status = err?.status || err?.response?.status;
+
+        if (status === 401) {
+          const refreshed = await tryRefresh();
+
+          if (refreshed) {
+            // retry with fresh token
+            const result = await $fetch<T>(resolveUrl(), {
+              baseURL,
+              ...opts,
+              headers: {
                 ...(opts?.headers ?? {}),
-                ...(userStore.user.access_token
-                    ? { Authorization: `Bearer ${userStore.user.access_token}` }
-                    : {})
-            }
+                Authorization: `Bearer ${userStore.user.access_token}`,
+              },
+            });
+            if (!cancelled) data.value = result;
+          } else {
+            userStore.logOut();
+            router.push("/admin2/login");
+          }
+        } else {
+          if (!cancelled) error.value = err;
         }
-
-        try {
-            const result = await $fetch<T>(finalUrl, options)
-            if (!cancelled) data.value = result
-
-        } catch (err: any) {
-            const status = err?.status || err?.response?.status
-
-            if (status === 401) {
-                const refreshed = await tryRefresh()
-
-                if (refreshed) {
-                    // retry with fresh token
-                    const result = await $fetch<T>(resolveUrl(), {
-                        baseURL,
-                        ...opts,
-                        headers: {
-                            ...(opts?.headers ?? {}),
-                            Authorization: `Bearer ${userStore.user.access_token}`
-                        }
-                    })
-                    if (!cancelled) data.value = result
-                } else {
-                    userStore.logOut()
-                    router.push('/admin2/login')
-                }
-            } else {
-                if (!cancelled) error.value = err
-            }
-        }
-
+      }
     } finally {
-        if (!cancelled) loading.value = false  
+      if (!cancelled) loading.value = false;
     }
-}
+  };
 
   // auto-refetch on URL change
   if (isRef(url) || typeof url === "function") {

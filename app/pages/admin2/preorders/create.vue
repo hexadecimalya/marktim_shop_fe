@@ -224,7 +224,7 @@ const url = computed(() => {
 })
 
 const { data, loading, error } = useAuthFetchData(url)
-// const productList = computed(() => data.value?.data ?? [])
+
 const productList = ref([])
 
 watch(data, (newData) => {

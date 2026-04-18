@@ -50,10 +50,9 @@ const productList = computed(() => data.value?.data ?? [])
 const totalCount = computed(() => data.value?.count ?? 0)
 
 
-const seoTitle = computed(() => 'Головна сторінка — MarkTim Shop')
-const seoDescription = computed(() =>
+const seoTitle = 'Головна сторінка — MarkTim Shop'
+const seoDescription = 
   'MarkTim – інтернет-магазин якісних європейських товарів. Широкий асортимент, гарантована якість та швидка доставка по Україні.'
-)
 const ogImage = computed(() => `${config.public.siteUrl}/og-default.png`)
 
 useSeoMeta({
@@ -61,11 +60,11 @@ useSeoMeta({
   description: seoDescription,
   ogTitle: seoTitle,
   ogDescription: seoDescription,
-  ogImage: ogImage,
+  ogImage: ogImage.value,
   ogUrl: 'https://marktim.shop',
   canonical: 'https://marktim.shop',
   twitterCard: 'summary_large_image',
-  twitterImage: ogImage,
+  twitterImage: ogImage.value,
   twitterTitle: seoTitle,
   twitterDescription: seoDescription
 })

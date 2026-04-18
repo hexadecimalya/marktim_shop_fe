@@ -9,23 +9,23 @@
                     <UInput v-model="product.name_ukr" class="w-full" />
                 </UFormField>
                 <UFormField label="Бренд" required name="brand">
-                    <USelectMenu class="w-full" v-model="product.brand" v-model:search-term="brandSearch" :items="filteredBrands"
-                        label-key="name" value-key="id" placeholder="Оберіть або створіть бренд" create-item="always"
-                        @create="createBrand" />
+                    <USelectMenu class="w-full" v-model="product.brand" v-model:search-term="brandSearch"
+                        :items="filteredBrands" label-key="name" value-key="id" placeholder="Оберіть або створіть бренд"
+                        create-item="always" @create="createBrand" />
                 </UFormField>
                 <UFormField label="Назва (російською)" required name="name">
                     <UButton label="перекласти" @click="triggerTranslation" class="mb-2" color="neutral"
                         :loading="isTranslating" />
                     <UInput v-model="product.name" class="w-full" />
                 </UFormField>
-                <UFormField label="Оригінальна назва" name="name_orig">
-                    <UInput v-model="product.name_orig" class="w-full" />
+                <UFormField label="Оригінальна назва" name="name_original">
+                    <UInput v-model="product.name_original" class="w-full" />
                 </UFormField>
                 <UFormField label="Фіскальна назва" name="name_fiscal">
                     <UInput v-model="product.name_fiscal" class="w-full" placeholder="Лиш для алкоголю" />
                 </UFormField>
-                <UFormField label="Штрих-код" name="barcode">
-                    <UInput v-model="product.barcode" class="w-full" />
+                <UFormField label="Штрих-код" name="barcodes">
+                    <UInput v-model="product.barcodes" class="w-full" />
                 </UFormField>
                 <UFormField label="Опис" name="description_ukr">
                     <UTextarea v-model="product.description_ukr" :rows="4" size="xl" class="w-full" />
@@ -41,10 +41,14 @@
                         <UInput v-model="product.measurements" type="number" step="0.01" />
                     </UFormField>
                     <UFormField label="Одиниця" required name="measure_units">
-                        <USelect v-if="Array.isArray(units_list) && units_list.length" v-model="product.measure_units"
-                            :items="units_list" value-key="id" label-key="name" class="w-24 h-8" />
-                        <div v-else-if="unitsLoading">loading...</div>
-                        <div v-else>error...</div>
+                        <ClientOnly>
+                            <USelect v-if="Array.isArray(units_list) && units_list.length"
+                                v-model="product.measure_units" :items="units_list" value-key="id" label-key="name"
+                                class="w-24 h-8" />
+                             <template #fallback>
+                                <div>loading...</div>
+                            </template>
+                        </ClientOnly>
                     </UFormField>
                     <UCheckbox label="Ваговий товар?" v-model="product.loose" />
                 </div>
@@ -82,10 +86,10 @@ const uploadedFile = ref([])
 // state
 const product = reactive({
     name_ukr: '',
-    name : '',
-    name_orig: '',
+    name: '',
+    name_original: '',
     name_fiscal: '',
-    barcode: '',
+    barcodes: null,
     description_ukr: '',
     brand: null,
     measurements: null,
@@ -171,7 +175,7 @@ const createBrand = async (newBrandName) => {
         })
         console.log(res)
         brandsData.value.data.push(res)
-       
+
         product.brand = res.id
         brandSearch.value = ''
     } catch (e) {
@@ -182,13 +186,19 @@ const units_list = computed(() => dataUnits?.value?.data ?? [])
 
 const productIsSaving = ref(false)
 
-const handleSaveProduct = async () => {  
+const handleSaveProduct = async () => {
     productIsSaving.value = true
     try {
         const payload = new FormData()
 
         for (const [key, value] of Object.entries(product)) {
             if (key === 'images') continue
+            if (key === 'barcodes') {
+                const barcodeArray = value.split(',').map(s => s.trim()).filter(Boolean)
+
+                payload.append('barcodes', JSON.stringify({ all: barcodeArray }))
+                continue
+            }
             if (Array.isArray(value)) {
                 value.forEach(v => payload.append(key, v))
             } else if (value !== null && value !== undefined) {
@@ -200,8 +210,8 @@ const handleSaveProduct = async () => {
             payload.append('images', uploadedFile.value, uploadedFile.value.name)
         }
 
-       
-        for (const [k, v] of payload.entries()) console.log(k, v)
+
+        //for (const [k, v] of payload.entries()) console.log(k, v)
 
         const response = await execute('/products2/', {
             method: 'POST',
@@ -216,7 +226,12 @@ const handleSaveProduct = async () => {
 
     } catch (e) {
         console.error('Failed to save product', e?.response?._data || e)
-    } 
+        toast.add({
+            title: 'Помилка збереження',
+            icon: 'i-lucide:ban',
+            color: 'error'
+        })
+    }
     finally {
         productIsSaving.value = false
     }
@@ -227,9 +242,9 @@ const resetForm = () => {
     Object.assign(product, {
         name_ukr: '',
         name: '',
-        name_orig: '',
+        name_original: '',
         name_fiscal: '',
-        barcode: '',
+        barcodes: null,
         description_ukr: '',
         brand: null,
         measurements: null,
