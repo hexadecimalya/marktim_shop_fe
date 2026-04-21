@@ -257,7 +257,6 @@ const syncWithStore = (product) => {
 const isProductInPreorder = (id) => {
     const items = Array.isArray(preorderItems.value)
         ? preorderItems.value
-        // if it's an object (e.g. numeric keys) convert to array, or fallback to empty array
         : (preorderItems.value ? Object.values(preorderItems.value) : [])
 
     return items.some(item => item && item.id === id)
@@ -289,8 +288,6 @@ const handlePreorder = async () => {
                 promotion_price: parseFloat(item.promo_price) || null
             }))
         }
-        console.log(payload)
-        console.log(JSON.stringify(payload, null, 2))
         const response = await execute('/preorders/', {
             method: 'POST',
             body: payload,

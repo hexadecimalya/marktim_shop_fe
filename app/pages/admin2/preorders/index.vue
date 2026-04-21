@@ -1,109 +1,232 @@
 <template>
-
     <section class="w-5/6 mx-auto">
         <h1 class="text-2xl font-extrabold my-4">
             Список передзамовлень
         </h1>
 
-
-
         <div v-if="!loading && !error">
+            <UButton variant="subtle" class="mx-auto mb-6" color="error" icon="i-lucide:hand"
+                :disabled="isStopping" @click="handleStopPreorders">Зупинити всі</UButton>
             <div
-                class="grid grid-cols-5 my-2 items-center md:text-sm  bg-mtgreen-100 border border-gray-200 rounded-t-lg p-3 text-sm font-semibold text-gray-700">
-
+                class="grid grid-cols-6 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <div>Створено</div>
                 <div class="col-span-2">Назва</div>
                 <div>Статус</div>
-                <div>Активний до
-                </div>
+                <div>Активний до</div>
                 <div class="text-end">Дії</div>
             </div>
-            <div v-for="preorder in preordersList" :key="preorder.id">
-                <div class="grid grid-cols-5 my-2 items-center text-xs md:text-sm px-3">
-                    <div class="col-span-2 flex space-x-2 items-center">
-                       
-                        <NuxtLink :to="`/admin2/preorders/${preorder.id}`" class="hover:underline cursor-pointer">
-                            {{ preorder.name }}
-                        </NuxtLink>
+            <div class="border-x border-b border-gray-200 rounded-b-lg">
+                <div v-for="preorder in preordersList" :key="preorder.id">
+                    <div class="grid grid-cols-6 px-1 py-1 text-sm font-slim items-center">
+                        <div class="px-4">{{ preorder.created }}</div>
+                        <div class="col-span-2 font-semibold hover:underline text-gray-600">
+                            <NuxtLink :to="`/admin2/preorders/${preorder.id}`" class="hover:underline cursor-pointer">
+                                {{ preorder.name }}
+                            </NuxtLink>
+                        </div>
+                        <div>
+                            <UBadge variant="subtle" :color="preorder.active ? 'primary' : 'neutral'">
+                                {{ preorder.active ? 'активований' : 'неактивний' }}
+                            </UBadge>
+                        </div>
+                        <div class="flex align-middle">
+                            <UPopover>
+                                <UButton size="sm" variant="ghost" color="neutral">
+                                    {{ formatDate(validTillMap[preorder.id]) }}
+                                </UButton>
+                                <template #content>
+                                    <UCalendar :model-value="toCalendarDate(validTillMap[preorder.id])"
+                                        @update:model-value="(val) => {
+                                            const str = fromCalendarDate(val)
+                                            validTillMap[preorder.id] = str
+                                            saveValidTill(preorder.id, str)
+                                        }" color="neutral" class="inline-flex" />
+                                </template>
+                            </UPopover>
+                        </div>
+                        <div class="flex space-x-3 justify-end">
+                            <UTooltip
+                                :text="!preorder.uiValidTill ? 'Спочатку оберіть дату' : (!preorder.active ? 'Активувати' : 'Вимкнути')"
+                                :content="{ side: 'top' }">
+                                <UButton variant="ghost"
+                                    :icon="!preorder.active ? 'i-lucide:power' : 'i-lucide:power-off'"
+                                    :color="!preorder.uiValidTill ? 'neutral' : (preorder.active ? 'primary' : 'neutral')"
+                                    :class="{ 'opacity-50': !preorder.uiValidTill }" :disabled="isStatusSwithing"
+                                    @click="handleSwitchActiveStatusPreorder(preorder.id)" />
+                            </UTooltip>
+                            <UTooltip text="Опублікувати в Viber" :content="{ side: 'top' }">
+                                <UButton variant="ghost" icon="i-lucide:send" color="neutral" :disabled="isPublishing"
+                                    @click="handlePubishPreorder(preorder.id)" />
+                            </UTooltip>
+                            <UTooltip text="Видалити" :content="{ side: 'top' }">
+                                <UButton variant="ghost" icon="i-lucide:trash" color="error" :disabled="isDeleting"
+                                    @click="handleDeletePreorder(preorder.id)" />
+                            </UTooltip>
+                        </div>
                     </div>
-                    <div>
-                        <UButton variant="subtle" :color="preorder.active ? 'primary' : 'neutral'"> {{ preorder.active ?
-                            'вимкнути' : 'активувати' }} </UButton>
-                    </div>
-                    <div class="flex align-middle">
-                        <UPopover>
-                            <UButton size="sm" variant="ghost" color="neutral">
-                                {{
-                                    preorder.uiValidTill
-                                        ? df.format(preorder.uiValidTill.toDate(getLocalTimeZone()))
-                                        : 'Обрати дату'
-                                }}
-                            </UButton>
-
-                            <template #content>
-                                <UCalendar v-model="preorder.uiValidTill" color="neutral" class="inline-flex" />
-                            </template>
-                        </UPopover>
-                    </div>
-                    <UButton class="justify-self-end" variant="ghost" icon="i-lucide:trash" color="error" />
-
+                    <USeparator />
                 </div>
-                <USeparator />
             </div>
             <div class="my-6 flex justify-center">
                 <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
                     active-variant="subtle" :items-per-page="limit" show-edges />
             </div>
-
         </div>
 
-        <div v-else-if="error">
-            {{ error }}
-        </div>
+        <div v-else-if="error">{{ error }}</div>
         <div v-else>
             <AdminLoader />
         </div>
-
-
     </section>
-
 </template>
 
 <script setup>
-import { CalendarDate, DateFormatter, getLocalTimeZone } from '@internationalized/date'
-const isActive = ref(false)
-const df = new DateFormatter('ua-UA', {
-    dateStyle: 'medium'
-})
+import { CalendarDate } from '@internationalized/date'
+
+const { execute } = useAuthFetchMulti()
+const toast = useToast()
+
 const page = ref(1)
 const limit = 30
 const totalCount = computed(() => data.value?.count ?? 0)
-const url = "/api/v1/preorders/"
+const url = computed(() => `/preorders/?preorder=true&page_size=${limit}&page=${page.value}`)
+
+const { data, error, loading, refresh } = useAuthFetchData(url)
 
 
-const { data, error, loading } = useAuthFetchData(url)
+const validTillMap = reactive({})
 
-const preordersList = computed(() => {
-    return (data.value?.data ?? []).map(preorder => {
-        let uiValidTill = null
-
-        const raw = preorder.metadata?.valid_till
-
-        if (raw) {
-            // Expecting "YYYY-MM-DD"
-            const [year, month, day] = raw.split('-').map(Number)
-            uiValidTill = new CalendarDate(year, month, day)
+watch(
+    () => data.value?.data,
+    (list) => {
+        if (!list) return
+        for (const p of list) {
+            if (validTillMap[p.id] === undefined)
+                validTillMap[p.id] = p.metadata?.valid_till ?? null
         }
+    },
+    { immediate: true }
+)
 
-        return {
-            ...preorder,
-            uiValidTill
-        }
-    })
-})
+const preordersList = computed(() =>
+    (data.value?.data ?? []).map(preorder => ({
+        ...preorder,
+        get uiValidTill() { return validTillMap[preorder.id] ?? null }
+    }))
+)
 
-const value = ref(false)
-const selectedDate = shallowRef(new CalendarDate(2022, 1, 10))
-definePageMeta({
-  layout: 'admin'
-})
+// --- Date helpers ---
+
+function toCalendarDate(str) {
+    if (!str) return null
+    const [y, m, d] = str.split('-').map(Number)
+    return new CalendarDate(y, m, d)
+}
+
+function fromCalendarDate(cd) {
+    if (!cd) return null
+    return `${cd.year}-${String(cd.month).padStart(2, '0')}-${String(cd.day).padStart(2, '0')}`
+}
+
+function formatDate(str) {
+    if (!str) return 'Обрати дату'
+    const [y, m, d] = str.split('-').map(Number)
+    return new Date(y, m - 1, d).toLocaleDateString('uk-UA', { dateStyle: 'medium' })
+}
+
+
+const saveValidTill = async (id, dateStr) => {
+    try {
+        await execute(`/preorders/${id}/save_date/?date=${dateStr}`, { method: 'GET' })
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+const isStatusSwithing = ref(false)
+
+const handleSwitchActiveStatusPreorder = async (id) => {
+    const preorder = preordersList.value.find(p => p.id === id)
+
+    if (!validTillMap[id]) {
+        toast.add({
+            title: 'Дата не обрана',
+            description: `Будь ласка, оберіть дату "Активний до" для ${preorder?.name || 'цього передзамовлення'}`,
+            icon: 'i-lucide:calendar-clock',
+            color: 'warning'
+        })
+        return
+    }
+
+    isStatusSwithing.value = true
+    try {
+        await execute(`/preorders/${id}/toggle_activity/`, { method: 'GET' })
+        toast.add({
+            title: 'Статус успішно змінено',
+            description: preorder.name,
+            icon: 'i-lucide:check-circle',
+            color: 'success'
+        })
+        refresh()
+    } catch (e) {
+        console.error(e)
+        toast.add({ title: 'Помилка зміни статусу', icon: 'i-lucide:ban', color: 'error' })
+    } finally {
+        isStatusSwithing.value = false
+    }
+}
+
+const isPublishing = ref(false)
+
+const handlePubishPreorder = async (id) => {
+    isPublishing.value = true
+    try {
+        await execute(`/preorders/${id}/`, { method: 'POST' })
+        toast.add({ title: 'Публікація передзамовлення в процесі', icon: 'i-lucide:check', color: 'success' })
+        refresh()
+    } catch (e) {
+        console.error(e, 'Error publishing preorder')
+        toast.add({ title: 'Помилка публікації', icon: 'i-lucide:ban', color: 'error' })
+    } finally {
+        isPublishing.value = false
+    }
+}
+
+const isDeleting = ref(false)
+
+const handleDeletePreorder = async (id) => {
+    isDeleting.value = true
+    try {
+        await execute(`/preorders/${id}/`, { method: 'DELETE' })
+        toast.add({ title: 'Продукт успішно видалено', icon: 'i-lucide:check', color: 'success' })
+        refresh()
+    } catch (e) {
+        console.error(e, 'Error deleting preorder')
+        toast.add({ title: 'Помилка видалення', icon: 'i-lucide:ban', color: 'error' })
+    } finally {
+        isDeleting.value = false
+    }
+}
+const isStopping = ref(false)
+
+const handleStopPreorders = async () => {
+
+    isStopping.value = true
+    try {
+        await execute(`/preorders/stop/`, { method: 'GET' })
+        toast.add({
+            title: 'Передзамовлення зупинені',
+            icon: 'i-lucide:check-circle',
+            color: 'green'
+        })
+        refresh()
+    } catch (e) {
+        console.error(e)
+        toast.add({ title: 'Помилка зміни статусу', icon: 'i-lucide:ban', color: 'error' })
+    } finally {
+        isStopping.value = false
+    }
+}
+
+definePageMeta({ layout: 'admin' })
 </script>
