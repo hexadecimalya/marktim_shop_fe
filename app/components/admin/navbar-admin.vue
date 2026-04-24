@@ -5,9 +5,9 @@
             <UIcon name="i-heroicons:bars-3-16-solid" class="w-6 h-6 ml-4" />
         </MobileMenuSlideover>
         <nav>
-            
+
             <ul class="flex space-x-4 mx-4">
-                   <DropdownMenu :items="itemsSales" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
+                <DropdownMenu :items="itemsSales" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
                     :content="{ align: 'start' }">
 
                     <li class="cursor-pointer">Продажі</li>
@@ -21,16 +21,19 @@
                     :content="{ align: 'start' }">
                     <li class="cursor-pointer">Передзамовлення</li>
                 </DropdownMenu>
-               <DropdownMenu :items="itemsSupplies" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
+                <DropdownMenu :items="itemsSupplies" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
                     :content="{ align: 'start' }">
                     <li class="cursor-pointer">Поставки</li>
                 </DropdownMenu>
-                 <DropdownMenu :items="itemsEntities" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
+                <DropdownMenu :items="itemsEntities" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
                     :content="{ align: 'start' }">
                     <li class="cursor-pointer">Довідники</li>
                 </DropdownMenu>
-                <li></li>
-                <li></li>
+                <!-- <DropdownMenu :items="itemsTools" :ui="{ content: 'w-48', color: 'bg-gray-800' }"
+                    :content="{ align: 'start' }">
+                    <li class="cursor-pointer">Інструменти</li>
+                </DropdownMenu>
+                <li></li> -->
             </ul>
         </nav>
         <div class="flex w-24 flex-none justify-evenly">
@@ -64,7 +67,7 @@ const itemsPreorders = [
     }
 ]
 const itemsSales = [
-       {
+    {
         label: 'Всі',
         icon: 'i-lucide-align-justify',
         to: '/admin2/sales'
@@ -102,7 +105,7 @@ const itemsSupplies = [
 ]
 
 const itemsEntities = [
-     {
+    {
         label: 'Категорії',
         icon: 'i-lucide-chart-bar-stacked',
         to: '/admin2/entities/categories'
@@ -117,6 +120,24 @@ const itemsEntities = [
         icon: 'i-lucide-scroll-text',
         to: '/admin2/entities/brands'
     }
+]
+
+const itemsTools = [
+    {
+        label: 'Viber збір',
+        icon: 'i-lucide-chart-bar-stacked',
+        to: '/admin2/tools/viber-preorders'
+    },
+    // {
+    //     label: 'Контрагенти',
+    //     icon: 'i-lucide-users',
+    //     to: '/admin2/entities/counterparties'
+    // },
+    // {
+    //     label: 'Бренди',
+    //     icon: 'i-lucide-scroll-text',
+    //     to: '/admin2/entities/brands'
+    // }
 ]
 
 </script>
