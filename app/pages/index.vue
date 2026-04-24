@@ -2,8 +2,13 @@
   <section class="container mt-2 md:mt-8 mx-auto xl:w-5/6 lg:w-11/12 w-full pt-4">
     <h1 class="text-2xl md:text-3xl font-semibold py-4">Нова поставка</h1>
 
-    <template v-if="loading || !productList.length">
+    <template v-if="loading">
       <CardLoader />
+    </template>
+    <template v-else-if="!loading && !productList.length">
+      <p class="text-gray-500 mb-6 text-center">
+        Нові поставки відсутні
+      </p>
     </template>
 
     <template v-else>
