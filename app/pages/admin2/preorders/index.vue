@@ -48,18 +48,18 @@
                             <UTooltip
                                 :text="!preorder.uiValidTill ? 'Спочатку оберіть дату' : (!preorder.active ? 'Активувати' : 'Вимкнути')"
                                 :content="{ side: 'top' }">
-                                <UButton variant="ghost"
+                                <UButton variant="subtle"
                                     :icon="!preorder.active ? 'i-lucide:power' : 'i-lucide:power-off'"
                                     :color="!preorder.uiValidTill ? 'neutral' : (preorder.active ? 'primary' : 'neutral')"
                                     :class="{ 'opacity-50': !preorder.uiValidTill }" :disabled="isStatusSwithing"
                                     @click="handleSwitchActiveStatusPreorder(preorder.id)" />
                             </UTooltip>
                             <UTooltip text="Опублікувати в Viber" :content="{ side: 'top' }">
-                                <UButton variant="ghost" icon="i-lucide:send" color="neutral" :disabled="isPublishing"
+                                <UButton variant="subtle" icon="i-lucide:send" color="neutral" :disabled="isPublishing"
                                     @click="handlePubishPreorder(preorder.id)" />
                             </UTooltip>
                             <UTooltip text="Видалити" :content="{ side: 'top' }">
-                                <UButton variant="ghost" icon="i-lucide:trash" color="error" :disabled="isDeleting"
+                                <UButton variant="subtle" icon="i-lucide:trash" color="error" :disabled="isDeleting"
                                     @click="handleDeletePreorder(preorder.id)" />
                             </UTooltip>
                         </div>
@@ -217,7 +217,7 @@ const handleStopPreorders = async () => {
         toast.add({
             title: 'Передзамовлення зупинені',
             icon: 'i-lucide:check-circle',
-            color: 'green'
+            color: 'success'
         })
         refresh()
     } catch (e) {

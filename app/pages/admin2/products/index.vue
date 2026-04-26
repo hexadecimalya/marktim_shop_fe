@@ -6,47 +6,55 @@
         <div class="flex py-4 justify-between ">
             <div class="flex space-x-4 items-center ">
                 <USwitch label="В наявності" v-model="toggleInStock" :loading="loading" />
-                <USwitch :disabled="!toggleInStock || loading" label="Без картинок" v-model="toggleNoImages" :loading="loading" />
+                <USwitch :disabled="!toggleInStock || loading" label="Без картинок" v-model="toggleNoImages"
+                    :loading="loading" />
             </div>
             <div class="flex items-center space-x-4">
                 <span class="text-sm text-gray-400 font-medium">{{ totalCount }} записів</span>
-<UButton @click="handleExport" label="Експорт вибірки" color="neutral" variant="subtle" 
-    :disabled="!toggleInStock || loading || toggleNoImages" />
+                <UButton @click="handleExport" label="Експорт вибірки" color="neutral" variant="subtle"
+                    :disabled="!toggleInStock || loading || toggleNoImages" />
             </div>
         </div>
         <!-- Table Header -->
         <div
-            class="grid grid-cols-21 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+            class="grid grid-cols-25 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-2 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
             <div class="">ID</div>
-            <div class="col-span-10">Назва</div>
+            <div class="col-span-14">Назва</div>
             <div class="col-span-8">Категорії</div>
-            <div>
+            <div class="flex justify-center">
                 <UIcon name="i-lucide:image" />
             </div>
             <div class="text-end">Дії</div>
         </div>
 
 
-        <div v-if="!loading && !error" class="divide-y divide-gray-100 border-x border-b border-gray-200 rounded-b-lg">
+        <div v-if="!loading && !error" class="divide-y divide-gray-100 border-x border-b border-gray-200 rounded-b-lg ">
             <div v-for="product in productList" :key="product.id"
-                class="grid grid-cols-21 items-center px-1 py-1 text-sm font-slim ">
-                <div class="font-semibold text-center hover:underline text-gray-600">
+                class="grid grid-cols-25 items-center px-1 py-1 text-sm font-slim gap-2">
+                <div class=" text-center hover:underline  text-xs text-gray-400 font-mono">
                     <NuxtLink :to="`/admin2/products/${product.id}`">{{ product.id }}</NuxtLink>
                 </div>
-                <div class="col-span-10 font-medium">{{ product.name_ukr ? product.name_ukr : product.name }}</div>
-                <div class="col-span-8 text-gray-500 space-x-0.5">
+                <div @click="copyName(product.name, product.id)"
+                    class="col-span-14 font-medium cursor-pointer group flex items-center gap-1.5 truncate hover:overflow-visible "
+                    :class="copiedId === product.id ? 'text-green-500' : ''">
+                    {{ product.name_ukr ?? product.name }}
+                    <UIcon :name="copiedId === product.id ? 'i-lucide:check' : 'i-lucide:clipboard'"
+                        class="shrink-0 text-gray-300 group-hover:text-gray-400 transition-colors size-3.5"
+                        :class="copiedId === product.id ? 'text-green-500' : ''" />
+                </div>
+                <div class="col-span-8 text-gray-500 space-x-0.5 truncate hover:overflow-visible">
                     <u-badge v-for="category in product.categories" :key="category.id" color="neutral"
                         variant="subtle">{{ category.name }}</u-badge>
                 </div>
-                <div class="text-gray-500">{{ product.files.length ? product.files.length : '-' }}</div>
+                <div class="text-gray-500 text-center mr-2">{{ product.files.length ? product.files.length : '-' }}</div>
 
 
-                <div class="flex justify-end">
+                <div class="flex justify-end mr-1">
                     <UModal :key="product.id" :open="openedProductId === product.id"
                         @update:open="(val) => openedProductId = val ? product.id : null" title="Підтвердити видалення"
                         :description="`Видалити продукт ${product.name_ukr ?? product.name}?`"
                         :ui="{ description: 'font-bold text-black my-4 text-md' }">
-                        <UButton variant="ghost" color="error" icon="i-lucide:trash" class="p-1.5!" size="xs"
+                        <UButton variant="subtle" color="error" icon="i-lucide:trash" class="p-1.5!" size="xs"
                             @click="openedProductId = product.id" />
                         <template #footer="{ close }">
                             <div class="flex justify-end gap-2">
@@ -103,7 +111,7 @@ const url = computed(() => {
     if (searchTerm.value.length >= 3) params.set('filter_param', searchTerm.value)
     if (toggleInStock.value) params.set('in_stock', 'true')
     if (toggleNoImages.value) params.set('wo_pictures', 'true')
-        return `/products2/?${params.toString()}`
+    return `/products2/?${params.toString()}`
 })
 
 const handleExport = () => {
@@ -111,7 +119,7 @@ const handleExport = () => {
     const params = new URLSearchParams({ order_by: '-id', offset: String(offset) })
 
     if (searchTerm.value.length >= 3) params.set('filter_param', searchTerm.value)
-    if (toggleInStock.value)          params.set('in_stock', 'true')
+    if (toggleInStock.value) params.set('in_stock', 'true')
     params.set('export', 'true')
 
     const baseURL = useRuntimeConfig().public.apiBase
@@ -155,6 +163,17 @@ const handleDeleteProduct = async (id) => {
     }
     finally {
         productIsDeleting.value = false
+    }
+}
+const copiedId = ref(null)
+
+const copyName = async (name, id) => {
+    try {
+        await navigator.clipboard.writeText(name)
+        copiedId.value = id
+        setTimeout(() => (copiedId.value = null), 2000)
+    } catch (err) {
+        console.error('Copy failed', err)
     }
 }
 

@@ -1,156 +1,195 @@
 <template>
-    <section class="w-5/6 lg:w-3/5 mx-auto">
+    <section class="w-5/6 mx-auto">
         <h1 class="text-2xl font-extrabold my-4">
             Список поставок
         </h1>
-        <div v-for="supply in suppliesList">
-            <div class="grid grid-cols-7 my-2 items-center text-xs md:text-sm">
-                <div>{{ supply.created }}</div>
-                <div>
-                    <!-- <UCheckbox v-model="value" color="neutral" /> -->
-                    <p>
-                        {{ supply.id }}
-                    </p>
-                </div>
-                <div class="col-span-2 flex space-x-2 items-center">{{ supply.supplier }}</div>
-                <div>
-                    <AppButtonAdm @click="supply.isActive = !supply.isActive" :isActive="isActive">{{ supply.isActive ? 'активна' : 'вимкнена'
-                    }}</AppButtonAdm>
+         <div v-if="!loading && !error">
+            <UButton variant="subtle" class="mx-auto mb-6" color="error" icon="i-lucide:hand" :disabled="isStopping"
+                @click="handleStopSupplies">Зупинити всі</UButton>
+            <div
+                class="grid grid-cols-5 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <div>Створено</div>
+                <div>ID</div>
+                <div>Постачальник</div>
+                <div>Статус</div>
+                <div class="text-end">Дії</div>
+            </div>
+            <div class="border-x border-b border-gray-200 rounded-b-lg px-2 ">
+                <div v-for="supply in suppliesList" :key="supply.id">
+                    <div class="grid grid-cols-5  px-1 py-1 text-sm font-slim items-center">
 
-
-                </div>
-                <UTooltip text="Завантажити картинки">
-                    <UButton class="justify-self-end" variant="ghost" icon="i-lucide:download" color="black" />
-                </UTooltip>
-                <UModal title="Confirm deleting">
-
-                    <UButton class="justify-self-end" variant="ghost" icon="i-lucide:trash" color="error" />
-
-                    <template #body>
-                        <div class="h-48 m-4 mx-auto">
-                           Видалити поставку #123?
+                        <div>{{ supply.created }}</div>
+                        <div>
+                            <p>
+                                {{ supply.id }}
+                            </p>
+                        </div>
+                        <div class=" flex space-x-2 items-center">{{ supply.supplier.name }}</div>
+                        <div>
+                            <UBadge variant="subtle" :color="supply.metadata.active ? 'primary' : 'neutral'"> {{
+                                supply.metadata.active ? 'активована' : 'неактивна' }}</UBadge>
                         </div>
 
-                    </template>
-                    <template #footer="{ close }">
-                        <UButton label="Cancel" color="neutral" variant="outline" @click="close" />
-                        <UButton @click="handleDeleteSupply(id)" label="Видалити" color="neutral" />
-                    </template>
-                </UModal>
+                        <div class="flex space-x-3 justify-end">
+                            <UTooltip :text="!supply.metadata.active ? 'Активувати' : 'Вимкнути'"
+                                :content="{ side: 'top' }">
+                                <UButton variant="subtle"
+                                    :icon="!supply.metadata.active ? 'i-lucide:power' : 'i-lucide:power-off'"
+                                    :color="supply.metadata.active ? 'primary' : 'neutral'" :disabled="isStatusSwithing"
+                                    @click="handleSwitchActiveStatusSupply(supply.id)" />
+                            </UTooltip>
+                            <UTooltip text="Завантажити картинки" :content="{ side: 'top' }">
+                                <UButton class="justify-self-end" variant="subtle" icon="i-lucide:download"
+                                    color="neutral" :disabled="isExporting" @click="handleExport(supply.id)" />
+                            </UTooltip>
+
+                            <UModal title="Confirm deleting">
+                                <UTooltip text="Видалити" :content="{ side: 'top' }">
+                                    <UButton class="justify-self-end" variant="subtle" icon="i-lucide:trash"
+                                        color="error" />
+
+                                </UTooltip>
+                                <template #body>
+                                    <div class="h-48 m-4 mx-auto">
+                                        Видалити поставку #123?
+                                    </div>
+
+                                </template>
+                                <template #footer="{ close }">
+                                    <UButton label="Cancel" color="neutral" variant="outline" @click="close" />
+                                    <UButton @click="handleDeleteSupply(id)" label="Видалити" color="neutral" />
+                                </template>
+                            </UModal>
+                        </div>
+                    </div>
+                       <USeparator />
+                </div>
             </div>
-            <USeparator />
         </div>
+
     </section>
-     <div class="my-6 flex justify-center" v-if="!loading">
+    <div class="my-6 flex justify-center" v-if="!loading">
         <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
             active-variant="subtle" :items-per-page="limit" show-edges />
     </div>
 </template>
 
 <script setup>
+definePageMeta({
+    layout: 'admin'
+})
 
-const isActive = ref(false)
+const { execute } = useAuthFetchMulti()
+const toast = useToast()
+//const isActive = ref(false)
+
+const page = ref(1)
+const limit = 30
+const totalCount = computed(() => data.value?.count ?? 0)
+const url = computed(() => `/deliveries/?page_size=${limit}&page=${page.value}`)
+
+const { data, error, loading, refresh } = useAuthFetchData(
+    url
+)
+
+const isExporting = ref(false)
+
+const suppliesList = computed(() => data.value?.data ?? [])
+
+const handleExport = async (id) => {
+    const userStore = useUserStore()
+    if (!userStore.user.access_token) {
+        userStore.initStore();
+    }
+
+    isExporting.value = true
+    const config = useRuntimeConfig()
+
+    try {
+        const blob = await $fetch(`${config.public.apiBase}/deliveries/${id}/export_imgs/`, {
+            method: 'GET',
+            responseType: 'blob',
+            headers: {
+                'Authorization': `Bearer ${userStore.user.access_token}`
+            }
+        })
+
+        const url = window.URL.createObjectURL(blob)
+
+        const link = document.createElement('a')
+        link.href = url
+
+        link.setAttribute('download', `export-images-${id}.zip`)
+
+        document.body.appendChild(link)
+        link.click()
+
+        link.remove()
+        window.URL.revokeObjectURL(url)
+
+        toast.add({ title: 'Успіх', description: 'Файл завантажено', color: 'success' })
+    } catch (e) {
+        console.error('Download error:', e)
+
+        if (e.status === 401) {
+            toast.add({ title: 'Помилка', description: 'Термін дії сесії вичерпано', color: 'error' })
+        } else {
+            toast.add({ title: 'Помилка', description: 'Не вдалося завантажити файл', color: 'error' })
+        }
+    } finally {
+        isExporting.value = false
+    }
+
+    // console.log('exporting')
+}
+const isStatusSwithing = ref(false)
+const handleSwitchActiveStatusSupply = async (id) => {
+    const supply = suppliesList.value.find(s => s.id === id)
+
+
+    isStatusSwithing.value = true
+    try {
+        await execute(`/deliveries/${id}/toggle_activity/`, { method: 'GET' })
+        toast.add({
+            title: 'Статус успішно змінено',
+            description: supply.id,
+            icon: 'i-lucide:check-circle',
+            color: 'success'
+        })
+        refresh()
+    } catch (e) {
+        console.error(e)
+        toast.add({ title: 'Помилка зміни статусу', icon: 'i-lucide:ban', color: 'error' })
+    } finally {
+        isStatusSwithing.value = false
+    }
+}
+
+const isStopping = ref(false)
+
+const handleStopSupplies = async () => {
+
+    isStopping.value = true
+    try {
+        await execute(`/deliveries/stop/`, { method: 'GET' })
+        toast.add({
+            title: 'Активні поставки зупинені',
+            icon: 'i-lucide:check-circle',
+            color: 'success'
+        })
+        refresh()
+    } catch (e) {
+        console.error(e)
+        toast.add({ title: 'Помилка зміни статусу', icon: 'i-lucide:ban', color: 'error' })
+    } finally {
+        isStopping.value = false
+    }
+}
+
 const handleDeleteSupply = (id) => {
     console.log('deleted')
 }
 
-const page = ref(1)
-const limit = 50
-const totalCount = computed(() => data.value?.count ?? 0)
-const url = computed(() => {
-    // const offset = (page.value - 1) * limit
-    const base = `/deliveries`
-    return base
-})
-
-const { data, error, loading } = useAuthFetchData(
-    url
-)
 
 
-// console.log(data.value)
-const suppliesList = computed(() => data.value?.data ?? [])
-
-
-const dummySupply = [
-  {
-    id: 1,
-    date: '10.01.2025',
-    isActive: true,
-    supplier: 'Головач Северина',
-    finished: true
-  },
-  {
-    id: 2,
-    date: '12.01.2025',
-    isActive: false,
-    supplier: 'Мельник Артем',
-    finished: false
-  },
-  {
-    id: 3,
-    date: '15.01.2025',
-    isActive: true,
-    supplier: 'Коваль Софія',
-    finished: true
-  },
-  {
-    id: 4,
-    date: '18.01.2025',
-    isActive: true,
-    supplier: 'Бондар Владислав',
-    finished: false
-  },
-  {
-    id: 5,
-    date: '20.01.2025',
-    isActive: false,
-    supplier: 'Шевченко Аліна',
-    finished: true
-  },
-  {
-    id: 6,
-    date: '23.01.2025',
-    isActive: true,
-    supplier: 'Ткачук Ігор',
-    finished: false
-  },
-  {
-    id: 7,
-    date: '25.01.2025',
-    isActive: false,
-    supplier: 'Олійник Марія',
-    finished: true
-  },
-  {
-    id: 8,
-    date: '28.01.2025',
-    isActive: true,
-    supplier: 'Сидоренко Дмитро',
-    finished: false
-  },
-  {
-    id: 9,
-    date: '30.01.2025',
-    isActive: true,
-    supplier: 'Романюк Катерина',
-    finished: true
-  },
-  {
-    id: 10,
-    date: '02.02.2025',
-    isActive: false,
-    supplier: 'Іванчук Павло',
-    finished: false
-  }
-]
-
-
-const exportImages = (id) => {
-    // console.log('exporting')
-}
-
-definePageMeta({
-    layout: 'admin'
-})
 </script>
