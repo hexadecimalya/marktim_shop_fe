@@ -181,7 +181,7 @@ const isPublishing = ref(false)
 const handlePubishPreorder = async (id) => {
     isPublishing.value = true
     try {
-        await execute(`/preorders/${id}/`, { method: 'POST' })
+        await execute(`/preorders/${id}/publish/viber/`, { method: 'GET' })
         toast.add({ title: 'Публікація передзамовлення в процесі', icon: 'i-lucide:check', color: 'success' })
         refresh()
     } catch (e) {
