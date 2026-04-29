@@ -50,6 +50,17 @@
             @focus="$event.target.select()"
           />
         </div>
+ <div>
+          <label class="block text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-2 ml-1">
+            Опис
+          </label>
+          <UTextarea 
+            v-model="description" 
+            size="xl"
+            color="white"
+            variant="none"
+            class="text-2xl w-full font-semibold bg-gray-50 border border-gray-100 rounded-2xl transition-all focus-within:ring-2 focus-within:ring-gray-200"/>
+        </div>
 
         <Transition
           enter-active-class="transition duration-300 ease-out"
@@ -98,6 +109,7 @@ const state = reactive({
 })
 
 const price = ref(null)
+const description = ref('')
 const message = ref('')
 const copied = ref(false)
 
@@ -110,7 +122,7 @@ const formattedDate = computed(() =>
   state.date ? `${state.date.day} ${UA_MONTHS[state.date.month - 1]}` : ''
 )
 
-// --- Logic ---
+
 const calculateFloatingRate = (zl) => {
   if (zl < 2.49) return 1.4
   if (zl < 6.99) return 1.3
@@ -134,10 +146,11 @@ watchEffect(() => {
 
   message.value = `*⚡️Флеш-замовлення⚡️*
 
-Опис товару
+${description.value}
 
 💳 Ціна: ${sell_price} грн
 ОПТ від 2 шт: ${bulk_price} грн
+
 🎩 \`\`\`діє ${formattedDate.value} до 18:00\`\`\` 🪄`
 })
 
