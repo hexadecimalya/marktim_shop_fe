@@ -151,7 +151,7 @@ ${description.value}
 💳 Ціна: ${sell_price} грн
 ОПТ від 2 шт: ${bulk_price} грн
 
-🎩 \`\`\`діє ${formattedDate.value} до 18:00\`\`\` 🪄`
+🎩 \`\`\`діє ${formattedDate.value}\`\`\` 🪄`
 })
 
 // --- Actions ---
