@@ -33,7 +33,7 @@ const { Translate } = v2
 
 
 const credentials = JSON.parse(
-  process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON!
+  process.env.GOOGLE_APPLICATION_CREDENTIALS!
 )
 
 const translate = new Translate({
