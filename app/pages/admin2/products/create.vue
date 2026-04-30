@@ -117,18 +117,6 @@ const triggerTranslation = async () => {
     if (!product.name_ukr) return
     isTranslating.value = true
     try {
-        // const res = await $fetch('/api/translate', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         text: product.name_ukr,
-        //         source: 'uk',
-        //         target: 'ru'
-        //     })
-
-        // })
         const res = await $fetch('/api/translate', {
             method: 'POST',
             body: {

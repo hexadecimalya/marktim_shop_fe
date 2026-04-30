@@ -1,4 +1,4 @@
-import { Translate } from '@google-cloud/translate/build/src/v2'
+// import { Translate } from '@google-cloud/translate/build/src/v2'
 
 // const credentials = JSON.parse(
 //   process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON!
@@ -8,32 +8,44 @@ import { Translate } from '@google-cloud/translate/build/src/v2'
 //   credentials
 // })
 
-const raw = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON
+// export default defineEventHandler(async (event) => {
+//   const body = await readBody(event)
+//   const { text, target, source } = body
 
-if (!raw) {
-  throw new Error('Missing GOOGLE_APPLICATION_CREDENTIALS_JSON')
-}
+//   if (!text) {
+//     throw createError({
+//       statusCode: 400,
+//       statusMessage: 'No text provided',
+//     })
+//   }
 
-const credentials = JSON.parse(raw)
+//  const [translated] = await translate.translate(text, {
+//     from: source || 'uk',
+//     to: target || 'ru'
+//   })
 
-if (credentials.private_key) {
-  credentials.private_key = credentials.private_key.replace(/\\n/g, '\n')
-}
-
-const translate = new Translate({ credentials })
+//   return { translated }
+// })
+import { Translate } from '@google-cloud/translate/build/src/v2'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { text, target, source } = body
 
   if (!text) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'No text provided',
-    })
+    throw createError({ statusCode: 400, statusMessage: 'No text provided' })
   }
 
- const [translated] = await translate.translate(text, {
+  const credentialsJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON
+  if (!credentialsJson) {
+    throw createError({ statusCode: 500, statusMessage: 'Missing Google credentials' })
+  }
+
+  const translate = new Translate({
+    credentials: JSON.parse(credentialsJson)
+  })
+
+  const [translated] = await translate.translate(text, {
     from: source || 'uk',
     to: target || 'ru'
   })
