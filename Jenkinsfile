@@ -55,6 +55,7 @@ pipeline {
                 export NODE_OPTIONS="--max-old-space-size=3072" &&
                 cd ${cfg.dir} &&
                 git pull origin ${cfg.branch} &&
+                rm -rf .output .nuxt &&
                 npm ci &&
                 npm run build
               '
