@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
   const credentialsJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON
 if (!credentialsJson) {
-  throw createError({ statusCode: 500, statusMessage: 'Missing Google credentials' })
+  throw createError({ statusCode: 500, statusMessage: 'Missing Google credentials.' })
 }
 
 const credentials = JSON.parse(credentialsJson)
