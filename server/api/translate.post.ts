@@ -10,13 +10,14 @@ export default defineEventHandler(async (event) => {
   }
 
   const credentialsJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON
-  if (!credentialsJson) {
-    throw createError({ statusCode: 500, statusMessage: 'Missing Google credentials' })
-  }
+if (!credentialsJson) {
+  throw createError({ statusCode: 500, statusMessage: 'Missing Google credentials' })
+}
 
-  const translate = new Translate({
-    credentials: JSON.parse(credentialsJson)
-  })
+const credentials = JSON.parse(credentialsJson)
+credentials.private_key = credentials.private_key.replace(/\\n/g, '\n')
+
+const translate = new Translate({ credentials })
 
   const [translated] = await translate.translate(text, {
     from: source || 'uk',
