@@ -45,7 +45,7 @@
                             <USelect v-if="Array.isArray(units_list) && units_list.length"
                                 v-model="product.measure_units" :items="units_list" value-key="id" label-key="name"
                                 class="w-24 h-8" />
-                             <template #fallback>
+                            <template #fallback>
                                 <div>loading...</div>
                             </template>
                         </ClientOnly>
@@ -117,7 +117,7 @@ const triggerTranslation = async () => {
     if (!product.name_ukr) return
     isTranslating.value = true
     try {
-        const res = await fetch('/api/translate', {
+        const res = await $fetch('/api/translate/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -129,9 +129,8 @@ const triggerTranslation = async () => {
             })
 
         })
-        const data = await res.json()
-        product.name = data.translated
-        console.log(data.translated);
+        // const data = await res.json()
+        product.name = res.translated
     }
     catch (e) {
         console.error(e)
@@ -194,10 +193,12 @@ const handleSaveProduct = async () => {
         for (const [key, value] of Object.entries(product)) {
             if (key === 'images') continue
             if (key === 'barcodes') {
-                const barcodeArray = value.split(',').map(s => s.trim()).filter(Boolean)
-
-                payload.append('barcodes', JSON.stringify({ all: barcodeArray }))
-                continue
+                const barcodeStr = value || '';
+                const barcodeArray = barcodeStr.split(',').map(s => s.trim()).filter(Boolean);
+                if (barcodeArray.length > 0) {
+                    payload.append('barcodes', JSON.stringify({ all: barcodeArray }));
+                }
+                continue;
             }
             if (Array.isArray(value)) {
                 value.forEach(v => payload.append(key, v))
