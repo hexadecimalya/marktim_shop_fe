@@ -1,12 +1,26 @@
 import { Translate } from '@google-cloud/translate/build/src/v2'
 
-const credentials = JSON.parse(
-  process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON!
-)
+// const credentials = JSON.parse(
+//   process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON!
+// )
 
-const translate = new Translate({
-  credentials
-})
+// const translate = new Translate({
+//   credentials
+// })
+
+const raw = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON
+
+if (!raw) {
+  throw new Error('Missing GOOGLE_APPLICATION_CREDENTIALS_JSON')
+}
+
+const credentials = JSON.parse(raw)
+
+if (credentials.private_key) {
+  credentials.private_key = credentials.private_key.replace(/\\n/g, '\n')
+}
+
+const translate = new Translate({ credentials })
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
