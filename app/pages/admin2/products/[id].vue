@@ -43,10 +43,10 @@
                 </UFormField>
 
                 <div class="grid grid-cols-3 gap-4">
-                    <UFormField label="Вага/обʼєм" required name="measurements">
-                        <UInput v-model="product.measurements" type="number" step="0.01" />
+                    <UFormField label="Вага/обʼєм" :required="!product.loose" name="measurements">
+                        <UInput v-model="product.measurements" type="number" :disabled="product.loose" />
                     </UFormField>
-                    <UFormField label="Одиниця" required="" name="measure_units">
+                    <UFormField label="Одиниця" required name="measure_units">
                         <ClientOnly>
                             <USelect v-model="product.measure_units" :items="units_list" value-key="id" label-key="name"
                                 class="w-24 h-8" />
@@ -112,10 +112,13 @@
                         description="SVG, PNG, JPG or GIF (max. 2MB)" layout="list" class="w-96 min-h-48" />
                 </UFormField>
             </ClientOnly>
-            <div class="text-center">
+            <div class="text-center flex justify-center gap-4">
                 <UButton type="submit" variant="subtle" color="primary" :disabled="productIsSaving"
                     :loading="productIsSaving">
                     Зберегти зміни
+                </UButton>
+                <UButton type="button" variant="outline" color="neutral" icon="i-lucide:copy" @click="openAsCopy">
+                    Створити копію
                 </UButton>
             </div>
         </UForm>
@@ -240,7 +243,7 @@ const validate = (state) => {
         errors.push({ name: 'brand', message: 'Вкажіть бренд' })
     if (!state.categories || state.categories.length < 1)
         errors.push({ name: 'categories', message: 'Оберіть хоча б одну категорію' })
-    if (!state.measurements || isNaN(Number(state.measurements)) || Number(state.measurements) <= 0)
+    if ((!state.measurements || isNaN(Number(state.measurements)) || Number(state.measurements) <= 0) && !state.loose)
         errors.push({ name: 'measurements', message: 'Введіть вагу' })
     if (!state.measure_units)
         errors.push({ name: 'measure_units', message: 'Оберіть одиницю' })
@@ -330,6 +333,24 @@ const handleSaveProduct = async () => {
     } finally {
         productIsSaving.value = false
     }
+}
+
+const router = useRouter()
+
+const openAsCopy = () => {
+    const copyData = {
+        name_ukr:        product.name_ukr,
+        name_original:   product.name_original,
+        name_fiscal:     product.name_fiscal,
+        description_ukr: product.description_ukr,
+        brand:           product.brand,
+        measurements:    product.measurements,
+        categories:      product.categories,
+        measure_units:   product.measure_units,
+        loose:           product.loose,
+    }
+    sessionStorage.setItem('product_copy_prefill', JSON.stringify(copyData))
+    window.open(router.resolve('/admin2/products/create').href, '_blank')
 }
 
 </script>

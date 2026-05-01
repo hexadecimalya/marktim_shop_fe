@@ -137,6 +137,42 @@ const triggerTranslation = async () => {
 
 }
 
+
+// onMounted(() => {
+//     const raw = sessionStorage.getItem('product_copy_prefill')
+//     if (!raw) return
+//     try {
+//         const prefill = JSON.parse(raw)
+//         Object.assign(product, prefill)
+//     } catch (e) {
+//         console.error('Failed to parse product prefill', e)
+//     } finally {
+//         sessionStorage.removeItem('product_copy_prefill')
+//     }
+// })
+
+onMounted(() => {
+    const raw = sessionStorage.getItem('product_copy_prefill')
+    if (!raw) return
+    sessionStorage.removeItem('product_copy_prefill')
+
+    let prefill
+    try { prefill = JSON.parse(raw) } catch { return }
+
+    // Wait until all async data sources are ready
+    const unwatch = watch(
+        [brandsData, dataUnits, () => categoriesList.value?.length],
+        ([brands, units, catLen]) => {
+            if (!brands || !units || !catLen) return
+            Object.assign(product, prefill)
+            unwatch() // stop watching once applied
+        },
+        { immediate: true }
+    )
+})
+
+
+
 const validate = (state) => {
     const errors = []
 
@@ -178,6 +214,7 @@ const createBrand = async (newBrandName) => {
     }
 }
 const units_list = computed(() => dataUnits?.value?.data ?? [])
+
 
 const productIsSaving = ref(false)
 
