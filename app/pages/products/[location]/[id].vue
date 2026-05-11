@@ -3,7 +3,7 @@
         <Breadcrumbs class="hidden sm:inline-block" :items="items" />
 
         <div class="lg:container sm:mt-8 mt-0 mx-auto flex sm:flex-row flex-col justify-center">
-            <img class="sm:w-1/2" :src="product.product.files[0]?.link ?? placeholder" />
+            <img class="sm:w-1/2" :src="product.product.files?.[0]?.link ?? placeholder" />
 
             <div class="p-4 lg:ml-4 md:w-2/5">
                 <h2 class="text-base my-2 font-medium text-justify">
@@ -15,7 +15,7 @@
                     {{ Math.trunc(product.sell_price) }} грн
                     {{ product.bulk_price ? `/ ${Math.trunc(product.bulk_price)} грн від 2 шт` : '' }}
                 </div>
-                <div v-if="!product.units_amount <= 0">
+                <div v-if="product.units_amount > 0 || routeLocation === 'preorders'">
                     <div v-if="!isInCart" class="my-4">
                         <div class="text-xs font-medium mb-0">кількість</div>
                         <div
@@ -54,8 +54,8 @@
                 </div>
                 <p v-if="product.units_amount <= 0" class="font-semibold my-2">Нема в наявності</p>
                 <div v-if="categoriesList.length">
-                    <UBadge class="my-2 mr-2" size="md" color="neutral" variant="outline" v-for="category in categoriesList"
-                        :key="category.slug">
+                    <UBadge class="my-2 mr-2" size="md" color="neutral" variant="outline"
+                        v-for="category in categoriesList" :key="category.slug">
                         <NuxtLink :to="`/products/${routeLocation}/category/${category.slug}`">
                             {{ category.name }}
                         </NuxtLink>
@@ -90,10 +90,11 @@ import useApiGet from '~/composables/useGetApi'
 import ProductLoader from '@/components/UI/product-loader.vue'
 import placeholder from '@/assets/image_placeholder_big.png'
 
+
 const config = useRuntimeConfig()
 const route = useRoute()
 
-const routeLocation = computed(() => route.params.location) // 'stock' or 'preorder'
+const routeLocation = computed(() => route.params.location) // 'stock' or 'preorders'
 const prodId = computed(() => Number(route.params.id))
 
 
@@ -102,9 +103,12 @@ const routeLabel = computed(() =>
 )
 
 const cart = useCartStore()
+
+const { stockItems, preorderItems } = storeToRefs(cart)
+
 const isInCart = computed(() =>
-    cart.stockItems.some(i => i.id === prodId.value) ||
-    cart.preorderItems.some(i => i.id === prodId.value)
+    (stockItems.value ?? []).some(i => i.id === prodId.value) ||
+    (preorderItems.value ?? []).some(i => i.id === prodId.value)
 )
 
 
@@ -126,7 +130,7 @@ const handleAddToCart = () => {
         bulkPrice: p.bulk_price,
         image: p.product?.files?.[0]?.link ?? placeholder,
         quantity: quantity.value,
-        isPreorder: routeLocation.value === 'preorder'
+        isPreorder: routeLocation.value === 'stock' ? false : true
     }
 
     if (isInCart.value) {

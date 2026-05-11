@@ -3,15 +3,6 @@
         <div class="relative group">
             <NuxtLink :to="`/products/${routeLocation}/${itemData.id}/`">
                 <img :src="`${itemData.image}`" :alt="itemData.name" class="object-cover rounded-t-md" />
-                <!-- <div v-if="gluten_free || sugar_free || lactose_free || vegan" class="absolute top-[5%] right-[5%] h-[16%] rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center gap-2 px-2
-             opacity-0 group-hover:opacity-100  translate-x-full group-hover:translate-x-[-5%] 
-  transition-transform duration-300 ease-out">
-
-                    <UIcon v-if="gluten_free" name="i-lucide:wheat-off" class="w-5 h-5 opacity-80" />
-                    <UIcon v-if="sugar_free" name="i-lucide:candy-off" class="w-5 h-5 opacity-80" />
-                    <UIcon v-if="vegan" name="i-lucide:leaf" class="w-5 h-5 opacity-80" />
-                    <UIcon v-if="lactose_free" name="i-lucide:milk-off" class="w-5 h-5 opacity-80" />
-                </div> -->
                 <div
                     class="absolute top-[5%] right-[5%] flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <UTooltip v-if="gluten_free" text="Без глютену">
@@ -78,10 +69,9 @@
 </template>
 <script setup>
 
-// import { useCartStore } from '~/store/use-cart-store'
 import AppButton from './UI/app-button.vue'
 import placeholder from '@/assets/image_placeholder.png'
-const isDiscount = ref(false)
+// const isDiscount = ref(false)
 const route = useRoute()
 const routeLocation = route.params.location || 'stock'
 const isPreorderLocation = route.params.location === 'preorders'
@@ -89,20 +79,44 @@ const props = defineProps({
     product: Object
 })
 
+const productData = computed(() => props.product?.product ?? {})
 const itemData = computed(() => ({
-    id: props.product.id,
-    name: props.product.product.name_ukr || props.product.product.name,
-    image: props.product.product.files?.[0]?.link ?? placeholder,
-    price: Math.trunc(props.product.sell_price),
-    old_price: props.product.old_price ? Math.trunc(props.product.old_price) : null,
-    bulk_price: props.product.bulk_price ? Math.trunc(props.product.bulk_price) : null,
+    id: props.product?.id,
+    name: productData.value.name_ukr || productData.value.name || '',
+    image: productData.value.files?.[0]?.link ?? placeholder,
+    price: Math.trunc(props.product?.sell_price ?? 0),
+    old_price: props.product?.old_price
+        ? Math.trunc(props.product.old_price)
+        : null,
+    bulk_price: props.product?.bulk_price
+        ? Math.trunc(props.product.bulk_price)
+        : null,
     isPreorder: isPreorderLocation,
-    categories: props.product.product.categories ?? [],
+    categories: productData.value.categories ?? [],
 }))
+
+
+
+// const itemData = computed(() => ({
+//     id: props.product.id,
+//     name: props.product.product.name_ukr || props.product.product.name,
+//     image: props.product.product.files?.[0]?.link ?? placeholder,
+//     price: Math.trunc(props.product.sell_price),
+//     old_price: props.product.old_price ? Math.trunc(props.product.old_price) : null,
+//     bulk_price: props.product.bulk_price ? Math.trunc(props.product.bulk_price) : null,
+//     isPreorder: isPreorderLocation,
+//     categories: props.product.product.categories ?? [],
+// }))
 
 const dietaryIds = { gluten_free: 38, sugar_free: 40, lactose_free: 39, vegan: 55 }
 
 const hasCategory = (id) => props.product.product.categories.some(c => c.id === id)
+// const categories = computed(() =>
+//     productData.value.categories ?? []
+// )
+
+// const hasCategory = (id) =>
+//     categories.value.some(c => c.id === id)
 
 const gluten_free = computed(() => hasCategory(dietaryIds.gluten_free))
 const sugar_free = computed(() => hasCategory(dietaryIds.sugar_free))
@@ -112,9 +126,10 @@ const vegan = computed(() => hasCategory(dietaryIds.vegan))
 
 
 const cart = useCartStore()
+
 const isInCart = computed(() =>
-    cart.stockItems.some(i => i.id === itemData.value.id) ||
-    cart.preorderItems.some(i => i.id === itemData.value.id)
+    (cart.stockItems ?? []).some(i => i.id === itemData.value.id) ||
+    (cart.preorderItems ?? []).some(i => i.id === itemData.value.id)
 )
 
 const addToCart = () => {

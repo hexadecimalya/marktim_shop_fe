@@ -198,7 +198,7 @@ const handleDeletePreorder = async (id) => {
     isDeleting.value = true
     try {
         await execute(`/preorders/${id}/`, { method: 'DELETE' })
-        toast.add({ title: 'Продукт успішно видалено', icon: 'i-lucide:check', color: 'success' })
+        toast.add({ title: 'Передзамовлення успішно видалено', icon: 'i-lucide:check', color: 'success' })
         refresh()
     } catch (e) {
         console.error(e, 'Error deleting preorder')

@@ -48,7 +48,7 @@
                 </div>
 
                 <div class="col-span-1 justify-self-end flex font-semibold text-xs sm:text-base">
-                  <div class="sm:mr-2">{{ (item.price * item.quantity).toFixed(2) }} грн</div>
+                  <div class="sm:mr-2">{{ (item.price * item.quantity)?.toFixed(2) }} грн</div>
                 </div>
               </div>
               <USeparator v-if="item.id !== stockItems[stockItems.length - 1].id" />
@@ -63,16 +63,16 @@
             <div class="space-y-2 mb-4 md:text-base text-sm">
               <!-- <div class="flex justify-between">
                 <span class="text-gray-600">Сума</span>
-                <span class="font-medium">{{ stockSubtotal.toFixed(2) }} грн</span>
+                <span class="font-medium">{{ stockSubtotal?.toFixed(2) }} грн</span>
               </div> -->
               <!-- <div class="flex justify-between">
                 <span class="text-gray-600">Знижка -3%</span>
-                 <span class="font-medium text-mtwine-800">- {{ stockDiscount.toFixed(2) }} грн</span> 
+                 <span class="font-medium text-mtwine-800">- {{ stockDiscount?.toFixed(2) }} грн</span> 
               </div> 
               <USeparator /> -->
               <div class="pt-2 mt-2 flex justify-between">
                 <span class="font-medium">Всього</span>
-                <span class="font-bold">{{ stockSubtotal.toFixed(2) }} грн</span>
+                <span class="font-bold">{{ stockSubtotal?.toFixed(2) }} грн</span>
               </div>
             </div>
           </div>
@@ -107,8 +107,8 @@
                 </div>
 
                 <div class="col-span-1 justify-self-end flex font-semibold text-xs sm:text-base">
-                  <div class="sm:mr-2">{{ item.quantity === 1 ? (item.price * item.quantity).toFixed(2) :
-                    (item.bulk_price * item.quantity).toFixed(2) }} грн</div>
+                  <div class="sm:mr-2">{{ item.quantity === 1 ? (item.price * item.quantity)?.toFixed(2) :
+                    (item.bulk_price * item.quantity)?.toFixed(2) }} грн</div>
                 </div>
               </div>
               <USeparator v-if="item.id !== preorderItems[preorderItems.length - 1].id" />
@@ -123,16 +123,16 @@
             <div class="space-y-2 mb-4 md:text-base text-sm">
               <!-- <div class="flex justify-between">
                 <span class="text-gray-600">Сума</span>
-                <span class="font-medium">{{ preorderSubtotal.toFixed(2) }} грн</span>
+                <span class="font-medium">{{ preorderSubtotal?.toFixed(2) }} грн</span>
               </div> -->
               <!-- <div class="flex justify-between"> -->
               <!-- <span class="text-gray-600">Знижка -3%</span> -->
-              <!-- <span class="font-medium text-mtwine-800">- {{ preorderDiscount.toFixed(2) }} грн</span> -->
+              <!-- <span class="font-medium text-mtwine-800">- {{ preorderDiscount?.toFixed(2) }} грн</span> -->
               <!-- </div> -->
               <!-- <USeparator /> -->
               <div class="pt-2 mt-2 flex justify-between">
                 <span class="font-medium">Всього</span>
-                <span class="font-bold">{{ preorderSubtotal.toFixed(2) }} грн</span>
+                <span class="font-bold">{{ preorderSubtotal?.toFixed(2) }} грн</span>
               </div>
             </div>
 
@@ -208,7 +208,7 @@ const syncWithBackend = async () => {
 }
 
 onMounted(async () => {
-  syncWithBackend()
+  await syncWithBackend()
   loading.value = false
 })
 

@@ -98,9 +98,14 @@ const itemsSupplies = [
         to: '/admin2/supplies'
     },
     {
-        label: 'Створити',
+        label: 'Experimental: Create',
         icon: 'i-lucide-plus',
         to: '/admin2/supplies/create'
+    },
+     {
+        label: 'Experimental: List',
+        icon: 'i-lucide-pencil',
+        to: '/admin2/supplies/list'
     }
 ]
 

@@ -1,15 +1,15 @@
 import { defineStore } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 export const useCreateSupplyStore = defineStore('createSupply', () => {
   // ─── State ───────────────────────────────────────────────────────────────────
-  const exchangeRate = ref(null) // formula's exchange rate
-  const exchangeRateReal = ref(null) // actual rate
+  const exchangeRate = ref(null)       // formula's exchange rate
+  const exchangeRateReal = ref(null)   // actual rate
   const counterpartyName = ref(null)
   const supplyRows = ref([])
   const currentReceiptIndex = ref(0)
-  const deliveryFee = ref(null) // Nova Post delivery fee at sending
+  const deliveryFee = ref(null)        // Nova Post delivery fee at sending
   const additionalSpendings = ref(null) // transfer fee, etc
-
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
   const uid = () => Math.random().toString(36).slice(2, 9)
@@ -24,14 +24,12 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
   // Mutates sell_price & bulk_price on the row.
   // Skips if row came from sumup (prices are locked to what clients ordered at).
   const calculatePrices = (row) => {
-    if (row.fromSumup) return
     const rate = parseFloat(exchangeRate.value) || 0
     if (!rate) return
 
     const margin = 1.25 * 1.1
     const reg = parseFloat(row.regular_price) || 0
     const promo = parseFloat(row.promotion_price) || 0
-
 
     if (promo > 0) {
       row.sell_price = Math.ceil(promo * rate * margin * calculateFloatingRate(promo))
@@ -47,28 +45,19 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
   }
 
   // Recalculates all derived fields for a single row, then triggers calculatePrices.
-  // Called whenever quantity / discount / regular_price changes.
   const recalculate = (row) => {
     const qty = parseFloat(row.quantity) || 0
     const disc = parseFloat(row.discount) || 0
     const reg = parseFloat(row.regular_price) || 0
 
-    // promotion_price – per-unit discounted price
     row.promotion_price = (disc > 0 && qty > 0)
       ? ((reg * qty) - disc) / qty
       : null
 
-    // price – effective unit price shown on the receipt
     row.price = row.promotion_price !== null
       ? row.promotion_price
       : (reg > 0 ? reg : null)
 
-
-
-    // prices for internal accounting
-
-
-    // sum – total amount for this line
     if (qty > 0 && reg > 0) {
       row.sum = disc > 0
         ? (reg * qty) - disc
@@ -82,9 +71,7 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
 
   // After exchangeRate changes, recalculate sell/bulk for all non-sumup rows.
   const recalculateAll = () => {
-    supplyRows.value.forEach(row => {
-      if (!row.fromSumup) calculatePrices(row)
-    })
+    supplyRows.value.forEach(row => calculatePrices(row))
   }
 
   // ─── Row factory ─────────────────────────────────────────────────────────────
@@ -92,47 +79,42 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
     _id: uid(),
     receiptIndex: currentReceiptIndex.value,
     name: '',
-    nameDisabled: false,   // true when added from sumup or search
-    fromSumup: false,   // sell_price / bulk_price locked when true
-    p_id: null,
+    nameDisabled: false,
+    product_id: null,
     sell_price: null,
     bulk_price: null,
     quantity: null,
     discount: null,
     regular_price: null,
-    promotion_price: null,  // derived
-    price: null,   // derived
-    sum: null,   // derived
+    promotion_price: null,
+    price: null,
+    sum: null,
     ...overrides,
   })
 
   // ─── Actions ─────────────────────────────────────────────────────────────────
 
-  // From Sumup table: name + sell/bulk prices are locked
   const addRowFromSumup = (item) => {
-    supplyRows.value.push(newRow({
+    const row = newRow({
       name: item.name,
       nameDisabled: true,
-      fromSumup: true,
-      p_id: item.p_id,
-      sell_price: item.sell_price,
-      bulk_price: item.bulk_price,
-    }))
+      product_id: item.p_id,
+    })
+    calculatePrices(row)
+    supplyRows.value.push(row)
   }
 
-  // From Search: name is locked, prices calculated from DB data via calculatePrices
   const addRowFromSearch = (product) => {
     const row = newRow({
       name: product.name || product.name_ukr,
       nameDisabled: true,
-      p_id: product.id,
+      product_id: product.id,
       regular_price: product.regular_price ?? null,
     })
     calculatePrices(row)
     supplyRows.value.push(row)
   }
 
-  // Manual entry: everything editable
   const addEmptyRow = () => {
     supplyRows.value.push(newRow())
   }
@@ -141,7 +123,13 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
     supplyRows.value = supplyRows.value.filter(r => r._id !== id)
   }
 
-  // Mark current receipt as done → new rows go to next receipt group
+  const updateRowProduct = (rowId, productId) => {
+    const row = supplyRows.value.find(r => r._id === rowId)
+    if (!row || !productId) return
+    row.product_id = productId
+    row.nameDisabled = true
+  }
+
   const endOfReceipt = () => {
     const hasRows = supplyRows.value.some(r => r.receiptIndex === currentReceiptIndex.value)
     if (!hasRows) return
@@ -151,14 +139,108 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
   const clearSupply = () => {
     supplyRows.value = []
     currentReceiptIndex.value = 0
-    counterpartyName.value = ''
+    counterpartyName.value = null 
     exchangeRate.value = null
-    exchangeRateReal = null
+    exchangeRateReal.value = null 
+    deliveryFee.value = null
+    additionalSpendings.value = null
+  }
+
+ watchEffect(()=> console.log(counterpartyName.value))
+
+  const loadFromBackend = (supply) => {
+    clearSupply()
+
+    exchangeRate.value = supply.exchange_rate_f ?? null
+    exchangeRateReal.value = supply.exchange_rate_real ?? null
+    counterpartyName.value = supply.supplier?.id ?? null
+    deliveryFee.value = supply.delivery_fee ?? null
+    additionalSpendings.value = supply.additional_spendings ?? null
+
+    // Restore rows
+    const rows = (supply.supply_products ?? []).map(p => ({
+      _id: p._id || uid(),
+      receiptIndex: p.receipt_index ?? 0,
+      name: p.name ?? '',
+      nameDisabled: !!p.product_id,
+      product_id: p.product_id ?? null,
+      sell_price: p.sell_price ?? null,
+      bulk_price: p.bulk_price ?? null,
+      quantity: p.quantity ?? null,
+      discount: p.discount ?? null,
+      regular_price: p.regular_price ?? null,
+      promotion_price: p.promotion_price ?? null,
+      price: p.price ?? null,
+      sum: p.sum ?? null,
+    }))
+
+    supplyRows.value = rows
+
+    // Set currentReceiptIndex to the max receipt group that exists
+    const maxIdx = rows.reduce((max, r) => Math.max(max, r.receiptIndex), 0)
+    currentReceiptIndex.value = maxIdx
+  }
+
+  const aggregateRows = () => {
+    // Group all rows by product_id (guaranteed non-null at this stage)
+    const grouped = {}
+    supplyRows.value.forEach(row => {
+      ;(grouped[row.product_id] ??= []).push(row)
+    })
+
+    const result = []
+
+    Object.values(grouped).forEach(rows => {
+      // Single row — just unlock prices and pass through
+      if (rows.length === 1) {
+        const r = rows[0]
+        result.push({ ...r, nameDisabled: true })
+        return
+      }
+
+      // ── Quantity ──────────────────────────────────────────────────────────
+      const totalQty = rows.reduce((acc, r) => acc + (parseFloat(r.quantity) || 0), 0)
+
+      // ── Weighted average price (zl) ───────────────────────────────────────
+      // Extract raw scalars explicitly to avoid Vue Proxy getter interference
+      const priceRows = rows
+        .map(r => ({ price: parseFloat(r.price), sum: parseFloat(r.sum), qty: parseFloat(r.quantity) }))
+        .filter(r => !isNaN(r.price) && !isNaN(r.sum) && r.price > 0)
+
+      const totalSum    = priceRows.reduce((acc, r) => acc + r.sum, 0)
+      const qtyOfPriced = priceRows.reduce((acc, r) => acc + r.qty, 0)
+      const avgPrice    = qtyOfPriced > 0 ? totalSum / qtyOfPriced : null
+
+      const firstRow = rows[0]
+
+      const merged = {
+        _id:             firstRow._id,
+        receiptIndex:    0,
+        name:            firstRow.name,
+        nameDisabled:    true,
+        product_id:      firstRow.product_id,
+        quantity:        totalQty || null,
+        regular_price:   avgPrice != null ? Number(avgPrice.toFixed(4)) : parseFloat(firstRow.regular_price) || null,
+        discount:        null,
+        promotion_price: null,
+        price:           avgPrice != null ? Number(avgPrice.toFixed(3)) : null,
+        sum:             totalSum > 0 ? Number(totalSum.toFixed(2)) : null,
+        sell_price:      null,
+        bulk_price:      null,
+      }
+
+      // Let the existing formula derive sell/bulk from the averaged regular_price
+      calculatePrices(merged)
+
+      result.push(merged)
+    })
+
+    supplyRows.value = result
+    currentReceiptIndex.value = 0
   }
 
   // ─── Computed ────────────────────────────────────────────────────────────────
 
-  // Rows keyed by receiptIndex, preserving insertion order within each group
   const receiptGroups = computed(() => {
     const groups = {}
     supplyRows.value.forEach(row => {
@@ -168,7 +250,6 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
     return groups
   })
 
-  // Sum of `sum` per receipt group
   const receiptTotals = computed(() => {
     const totals = {}
     Object.entries(receiptGroups.value).forEach(([idx, rows]) => {
@@ -177,44 +258,37 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
     return totals
   })
 
-  // Grand total across all receipts
   const total = computed(() =>
     Object.values(receiptTotals.value).reduce((a, b) => a + b, 0)
   )
 
-  // Total cost of products converted to UAH
   const totalInUAH = computed(() => {
     const rate = parseFloat(exchangeRateReal.value) || 0
     return total.value * rate * 1.25
   })
 
-  // MonoBank fee
   const monoBankFee = 0.018
 
   const terminalTotalFee = computed(() => totalInUAH.value * monoBankFee)
 
   const totalOverheads = computed(() => {
-    return (parseFloat(deliveryFee.value) || 0) + 
-           (parseFloat(terminalTotalFee.value) || 0) + 
-           (parseFloat(additionalSpendings.value) || 0)
+    return (parseFloat(deliveryFee.value) || 0) +
+      (parseFloat(terminalTotalFee.value) || 0) +
+      (parseFloat(additionalSpendings.value) || 0)
   })
 
-  // 5. The overhead ratio (how much extra UAH per 1 UAH of product)
   const overheadRatio = computed(() => {
     if (totalInUAH.value === 0) return 0
     return totalOverheads.value / totalInUAH.value
   })
 
-watchEffect(() => console.log("коефіцієнт:", overheadRatio.value, "Сума грн:", totalInUAH.value, "Terminal:", terminalTotalFee.value, "Counterparty:", counterpartyName.value ))
 
-const supplyRowsWithCost = computed(() => {
+  const supplyRowsWithCost = computed(() => {
     const rate = parseFloat(exchangeRateReal.value) || 0
     const ratio = overheadRatio.value
 
     return supplyRows.value.map(row => {
       const basePriceUAH = (parseFloat(row.price) || 0) * rate * 1.25
-      
-      // cost_price = (Base Price) + (Base Price * Overhead Ratio)
       const costPrice = basePriceUAH + (basePriceUAH * ratio)
 
       return {
@@ -223,7 +297,6 @@ const supplyRowsWithCost = computed(() => {
       }
     })
   })
-
 
   return {
     // state
@@ -244,11 +317,15 @@ const supplyRowsWithCost = computed(() => {
     removeRow,
     endOfReceipt,
     clearSupply,
+    loadFromBackend,
+    updateRowProduct,
+    aggregateRows,
     // computed
     receiptGroups,
     receiptTotals,
     total,
     totalInUAH,
-    supplyRowsWithCost
+    supplyRowsWithCost,
   }
+
 })
