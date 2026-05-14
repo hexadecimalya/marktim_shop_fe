@@ -93,7 +93,7 @@ const itemData = computed(() => ({
         : null,
     isPreorder: isPreorderLocation,
     categories: productData.value.categories ?? [],
-    product_preorder_id: productData.value.id || null
+    product_preorder_id: isPreorderLocation ? productData.value.id : null
     
 }))
 

@@ -20,16 +20,18 @@
                         <div class="text-xs font-medium mb-0">кількість</div>
                         <div
                             class="flex flex-row h-12 w-full rounded-md relative bg-transparent my-4 border border-gray-100 justify-between">
-                         <UButton icon="i-lucide:minus" :disabled="quantity === 1" class="text-black px-4" variant="ghost" color="neutral" @click="decQuantity"/>
-                           
+                            <UButton icon="i-lucide:minus" :disabled="quantity === 1" class="text-black px-4"
+                                variant="ghost" color="neutral" @click="decQuantity" />
+
 
                             <input
                                 class="outline-none focus:outline-none text-center w-1/3 font-semibold text-md flex items-center"
                                 name="custom-input-number" :value="quantity" />
 
-                             <UButton icon="i-lucide:plus" class="text-black px-4" variant="ghost" color="neutral" :disabled="quantity === product.units_amount" @click="incQuantity"/>
+                            <UButton icon="i-lucide:plus" class="text-black px-4" variant="ghost" color="neutral"
+                                :disabled="quantity === product.units_amount" @click="incQuantity" />
                         </div>
-                   
+
                         <AppButton @click="handleAddToCart"
                             class="w-full h-12 not-[]:rounded-xs uppercase text-xs font-medium tracking-normal justify-center"
                             trailing>
@@ -37,7 +39,17 @@
                         </AppButton>
                     </div>
 
-                    <div v-else class="mt-4 sm:mt-28 mb-4">
+                    <div v-else class="mt-4 sm:mt-14 mb-4 space-y-4">
+                        <div
+                            class="flex items-center gap-2.5 px-3 py-2.5 rounded-sm border border-mtgreen-200 bg-mtgreen-50/50">
+                            <svg class="w-4 h-4 text-mtgreen-400 shrink-0" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-xs font-medium text-mtgreen-700 tracking-wide uppercase">
+                                Цей продукт вже в кошику
+                            </span>
+                        </div>
                         <NuxtLink to="/shopping-cart">
                             <UButton
                                 class="w-full h-12 not-[]:rounded-sm uppercase text-xs font-medium text-mtgreen-50 tracking-normal justify-center bg-mtgreen-300 hover:bg-mtgreen-400"
@@ -47,7 +59,7 @@
                         </NuxtLink>
                     </div>
                 </div>
-               
+
 
                 <p v-if="product.units_amount <= 0" class="font-semibold my-2">Нема в наявності</p>
                 <div v-if="categoriesList.length">

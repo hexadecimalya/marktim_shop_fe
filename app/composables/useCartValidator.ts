@@ -19,6 +19,13 @@ type StockApiResponse = Record<
   }
 >
 
+type PreorderApiResponse = Record<
+  string,
+  {
+    exists: boolean
+  }
+>
+
 export const useCartValidator = async ({
   cart
 }: CartValidatorOptions) => {
@@ -136,32 +143,37 @@ const syncPreorders = async ({
   cart,
   apiBase
 }: SyncPreordersParams) => {
-  console.log(preorderItems)
   if (!preorderItems.length) return
 
-  await Promise.all(
-    preorderItems.map(async (item) => {
-      if (!item.product_preorder_id) return
+  try {
+    const preorderIds = preorderItems
+      .map((item) => item.product_preorder_id)
+      .filter(Boolean)
 
-      try {
-        const response = await $fetch<{
-          exists: boolean
-        }>(`${apiBase}/public/preorders/`, {
-          query: {
-            check_product_id:
-              item.product_preorder_id
-          }
-        })
-        console.log(response)
-        if (!response?.exists) {
-          cart.removeItem(item.id, true)
+    if (!preorderIds.length) return
+
+    const response = await $fetch<PreorderApiResponse>(
+      `${apiBase}/public/preorders/check/`,
+      {
+        method: 'POST',
+        body: {
+          product_ids: preorderIds
         }
-      } catch (error) {
-        console.warn(
-          `Preorder validation failed for item ${item.id}:`,
-          error
-        )
+      }
+    )
+
+    preorderItems.forEach((item) => {
+      const exists =
+        response[item.product_preorder_id]?.exists
+
+      if (!exists) {
+        cart.removeItem(item.id, true)
       }
     })
-  )
+  } catch (error) {
+    console.warn(
+      'Bulk preorder validation failed:',
+      error
+    )
+  }
 }

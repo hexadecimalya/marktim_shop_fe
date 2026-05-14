@@ -33,16 +33,14 @@
                   <div>{{ item.price }} грн</div>
                   <div class="sm:inline-block flex justify-between items-center">
                     <div class="font-semibold flex items-center my-1">
-                      <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
-                        class="mr-2 flex items-center">
-                        <UIcon name="i-solar:minus-square-bold" class="sm:w-6 sm:h-6  w-7 h-7 opacity-80" />
-                      </button>
+                      <UButton @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
+                        variant="ghost" size="md" color="neutral " class="mx-2 p-0 flex items-center"
+                        icon="i-solar:minus-square-bold" />
                       <span class="text-gray-700">{{ item.quantity }}</span>
-                      <button @click="updateQty(item, item.quantity + 1)" :disabled="item.quantity >= item.maxQuantity"
-                        class="mx-2 flex items-center">
-                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7"
-                          :class="[item.quantity >= item.maxQuantity ? 'opacity-50' : 'opacity-80']" />
-                      </button>
+                      <UButton @click="updateQty(item, item.quantity + 1)" :disabled="item.quantity === item.maxQuantity"
+                        variant="ghost" size="md" color="neutral " class="mx-2 p-0 flex items-center"
+                        icon="i-solar:minus-square-bold"
+                        :class="[item.quantity >= item.maxQuantity ? 'opacity-50' : 'opacity-80']" />
                     </div>
                     <div @click="remove(item)" class="underline cursor-pointer">Видалити</div>
                   </div>
@@ -93,15 +91,13 @@
                   <div>{{ item.price }} грн {{ item.bulk_price ? `/ ${item.bulk_price}` : '' }} грн </div>
                   <div class="sm:inline-block flex justify-between items-center">
                     <div class="font-semibold flex items-center my-1">
-                      <button @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
-                        class="mr-2 flex items-center">
-                        <UIcon name="i-solar:minus-square-bold" class="sm:w-6 sm:h-6  w-7 h-7" />
-                      </button>
+                      <UButton @click="updateQty(item, item.quantity - 1)" :disabled="item.quantity <= 1"
+                        variant="ghost" size="md" color="neutral " class="mx-2 p-0 flex items-center"
+                        icon="i-solar:minus-square-bold" />
                       <span class="text-gray-700">{{ item.quantity }}</span>
-                      <button @click="updateQty(item, item.quantity + 1)" :disabled="item.quantity >= item.maxQuantity"
-                        class="mx-2 flex items-center">
-                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7" />
-                      </button>
+                      <UButton @click="updateQty(item, item.quantity + 1)" variant="ghost" size="md" color="neutral"
+                        class="mx-2 p-0 flex items-center" icon="i-solar:minus-square-bold" />
+
                     </div>
                     <div @click="remove(item)" class="underline cursor-pointer">Видалити</div>
                   </div>
@@ -170,7 +166,7 @@ const {
 } = storeToRefs(cart)
 
 
-onMounted(async () => {
+onMounted(() => {
   loading.value = false
 })
 
@@ -179,14 +175,19 @@ const updateQty = (item, newQty) => {
 }
 
 const remove = (item) => {
-  cart.removeItem(item.id)
+  cart.removeItem(item.id, item.isPreorder)
 }
+
 // watchEffect(()=> console.log({
 //   stock: stockItems.value,
 //   preorder: preorderItems.value
 // }))
+
+await useCartValidator({ cart })
+
 useHead({
   title: 'Оформити замовлення'
 })
+
 
 </script>

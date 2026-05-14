@@ -1,7 +1,6 @@
 // plugins/cart-sync.client.ts
 import { toast } from "#build/ui";
 export default defineNuxtPlugin(async () => {
-  // await nuxtApp.runWithContext(() => Promise.resolve());
   const route = useRoute();
   const EXCLUDED_PREFIXES = ["/admin2"];
 
@@ -18,7 +17,7 @@ export default defineNuxtPlugin(async () => {
     return;
   }
 
-  const toast = useToast();
+  // const toast = useToast();
 
   try {
     await useCartValidator({ cart });
