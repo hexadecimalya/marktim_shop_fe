@@ -19,22 +19,17 @@
                     <div v-if="!isInCart" class="my-4">
                         <div class="text-xs font-medium mb-0">кількість</div>
                         <div
-                            class="flex flex-row h-12 w-full rounded-md relative bg-transparent my-4 border border-gray-100 ">
-                            <button class="hover:bg-gray-200 h-full w-1/3 rounded-l cursor-pointer outline-none"
-                                @click="decQuantity">
-                                <span class="m-auto text-2xl">−</span>
-                            </button>
+                            class="flex flex-row h-12 w-full rounded-md relative bg-transparent my-4 border border-gray-100 justify-between">
+                         <UButton icon="i-lucide:minus" :disabled="quantity === 1" class="text-black px-4" variant="ghost" color="neutral" @click="decQuantity"/>
+                           
 
                             <input
                                 class="outline-none focus:outline-none text-center w-1/3 font-semibold text-md flex items-center"
                                 name="custom-input-number" :value="quantity" />
 
-                            <button class="hover:bg-gray-200 h-full w-1/3 rounded-r cursor-pointer"
-                                @click="incQuantity">
-                                <span class="m-auto text-2xl">+</span>
-                            </button>
+                             <UButton icon="i-lucide:plus" class="text-black px-4" variant="ghost" color="neutral" :disabled="quantity === product.units_amount" @click="incQuantity"/>
                         </div>
-
+                   
                         <AppButton @click="handleAddToCart"
                             class="w-full h-12 not-[]:rounded-xs uppercase text-xs font-medium tracking-normal justify-center"
                             trailing>
@@ -52,6 +47,8 @@
                         </NuxtLink>
                     </div>
                 </div>
+               
+
                 <p v-if="product.units_amount <= 0" class="font-semibold my-2">Нема в наявності</p>
                 <div v-if="categoriesList.length">
                     <UBadge class="my-2 mr-2" size="md" color="neutral" variant="outline"
@@ -114,7 +111,7 @@ const isInCart = computed(() =>
 
 const quantity = ref(1)
 const incQuantity = () => {
-    if (quantity.value < product.value.units_amount) {
+    if (routeLocation.value === 'preorders' || quantity.value < product.value.units_amount) {
         quantity.value++
     }
     else return
@@ -124,13 +121,13 @@ const decQuantity = () => { quantity.value = Math.max(1, quantity.value - 1) }
 const handleAddToCart = () => {
     const p = product.value ?? {}
     const payload = {
-        id: prodId.value,
+        id: p.id,
         name: p.product?.name_ukr || p.product?.name || '',
         price: p.sell_price,
-        bulkPrice: p.bulk_price,
+        bulk_price: p.bulk_price,
         image: p.product?.files?.[0]?.link ?? placeholder,
         quantity: quantity.value,
-        isPreorder: routeLocation.value === 'stock' ? false : true
+        isPreorder: routeLocation.value === 'stock' ? false : true,
     }
 
     if (isInCart.value) {
@@ -155,7 +152,7 @@ watch(
     error,
     (err) => {
         if (err) {
-            const status = err.statusCode || err.status || 404
+            const status = err.status || 404
             throw createError({ statusCode: status, message: 'Такого продукту не знайдено' })
         }
     },

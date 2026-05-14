@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     },
     sentry: {
       dsn: process.env.NODE_ENV === "production" ? process.env.SENTRY_DSN : "",
-      tracesSampleRate: process.env.NODE_ENV === "production" ? 1.0 : 0,
+      tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 0,
     },
   },
   pages: true,
@@ -42,7 +42,7 @@ export default defineNuxtConfig({
   icon: {
     // mode: "svg",
     serverBundle: {
-      collections: ["lucide", "solar", "mingcute", "solar"],
+      collections: ["lucide", "solar", "mingcute"],
     },
   },
   vite: {
@@ -52,7 +52,7 @@ export default defineNuxtConfig({
         "@vue/devtools-core",
         "@vue/devtools-kit",
         "pinia-plugin-persistedstate",
-        "zod",
+        "@internationalized/date"
       ],
     },
   },

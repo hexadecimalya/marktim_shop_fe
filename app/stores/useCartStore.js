@@ -30,44 +30,6 @@ export const useCartStore = defineStore('cart', () => {
     preorderItems.value.reduce((sum, i) =>
       sum + (i.quantity === 1 ? i.price * i.quantity : i.bulk_price * i.quantity), 0)
   )
-const syncWithBackend = async () => {
-  const config = useRuntimeConfig()
-
-  const ids = stockItems.value.map(i => i.id)
-  if (!ids.length) return
-
-  const payload = {
-    product_ids: ids
-  }
-
-  const res = await $fetch(
-    `${config.public.apiBase}/public/stock/check_stock/`,
-    {
-      method: 'POST',
-      body: payload,
-    }
-  )
-
-  Object.entries(res).forEach(([id, serverItem]) => {
-    const productId = Number(id)
-    actualQuantity.value = serverItem.units_amount
-
-    const localItem = stockItems.value.find(i => i.id === productId)
-    if (!localItem) return
-
- 
-    if (localItem.price !== serverItem.sell_price) {
-      localItem.price = serverItem.sell_price
-    }
-
-
-    if (serverItem.units_amount <= 0) {
-      removeItem(productId)
-    } else if (localItem.quantity > serverItem.units_amount) {
-      localItem.quantity = serverItem.units_amount
-    }
-  })
-}
 
   const updateQuantity = (id, qty) => {
     const item = stockItems.value.find(i => i.id === id) ||
@@ -81,10 +43,15 @@ const syncWithBackend = async () => {
     }
   }
 
-  const removeItem = (id) => {
-    stockItems.value = stockItems.value.filter(i => i.id !== id)
-    preorderItems.value = preorderItems.value.filter(i => i.id !== id)
-  }
+//  const removeItem = (id, isPreorder) => {
+//     stockItems.value = stockItems.value.filter(i => i.id !== id)
+//     preorderItems.value = preorderItems.value.filter(i => i.id !== id)
+//   }
+
+const removeItem = (id, isPreorder) => {
+  const list = isPreorder ? preorderItems : stockItems
+  list.value = list.value.filter(i => i.id !== id)
+}
 
   const clearCart = () => {
     stockItems.value = []

@@ -60,6 +60,8 @@ const { data, pending, error } = useApiGet(
 const productList = computed(() => Array.isArray(data.value?.data) ? data.value.data : [])
 const totalCount = computed(() => data.value?.count || 0)
 
+
+
 const scrollToTop = () =>
     window.scrollTo({ top: 0, behavior: 'smooth' })
 

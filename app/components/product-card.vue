@@ -73,7 +73,7 @@ import AppButton from './UI/app-button.vue'
 import placeholder from '@/assets/image_placeholder.png'
 // const isDiscount = ref(false)
 const route = useRoute()
-const routeLocation = route.params.location || 'stock'
+const routeLocation = route.params.location  || 'stock'
 const isPreorderLocation = route.params.location === 'preorders'
 const props = defineProps({
     product: Object
@@ -93,30 +93,16 @@ const itemData = computed(() => ({
         : null,
     isPreorder: isPreorderLocation,
     categories: productData.value.categories ?? [],
+    product_preorder_id: productData.value.id || null
+    
 }))
 
 
 
-// const itemData = computed(() => ({
-//     id: props.product.id,
-//     name: props.product.product.name_ukr || props.product.product.name,
-//     image: props.product.product.files?.[0]?.link ?? placeholder,
-//     price: Math.trunc(props.product.sell_price),
-//     old_price: props.product.old_price ? Math.trunc(props.product.old_price) : null,
-//     bulk_price: props.product.bulk_price ? Math.trunc(props.product.bulk_price) : null,
-//     isPreorder: isPreorderLocation,
-//     categories: props.product.product.categories ?? [],
-// }))
-
 const dietaryIds = { gluten_free: 38, sugar_free: 40, lactose_free: 39, vegan: 55 }
 
 const hasCategory = (id) => props.product.product.categories.some(c => c.id === id)
-// const categories = computed(() =>
-//     productData.value.categories ?? []
-// )
 
-// const hasCategory = (id) =>
-//     categories.value.some(c => c.id === id)
 
 const gluten_free = computed(() => hasCategory(dietaryIds.gluten_free))
 const sugar_free = computed(() => hasCategory(dietaryIds.sugar_free))

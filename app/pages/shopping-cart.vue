@@ -40,7 +40,8 @@
                       <span class="text-gray-700">{{ item.quantity }}</span>
                       <button @click="updateQty(item, item.quantity + 1)" :disabled="item.quantity >= item.maxQuantity"
                         class="mx-2 flex items-center">
-                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7" :class="[item.quantity >= item.maxQuantity ? 'opacity-50' : 'opacity-80']"  />
+                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7"
+                          :class="[item.quantity >= item.maxQuantity ? 'opacity-50' : 'opacity-80']" />
                       </button>
                     </div>
                     <div @click="remove(item)" class="underline cursor-pointer">Видалити</div>
@@ -99,7 +100,7 @@
                       <span class="text-gray-700">{{ item.quantity }}</span>
                       <button @click="updateQty(item, item.quantity + 1)" :disabled="item.quantity >= item.maxQuantity"
                         class="mx-2 flex items-center">
-                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7"/>
+                        <UIcon name="i-solar:add-square-bold" class="sm:w-6 sm:h-6 w-7 h-7" />
                       </button>
                     </div>
                     <div @click="remove(item)" class="underline cursor-pointer">Видалити</div>
@@ -155,7 +156,7 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 
-const config = useRuntimeConfig()
+// const config = useRuntimeConfig()
 let loading = ref(true)
 
 const cart = useCartStore()
@@ -168,47 +169,8 @@ const {
   preorderTotal
 } = storeToRefs(cart)
 
-const syncWithBackend = async () => {
-  const config = useRuntimeConfig()
-
-  const ids = stockItems.value.map(i => i.id)
-  if (!ids.length) return
-
-  const payload = {
-    product_ids: ids
-  }
-
-  const res = await $fetch(
-    `${config.public.apiBase}/public/stock/check_stock/`,
-    {
-      method: 'POST',
-      body: payload,
-    }
-  )
-
-  Object.entries(res).forEach(([id, serverItem]) => {
-    const productId = Number(id)
-    // actualQuantity.value = serverItem.units_amount
-
-    const localItem = stockItems.value.find(i => i.id === productId)
-    if (!localItem) return
-    localItem.maxQuantity = serverItem.units_amount
-
-    if (localItem.price !== serverItem.sell_price) {
-      localItem.price = serverItem.sell_price
-    }
-
-
-    if (serverItem.units_amount <= 0) {
-       cart.removeItem(productId)
-    } else if (localItem.quantity > serverItem.units_amount) {
-      localItem.quantity = serverItem.units_amount
-    }
-  })
-}
 
 onMounted(async () => {
-  await syncWithBackend()
   loading.value = false
 })
 
@@ -219,7 +181,10 @@ const updateQty = (item, newQty) => {
 const remove = (item) => {
   cart.removeItem(item.id)
 }
-
+// watchEffect(()=> console.log({
+//   stock: stockItems.value,
+//   preorder: preorderItems.value
+// }))
 useHead({
   title: 'Оформити замовлення'
 })
