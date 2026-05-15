@@ -1,73 +1,123 @@
 <template>
-    <section class="w-5/6 mx-auto">
-        <h1 class="text-2xl font-extrabold my-4">
-            Список поставок
-        </h1>
-         <div v-if="!loading && !error">
-            <UButton variant="subtle" class="mx-auto mb-6" color="error" icon="i-lucide:hand" :disabled="isStopping"
-                @click="handleStopSupplies">Зупинити всі</UButton>
-            <div
-                class="grid grid-cols-5 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
-                <div>Створено</div>
-                <div>ID</div>
-                <div>Постачальник</div>
-                <div>Статус</div>
-                <div class="text-end">Дії</div>
-            </div>
-            <div class="border-x border-b border-gray-200 rounded-b-lg px-2 ">
-                <div v-for="supply in suppliesList" :key="supply.id">
-                    <div class="grid grid-cols-5  px-1 py-1 text-sm font-slim items-center">
+    <section class="w-full max-w-5xl mx-auto px-4">
+        <h1 class="text-2xl font-extrabold my-4">Список поставок</h1>
 
-                        <div>{{ supply.created }}</div>
-                        <div>
-                            <p>
-                                {{ supply.id }}
-                            </p>
-                        </div>
-                        <div class=" flex space-x-2 items-center">{{ supply.supplier.name }}</div>
-                        <div>
-                            <UBadge variant="subtle" :color="supply.metadata.active ? 'primary' : 'neutral'"> {{
-                                supply.metadata.active ? 'активована' : 'неактивна' }}</UBadge>
-                        </div>
+        <div v-if="!loading && !error">
+            <UButton variant="subtle" class="mb-6" color="error" icon="i-lucide:hand" :disabled="isStopping"
+                @click="handleStopSupplies">
+                Зупинити всі
+            </UButton>
 
-                        <div class="flex space-x-3 justify-end">
-                            <UTooltip :text="!supply.metadata.active ? 'Активувати' : 'Вимкнути'"
-                                :content="{ side: 'top' }">
-                                <UButton variant="subtle"
-                                    :icon="!supply.metadata.active ? 'i-lucide:power' : 'i-lucide:power-off'"
-                                    :color="supply.metadata.active ? 'primary' : 'neutral'" :disabled="isStatusSwithing"
-                                    @click="handleSwitchActiveStatusSupply(supply.id)" />
-                            </UTooltip>
-                            <UTooltip text="Завантажити картинки" :content="{ side: 'top' }">
-                                <UButton class="justify-self-end" variant="subtle" icon="i-lucide:download"
-                                    color="neutral" :disabled="isExporting" @click="handleExport(supply.id)" />
-                            </UTooltip>
-
-                            <UModal title="Confirm deleting">
-                                <UTooltip text="Видалити" :content="{ side: 'top' }">
-                                    <UButton class="justify-self-end" variant="subtle" icon="i-lucide:trash"
-                                        color="error" />
-
+            <!-- Desktop table -->
+            <div class="hidden md:block">
+                <div
+                    class="grid grid-cols-7 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <div>ID</div>
+                    <div class="col-span-2">Постачальник</div>
+                    <div>Позицій</div>
+                    <div>Статус</div>
+                    <div>Створено</div>
+                    <div class="text-end">Дії</div>
+                </div>
+                <div class="border-x border-b border-gray-200 rounded-b-lg">
+                    <div v-for="supply in suppliesList" :key="supply.id">
+                        <div class="grid grid-cols-7 px-4 py-3 text-sm items-center">
+                            <div class="font-mono text-gray-400 text-xs">{{ supply.id }}</div>
+                            <div class="col-span-2 font-medium">{{ supply.supplier.name }}</div>
+                            <div>{{ supply.total_items }}</div>
+                            <div>
+                                <UBadge variant="subtle" :color="supply.metadata.active ? 'primary' : 'neutral'">
+                                    {{ supply.metadata.active ? 'активована' : 'неактивна' }}
+                                </UBadge>
+                            </div>
+                            <div class="text-gray-600">{{ supply.created }}</div>
+                            <div class="flex space-x-3 justify-end">
+                                <UTooltip :text="!supply.metadata.active ? 'Активувати' : 'Вимкнути'"
+                                    :content="{ side: 'top' }">
+                                    <UButton variant="subtle"
+                                        :icon="!supply.metadata.active ? 'i-lucide:power' : 'i-lucide:power-off'"
+                                        :color="supply.metadata.active ? 'primary' : 'neutral'"
+                                        :disabled="isStatusSwithing"
+                                        @click="handleSwitchActiveStatusSupply(supply.id)" />
                                 </UTooltip>
-                                <template #body>
-                                    <div class="h-48 m-4 mx-auto">
-                                        Видалити поставку #123?
-                                    </div>
+                                <UTooltip text="Завантажити картинки" :content="{ side: 'top' }">
+                                    <UButton class="justify-self-end" variant="subtle" icon="i-lucide:download"
+                                        color="neutral" :disabled="isExporting" @click="handleExport(supply.id)" />
+                                </UTooltip>
 
-                                </template>
-                                <template #footer="{ close }">
-                                    <UButton label="Cancel" color="neutral" variant="outline" @click="close" />
-                                    <UButton @click="handleDeleteSupply(id)" label="Видалити" color="neutral" />
-                                </template>
-                            </UModal>
+                                <UModal title="Confirm deleting">
+                                    <UTooltip text="Видалити" :content="{ side: 'top' }">
+                                        <UButton class="justify-self-end" variant="subtle" icon="i-lucide:trash"
+                                            color="error" />
+
+                                    </UTooltip>
+                                    <template #body>
+                                        <div class="h-48 m-4 mx-auto">
+                                            Видалити поставку #123?
+                                        </div>
+
+                                    </template>
+                                    <template #footer="{ close }">
+                                        <UButton label="Cancel" color="neutral" variant="outline" @click="close" />
+                                        <UButton @click="handleDeleteSupply(id)" label="Видалити" color="neutral" />
+                                    </template>
+                                </UModal>
+                            </div>
                         </div>
+                        <USeparator />
                     </div>
-                       <USeparator />
+                </div>
+            </div>
+
+            <!-- Mobile cards -->
+            <div class="flex flex-col gap-3 md:hidden">
+                <div v-for="supply in suppliesList" :key="supply.id"
+                    class="border border-gray-200 rounded-xl p-4 flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-mono text-xs text-gray-500">#{{ supply.id }}</span>
+                        <UBadge variant="subtle" :color="supply.metadata.active ? 'primary' : 'neutral'">
+                            {{ supply.metadata.active ? 'активована' : 'неактивна' }}
+                        </UBadge>
+                    </div>
+                    <div class="text-sm font-medium">{{ supply.supplier.name }}</div>
+                    <div class="flex gap-4 text-xs text-gray-500">
+                        <span>📦 {{ supply.total_items }} позицій</span>
+                        <span>🗓 {{ supply.created }}</span>
+                    </div>
+                    <div class="flex gap-2 pt-1 border-t border-gray-100">
+                        <UTooltip :text="!supply.metadata.active ? 'Активувати' : 'Вимкнути'"
+                            :content="{ side: 'top' }">
+                            <UButton variant="subtle"
+                                :icon="supply.metadata.active ? 'i-lucide:power-off' : 'i-lucide:power'"
+                                :color="supply.metadata.active ? 'primary' : 'neutral'" :disabled="isStatusSwithing"
+                                @click="handleSwitchActiveStatusSupply(supply.id)" />
+                        </UTooltip>
+                        <UTooltip text="Завантажити картинки" :content="{ side: 'top' }">
+                            <UButton variant="subtle" icon="i-lucide:download" color="neutral" :disabled="isExporting"
+                                @click="handleExport(supply.id)" />
+                        </UTooltip>
+                        <UModal title="Підтвердіть видалення">
+                            <UTooltip text="Видалити" :content="{ side: 'top' }">
+                                <UButton variant="subtle" icon="i-lucide:trash" color="error" />
+                            </UTooltip>
+                            <template #body>
+                                <p class="p-4 text-sm">Видалити поставку #{{ supply.id }}?</p>
+                            </template>
+                            <template #footer="{ close }">
+                                <UButton label="Скасувати" color="neutral" variant="outline" @click="close" />
+                                <UButton label="Видалити" color="error" @click="handleDeleteSupply(supply.id)" />
+                            </template>
+                        </UModal>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <div v-if="loading" class="flex justify-center py-12">
+            <UIcon name="i-lucide:loader" class="animate-spin text-gray-400 text-2xl" />
+        </div>
     </section>
+
     <div class="my-6 flex justify-center" v-if="!loading">
         <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
             active-variant="subtle" :items-per-page="limit" show-edges />
@@ -152,7 +202,7 @@ const handleSwitchActiveStatusSupply = async (id) => {
         await execute(`/deliveries/${id}/toggle_activity/`, { method: 'GET' })
         toast.add({
             title: 'Статус успішно змінено',
-            description: supply.id,
+            description: `Поставка ${supply.id} від ${supply.supplier.name}`,
             icon: 'i-lucide:check-circle',
             color: 'success'
         })

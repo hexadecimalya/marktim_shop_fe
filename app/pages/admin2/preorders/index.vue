@@ -1,83 +1,172 @@
 <template>
-    <section class="w-5/6 mx-auto">
-        <h1 class="text-2xl font-extrabold my-4">
-            Список передзамовлень
-        </h1>
+  <section class="w-11/12 max-w-5xl mx-auto">
+    <h1 class="text-2xl font-extrabold my-4">Список передзамовлень</h1>
 
-        <div v-if="!loading && !error">
-            <UButton variant="subtle" class="mx-auto mb-6" color="error" icon="i-lucide:hand"
-                :disabled="isStopping" @click="handleStopPreorders">Зупинити всі</UButton>
-            <div
-                class="grid grid-cols-6 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
-                <div>Створено</div>
-                <div class="col-span-2">Назва</div>
-                <div>Статус</div>
-                <div>Активний до</div>
-                <div class="text-end">Дії</div>
-            </div>
-            <div class="border-x border-b border-gray-200 rounded-b-lg">
-                <div v-for="preorder in preordersList" :key="preorder.id">
-                    <div class="grid grid-cols-6 px-1 py-1 text-sm font-slim items-center">
-                        <div class="px-4">{{ preorder.created }}</div>
-                        <div class="col-span-2 font-semibold hover:underline text-gray-600">
-                            <NuxtLink :to="`/admin2/preorders/${preorder.id}`" class="hover:underline cursor-pointer">
-                                {{ preorder.name }}
-                            </NuxtLink>
-                        </div>
-                        <div>
-                            <UBadge variant="subtle" :color="preorder.active ? 'primary' : 'neutral'">
-                                {{ preorder.active ? 'активований' : 'неактивний' }}
-                            </UBadge>
-                        </div>
-                        <div class="flex align-middle">
-                            <UPopover>
-                                <UButton size="sm" variant="ghost" color="neutral">
-                                    {{ formatDate(validTillMap[preorder.id]) }}
-                                </UButton>
-                                <template #content>
-                                    <UCalendar :model-value="toCalendarDate(validTillMap[preorder.id])"
-                                        @update:model-value="(val) => {
-                                            const str = fromCalendarDate(val)
-                                            validTillMap[preorder.id] = str
-                                            saveValidTill(preorder.id, str)
-                                        }" color="neutral" class="inline-flex" />
-                                </template>
-                            </UPopover>
-                        </div>
-                        <div class="flex space-x-3 justify-end">
-                            <UTooltip
-                                :text="!preorder.uiValidTill ? 'Спочатку оберіть дату' : (!preorder.active ? 'Активувати' : 'Вимкнути')"
-                                :content="{ side: 'top' }">
-                                <UButton variant="subtle"
-                                    :icon="!preorder.active ? 'i-lucide:power' : 'i-lucide:power-off'"
-                                    :color="!preorder.uiValidTill ? 'neutral' : (preorder.active ? 'primary' : 'neutral')"
-                                    :class="{ 'opacity-50': !preorder.uiValidTill }" :disabled="isStatusSwithing"
-                                    @click="handleSwitchActiveStatusPreorder(preorder.id)" />
-                            </UTooltip>
-                            <UTooltip text="Опублікувати в Viber" :content="{ side: 'top' }">
-                                <UButton variant="subtle" icon="i-lucide:send" color="neutral" :disabled="isPublishing"
-                                    @click="handlePubishPreorder(preorder.id)" />
-                            </UTooltip>
-                            <UTooltip text="Видалити" :content="{ side: 'top' }">
-                                <UButton variant="subtle" icon="i-lucide:trash" color="error" :disabled="isDeleting"
-                                    @click="handleDeletePreorder(preorder.id)" />
-                            </UTooltip>
-                        </div>
-                    </div>
-                    <USeparator />
-                </div>
-            </div>
-            <div class="my-6 flex justify-center">
-                <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
-                    active-variant="subtle" :items-per-page="limit" show-edges />
-            </div>
-        </div>
+    <div v-if="!loading && !error">
+      <UButton
+        variant="subtle"
+        class="mb-6"
+        color="error"
+        icon="i-lucide:hand"
+        :disabled="isStopping"
+        @click="handleStopPreorders"
+      >
+        Зупинити всі
+      </UButton>
 
-        <div v-else-if="error">{{ error }}</div>
-        <div v-else>
-            <AdminLoader />
+      <!-- Desktop table -->
+      <div class="hidden md:block">
+        <div class="grid grid-cols-6 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+          <div>Створено</div>
+          <div class="col-span-2">Назва</div>
+          <div>Статус</div>
+          <div>Активний до</div>
+          <div class="text-end">Дії</div>
         </div>
-    </section>
+        <div class="border-x border-b border-gray-200 rounded-b-lg">
+          <div v-for="preorder in preordersList" :key="preorder.id">
+            <div class="grid grid-cols-6 px-4 py-2 text-sm items-center">
+              <div class="text-gray-500 text-xs">{{ preorder.created }}</div>
+              <div class="col-span-2 font-semibold text-gray-600">
+                <NuxtLink :to="`/admin2/preorders/${preorder.id}`" class="hover:underline">
+                  {{ preorder.name }}
+                </NuxtLink>
+              </div>
+              <div>
+                <UBadge variant="subtle" :color="preorder.active ? 'primary' : 'neutral'">
+                  {{ preorder.active ? 'активований' : 'неактивний' }}
+                </UBadge>
+              </div>
+              <div>
+                <UPopover>
+                  <UButton size="sm" variant="ghost" color="neutral">
+                    {{ formatDate(validTillMap[preorder.id]) }}
+                  </UButton>
+                  <template #content>
+                    <UCalendar
+                      :model-value="toCalendarDate(validTillMap[preorder.id])"
+                      @update:model-value="(val) => {
+                        const str = fromCalendarDate(val)
+                        validTillMap[preorder.id] = str
+                        saveValidTill(preorder.id, str)
+                      }"
+                      color="neutral"
+                      class="inline-flex"
+                    />
+                  </template>
+                </UPopover>
+              </div>
+              <div class="flex gap-2 justify-end">
+                <UTooltip
+                  :text="!preorder.uiValidTill ? 'Спочатку оберіть дату' : (!preorder.active ? 'Активувати' : 'Вимкнути')"
+                  :content="{ side: 'top' }"
+                >
+                  <UButton
+                    variant="subtle"
+                    :icon="preorder.active ? 'i-lucide:power-off' : 'i-lucide:power'"
+                    :color="preorder.active ? 'primary' : 'neutral'"
+                    :class="{ 'opacity-50': !preorder.uiValidTill }"
+                    :disabled="isStatusSwithing"
+                    @click="handleSwitchActiveStatusPreorder(preorder.id)"
+                  />
+                </UTooltip>
+                <UTooltip text="Опублікувати в Viber" :content="{ side: 'top' }">
+                  <UButton variant="subtle" icon="i-lucide:send" color="neutral" :disabled="isPublishing" @click="handlePubishPreorder(preorder.id)" />
+                </UTooltip>
+                <UTooltip text="Видалити" :content="{ side: 'top' }">
+                  <UButton variant="subtle" icon="i-lucide:trash" color="error" :disabled="isDeleting" @click="handleDeletePreorder(preorder.id)" />
+                </UTooltip>
+              </div>
+            </div>
+            <USeparator />
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile cards -->
+      <div class="flex flex-col gap-3 md:hidden">
+        <div
+          v-for="preorder in preordersList"
+          :key="preorder.id"
+          class="border border-gray-200 rounded-xl p-4 flex flex-col gap-3"
+        >
+          <div class="flex items-start justify-between gap-2">
+            <NuxtLink
+              :to="`/admin2/preorders/${preorder.id}`"
+              class="font-semibold text-gray-700 hover:underline leading-snug"
+            >
+              {{ preorder.name }}
+            </NuxtLink>
+            <UBadge variant="subtle" :color="preorder.active ? 'primary' : 'neutral'" class="shrink-0">
+              {{ preorder.active ? 'активований' : 'неактивний' }}
+            </UBadge>
+          </div>
+
+          <div class="flex gap-4 text-xs text-gray-400">
+            <span>🗓 Створено: {{ preorder.created }}</span>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs text-gray-500">
+            <span class="shrink-0">Активний до:</span>
+            <UPopover>
+              <UButton size="sm" variant="ghost" color="neutral">
+                {{ formatDate(validTillMap[preorder.id]) }}
+              </UButton>
+              <template #content>
+                <UCalendar
+                  :model-value="toCalendarDate(validTillMap[preorder.id])"
+                  @update:model-value="(val) => {
+                    const str = fromCalendarDate(val)
+                    validTillMap[preorder.id] = str
+                    saveValidTill(preorder.id, str)
+                  }"
+                  color="neutral"
+                  class="inline-flex"
+                />
+              </template>
+            </UPopover>
+          </div>
+
+          <div class="flex gap-2 pt-2 border-t border-gray-100">
+            <UTooltip
+              :text="!preorder.uiValidTill ? 'Спочатку оберіть дату' : (!preorder.active ? 'Активувати' : 'Вимкнути')"
+              :content="{ side: 'top' }"
+            >
+              <UButton
+                variant="subtle"
+                :icon="preorder.active ? 'i-lucide:power-off' : 'i-lucide:power'"
+                :color="preorder.active ? 'primary' : 'neutral'"
+                :class="{ 'opacity-50': !preorder.uiValidTill }"
+                :disabled="isStatusSwithing"
+                @click="handleSwitchActiveStatusPreorder(preorder.id)"
+              />
+            </UTooltip>
+            <UTooltip text="Опублікувати в Viber" :content="{ side: 'top' }">
+              <UButton variant="subtle" icon="i-lucide:send" color="neutral" :disabled="isPublishing" @click="handlePubishPreorder(preorder.id)" />
+            </UTooltip>
+            <UTooltip text="Видалити" :content="{ side: 'top' }">
+              <UButton variant="subtle" icon="i-lucide:trash" color="error" :disabled="isDeleting" @click="handleDeletePreorder(preorder.id)" />
+            </UTooltip>
+          </div>
+        </div>
+      </div>
+
+      <div class="my-6 flex justify-center">
+        <UPagination
+          v-model:page="page"
+          :show-controls="false"
+          :total="totalCount"
+          active-color="neutral"
+          active-variant="subtle"
+          :items-per-page="limit"
+          show-edges
+        />
+      </div>
+    </div>
+
+    <div v-else-if="error">{{ error }}</div>
+    <div v-else><AdminLoader /></div>
+  </section>
 </template>
 
 <script setup>
