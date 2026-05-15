@@ -19,83 +19,105 @@
     </div>
 
     <!-- Table Header -->
-    <div
-      class="grid grid-cols-8 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
-      <div>#</div>
-      <div class="col-span-6">Назва</div>
-      <div class="text-end">Дії</div>
-    </div>
+    <div class="hidden md:block">
+      <div
+        class="grid grid-cols-8 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div>#</div>
+        <div class="col-span-6">Назва</div>
+        <div class="text-end">Дії</div>
+      </div>
 
-    <!-- Rows -->
-    <div class="border-x border-b border-gray-200 rounded-b-xl overflow-hidden divide-y divide-gray-100">
-      <div v-for="counterparty in filteredCounterparties" :key="counterparty.id"
-        class="grid grid-cols-8 items-center px-4 py-2.5 transition-colors duration-150">
-        <!-- ID -->
-        <div class="text-xs text-gray-400 font-mono">{{ counterparty.id }}</div>
+      <!-- Rows -->
+      <div class="border-x border-b border-gray-200 rounded-b-xl overflow-hidden divide-y divide-gray-100">
+        <div v-for="counterparty in filteredCounterparties" :key="counterparty.id"
+          class="grid grid-cols-8 items-center px-4 py-2.5 transition-colors duration-150">
+          <!-- ID -->
+          <div class="text-xs text-gray-400 font-mono">{{ counterparty.id }}</div>
 
-        <!-- Name field -->
-        <div class="col-span-6 pr-4">
-          {{ counterparty.name }}
-        </div>
+          <!-- Name field -->
+          <div class="col-span-6 pr-4 text-sm">
+            {{ counterparty.name }}
+          </div>
 
-        <!-- Edit / Save actions -->
-        <div class="flex space-x-3 justify-end">
-          <UTooltip :text="!counterparty.favoured ? 'Додати в улюблені' : 'Видалити з улюблених'"
-            :content="{ side: 'top' }">
-            <UButton :variant="counterparty.favoured ? 'solid' : 'subtle'" icon="i-lucide:star"
-              :disabled="isStatusSwithing" :color="counterparty.favoured ? 'warning' : 'neutral'"
-              @click="addToFavs(counterparty.id)" />
-          </UTooltip>
-          <UTooltip text="Редагувати" :content="{ side: 'top' }">
-            <UButton class="justify-self-end" variant="subtle" icon="i-lucide:pencil" color="neutral"
-              @click="goToEditPage(counterparty.id)" />
-          </UTooltip>
-
-          <UModal title="Підтвердити дію">
-            <UTooltip text="Видалити" :content="{ side: 'top' }">
-              <UButton class="justify-self-end" variant="subtle" icon="i-lucide:trash" color="error"
-                @click="confirmDelete(counterparty)" />
-
+          <!-- Edit / Save actions -->
+          <div class="flex space-x-3 justify-end">
+            <UTooltip :text="!counterparty.favoured ? 'Додати в улюблені' : 'Видалити з улюблених'"
+              :content="{ side: 'top' }">
+              <UButton :variant="counterparty.favoured ? 'solid' : 'subtle'" icon="i-lucide:star"
+                :disabled="isStatusSwithing" :color="counterparty.favoured ? 'warning' : 'neutral'"
+                @click="addToFavs(counterparty.id)"  />
             </UTooltip>
-            <template #body>
-              <div class="h-48 m-4 mx-auto">
-                Видалити контрагента <span class="font-semibold">{{ counterparty.name }}</span>?
-              </div>
+            <UTooltip text="Редагувати" :content="{ side: 'top' }">
+              <UButton class="justify-self-end" variant="subtle" icon="i-lucide:pencil" color="neutral"
+                @click="goToEditPage(counterparty.id)" disabled/>
+            </UTooltip>
 
-            </template>
-            <template #footer="{ close }">
-              <UButton label="Cancel" color="neutral" variant="outline" @click="close" />
-              <UButton @click="executeDelete(id)" label="Видалити" color="neutral" />
-            </template>
-          </UModal>
-        </div>
-      </div>
+            <UModal title="Підтвердити дію">
+              <UTooltip text="Видалити" :content="{ side: 'top' }">
+                <UButton class="justify-self-end" variant="subtle" icon="i-lucide:trash" color="error"
+                  @click="confirmDelete(counterparty)" disabled/>
 
-      <!-- Empty state -->
-      <div v-if="filteredCounterparties.length === 0" class="py-12 text-center text-sm text-gray-400">
-        <template v-if="counterpartiesSearch">Нічого не знайдено за запитом «{{ counterpartiesSearch }}»</template>
-        <template v-else>Контрагенти відсутні</template>
-      </div>
-    </div>
+              </UTooltip>
+              <template #body>
+                <div class="h-48 m-4 mx-auto">
+                  Видалити контрагента <span class="font-semibold">{{ counterparty.name }}</span>?
+                </div>
 
-    <!-- Delete confirmation modal -->
-    <UModal v-model:open="showDeleteModal">
-      <template #content>
-        <div class="p-6 space-y-4">
-          <h3 class="text-base font-semibold text-gray-900">Видалити бренд?</h3>
-          <p class="text-sm text-gray-500">
-            Ви впевнені, що хочете видалити контрагента
-            <span class="font-medium text-gray-800">«{{ pendingDelete?.name }}»</span>?
-            Цю дію не можна скасувати.
-          </p>
-          <div class="flex justify-end gap-2 pt-2">
-            <UButton variant="ghost" color="neutral" @click="showDeleteModal = false">Скасувати</UButton>
-            <UButton color="error" :loading="deletingId !== null" @click="executeDelete">Видалити</UButton>
+              </template>
+              <template #footer="{ close }">
+                <UButton label="Cancel" color="neutral" variant="outline" @click="close" />
+                <UButton @click="executeDelete(id)" label="Видалити" color="neutral" />
+              </template>
+            </UModal>
           </div>
         </div>
-      </template>
-    </UModal>
 
+        <!-- Empty state -->
+        <div v-if="filteredCounterparties.length === 0" class="py-12 text-center text-sm text-gray-400">
+          <template v-if="counterpartiesSearch">Нічого не знайдено за запитом «{{ counterpartiesSearch }}»</template>
+          <template v-else>Контрагенти відсутні</template>
+        </div>
+      </div>
+
+
+      <!-- Delete confirmation modal -->
+      <UModal v-model:open="showDeleteModal">
+        <template #content>
+          <div class="p-6 space-y-4">
+            <h3 class="text-base font-semibold text-gray-900">Видалити бренд?</h3>
+            <p class="text-sm text-gray-500">
+              Ви впевнені, що хочете видалити контрагента
+              <span class="font-medium text-gray-800">«{{ pendingDelete?.name }}»</span>?
+              Цю дію не можна скасувати.
+            </p>
+            <div class="flex justify-end gap-2 pt-2">
+              <UButton variant="ghost" color="neutral" @click="showDeleteModal = false">Скасувати</UButton>
+              <UButton color="error" :loading="deletingId !== null" @click="executeDelete">Видалити</UButton>
+            </div>
+          </div>
+        </template>
+      </UModal>
+    </div>
+
+    <!-- Mobile cards -->
+    <div class="flex flex-col gap-3 md:hidden">
+      <div v-for="counterparty in filteredCounterparties" :key="counterparty.id"
+        class="border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <div class="text-sm font-medium truncate">{{ counterparty.name }}</div>
+          <div class="text-xs text-gray-400 font-mono mt-0.5">#{{ counterparty.id }}</div>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <UButton :variant="counterparty.favoured ? 'solid' : 'subtle'" icon="i-lucide:star"
+            :color="counterparty.favoured ? 'warning' : 'neutral'" :disabled="isStatusSwithing" size="sm"
+            @click="addToFavs(counterparty.id)" />
+          <UButton variant="subtle" icon="i-lucide:pencil" color="neutral" size="sm"
+            @click="goToEditPage(counterparty.id)" disabled />
+          <UButton variant="subtle" icon="i-lucide:trash" color="error" size="sm"
+            @click="confirmDelete(counterparty)" disabled/>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 

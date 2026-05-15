@@ -28,7 +28,7 @@
                         </NuxtLink>
                     </div>
 
-                    <div>{{ supply.supplier.name }}</div>
+                    <div>{{ supply.supplier }}</div>
                     <div>{{ supply.supply_products.length }}</div>
                     <div>
                         <UBadge variant="subtle" :color="!supply.draft ? 'primary' : 'neutral'"> {{
