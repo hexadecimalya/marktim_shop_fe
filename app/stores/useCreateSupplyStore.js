@@ -120,7 +120,10 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
   }
 
   const removeRow = (id) => {
+    console.log(supplyRows.value)
     supplyRows.value = supplyRows.value.filter(r => r._id !== id)
+    console.log(supplyRows.value)
+
   }
 
   const updateRowProduct = (rowId, productId) => {
@@ -139,14 +142,14 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
   const clearSupply = () => {
     supplyRows.value = []
     currentReceiptIndex.value = 0
-    counterpartyName.value = null 
+    counterpartyName.value = null
     exchangeRate.value = null
-    exchangeRateReal.value = null 
+    exchangeRateReal.value = null
     deliveryFee.value = null
     additionalSpendings.value = null
   }
 
- watchEffect(()=> console.log(counterpartyName.value))
+  watchEffect(() => console.log(counterpartyName.value))
 
   const loadFromBackend = (supply) => {
     clearSupply()
@@ -161,9 +164,9 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
     const rows = (supply.supply_products ?? []).map(p => ({
       _id: p._id || uid(),
       receiptIndex: p.receipt_index ?? 0,
-      name: p.name ?? '',
-      nameDisabled: !!p.product_id,
-      product_id: p.product_id ?? null,
+      name: p.product_detail.name ?? '',
+      nameDisabled: !!p.product_detail.id,
+      product_id: p.product_detail.id ?? null,
       sell_price: p.sell_price ?? null,
       bulk_price: p.bulk_price ?? null,
       quantity: p.quantity ?? null,
@@ -185,7 +188,7 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
     // Group all rows by product_id (guaranteed non-null at this stage)
     const grouped = {}
     supplyRows.value.forEach(row => {
-      ;(grouped[row.product_id] ??= []).push(row)
+      ; (grouped[row.product_id] ??= []).push(row)
     })
 
     const result = []
@@ -207,26 +210,26 @@ export const useCreateSupplyStore = defineStore('createSupply', () => {
         .map(r => ({ price: parseFloat(r.price), sum: parseFloat(r.sum), qty: parseFloat(r.quantity) }))
         .filter(r => !isNaN(r.price) && !isNaN(r.sum) && r.price > 0)
 
-      const totalSum    = priceRows.reduce((acc, r) => acc + r.sum, 0)
+      const totalSum = priceRows.reduce((acc, r) => acc + r.sum, 0)
       const qtyOfPriced = priceRows.reduce((acc, r) => acc + r.qty, 0)
-      const avgPrice    = qtyOfPriced > 0 ? totalSum / qtyOfPriced : null
+      const avgPrice = qtyOfPriced > 0 ? totalSum / qtyOfPriced : null
 
       const firstRow = rows[0]
 
       const merged = {
-        _id:             firstRow._id,
-        receiptIndex:    0,
-        name:            firstRow.name,
-        nameDisabled:    true,
-        product_id:      firstRow.product_id,
-        quantity:        totalQty || null,
-        regular_price:   avgPrice != null ? Number(avgPrice.toFixed(4)) : parseFloat(firstRow.regular_price) || null,
-        discount:        null,
+        _id: firstRow._id,
+        receiptIndex: 0,
+        name: firstRow.name,
+        nameDisabled: true,
+        product_id: firstRow.product_id,
+        quantity: totalQty || null,
+        regular_price: avgPrice != null ? Number(avgPrice.toFixed(4)) : parseFloat(firstRow.regular_price) || null,
+        discount: null,
         promotion_price: null,
-        price:           avgPrice != null ? Number(avgPrice.toFixed(3)) : null,
-        sum:             totalSum > 0 ? Number(totalSum.toFixed(2)) : null,
-        sell_price:      null,
-        bulk_price:      null,
+        price: avgPrice != null ? Number(avgPrice.toFixed(3)) : null,
+        sum: totalSum > 0 ? Number(totalSum.toFixed(2)) : null,
+        sell_price: null,
+        bulk_price: null,
       }
 
       // Let the existing formula derive sell/bulk from the averaged regular_price

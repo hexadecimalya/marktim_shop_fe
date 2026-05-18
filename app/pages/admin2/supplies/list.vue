@@ -1,9 +1,9 @@
 <template>
     <section class="w-5/6 mx-auto">
         <h1 class="text-2xl font-extrabold my-4">
-            Список поставок
+            Список поставок (experimental)
         </h1>
-        <div v-if="!loading && !error">
+        <div v-if="!loading && !error && suppliesList.length !== 0">
             <div>
 
                 <div
@@ -28,7 +28,7 @@
                         </NuxtLink>
                     </div>
 
-                    <div>{{ supply.supplier }}</div>
+                    <div>{{ supply.supplier?.name || 'no name' }}</div>
                     <div>{{ supply.supply_products.length }}</div>
                     <div>
                         <UBadge variant="subtle" :color="!supply.draft ? 'primary' : 'neutral'"> {{
@@ -56,7 +56,7 @@
                             </UTooltip>
                             <template #body>
                                 <div class="h-48 m-4 mx-auto">
-                                    Видалити поставку {{ supply.id}} від {{ supply.supplier?.name }}?
+                                    Видалити поставку {{ supply.id }} від {{ supply.supplier?.name }}?
                                 </div>
 
                             </template>
@@ -69,13 +69,20 @@
                 </div>
             </div>
             <USeparator />
+            <div class="my-6 flex justify-center" v-if="!loading">
+                <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
+                    active-variant="subtle" :items-per-page="limit" show-edges />
+            </div>
+        </div>
+        <div v-else-if="!loading && !suppliesList.length"
+            class="flex flex-col items-center justify-center py-12 gap-3 text-center">
+            <UIcon name="i-lucide:clipboard-list" class="w-10 h-10 text-gray-300" />
+            <p class="text-sm font-medium text-gray-700">Немає [експериментальних] поставок</p>
+            <p class="text-xs text-gray-400">Вони з'являться тут</p>
         </div>
 
     </section>
-    <div class="my-6 flex justify-center" v-if="!loading">
-        <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
-            active-variant="subtle" :items-per-page="limit" show-edges />
-    </div>
+
 </template>
 
 <script setup>
@@ -104,7 +111,7 @@ const isExporting = ref(false)
 
 const isDeleting = ref(false)
 const handleDeleteSupply = async (id) => {
-        isDeleting.value = true
+    isDeleting.value = true
     try {
         await execute(`/supplies/${id}/`, { method: 'DELETE' })
         toast.add({ title: 'Поставка успішно видалена', icon: 'i-lucide:check', color: 'success' })

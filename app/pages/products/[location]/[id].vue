@@ -5,7 +5,10 @@
         <div class="lg:container sm:mt-8 mt-0 mx-auto flex sm:flex-row flex-col justify-center">
             <img class="sm:w-1/2" :src="product.product.files?.[0]?.link ?? placeholder" />
 
-            <div class="p-4 lg:ml-4 md:w-2/5">
+            <div class="px-4 lg:ml-4 md:w-2/5">
+                <!-- <ClientOnly>
+                    <div><span v-if="product.product.brand">{{ product.product.brand }}</span></div>
+                </ClientOnly> -->
                 <h2 class="text-base my-2 font-medium text-justify">
                     {{ product.product.name_ukr || product.product.name }}
                 </h2>

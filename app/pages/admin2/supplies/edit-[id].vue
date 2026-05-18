@@ -13,7 +13,7 @@
 
         <template v-else>
             <div class="flex items-center gap-3 my-4">
-                <UButton icon="i-lucide:arrow-left" variant="ghost" color="neutral" to="/supplies" />
+                <UButton icon="i-lucide:arrow-left" variant="ghost" color="neutral" to="/admin2/supplies" />
                 <h1 class="text-2xl font-extrabold">Редагувати поставку #{{ id }}</h1>
                 <UBadge v-if="isDraft" label="Чернетка" color="warning" variant="subtle" />
                 <UBadge v-else label="Збережено" color="success" variant="subtle" />
@@ -151,7 +151,7 @@
                                 <!-- Name -->
                                 <div class="col-span-4">
                                     <UInput v-model="row.name" :disabled="row.nameDisabled" size="sm" class="w-full">
-                                        <template v-if="!row.nameDisabled && row.name?.trim() && !row.product_id"
+                                        <template v-if="!row.nameDisabled && row.name?.trim() && !row.product_detail.id"
                                             #trailing>
                                             <UButton icon="i-lucide:check" color="primary" variant="ghost" size="xs"
                                                 :loading="isSavingProduct" @click.stop="handleCreateProduct(row)" />
@@ -264,7 +264,7 @@
                         <div class="flex items-end justify-end gap-2">
                             <UButton :label="!isFinished ? 'Зберегти чернетку' : 'Зберегти'" color="primary"
                                 icon="i-lucide:save" :loading="isSavingSupply" @click="handleSave" />
-                            <UButton label="Скасувати" variant="subtle" color="neutral" to="/supplies" />
+                            <UButton label="Скасувати" variant="subtle" color="neutral" to="/admin2/supplies" />
                             <UButton @click="downloadCSV" label="Експорт в CSV" icon="i-lucide:download"
                                 variant="subtle" color="neutral" />
                         </div>
@@ -304,7 +304,7 @@ const {
 // ── Fetch supply from backend ──────────────────────────────────────────────────
 const {
     data: supplyData,
-    pending: fetchPending,
+    loading: fetchPending,
     error: fetchError,
     refresh,
 } = useAuthFetchData(() => `/supplies/${id.value}`)
@@ -399,7 +399,7 @@ const isReadyToBeFinished = computed(() => {
     const hasValidRows = supplyRows.value.length > 0 && supplyRows.value.every(row => (
         row.product_id &&
         row.sell_price != null &&
-        row.bulk_price != null &&
+        //row.bulk_price != null &&
         row.price != null &&
         row.quantity != null &&
         row.quantity > 0
@@ -452,7 +452,7 @@ const handleSave = async () => {
     isSavingSupply.value = true
     try {
         const payload = {
-            supplier: counterpartyName.value,
+            supplier_id: counterpartyName.value,
             exchange_rate_f: exchangeRate.value,
             exchange_rate_real: exchangeRateReal.value,
             delivery_fee: deliveryFee.value,
@@ -462,8 +462,7 @@ const handleSave = async () => {
             total: parseFloat(total.value.toFixed(3)),
             total_in_uah: parseFloat(totalInUAH.value.toFixed(2)),
             supply_products: supplyRowsWithCost.value.map(row => ({
-                product_id: row.product_id,
-                name: row.name,
+                product: row.product_id,
                 receipt_index: row.receiptIndex,
                 sell_price: row.sell_price,
                 bulk_price: row.bulk_price,
@@ -471,12 +470,12 @@ const handleSave = async () => {
                 cost_price: row.cost_price || 0,
                 discount: row.discount || 0,
                 regular_price: row.regular_price,
-                promotion_price: row.promotion_price,
+                promotion_price: row.promotion_price != null ? parseFloat(Number(row.promotion_price).toFixed(3)) : null,
                 price: row.price != null ? parseFloat(Number(row.price).toFixed(3)) : null,
                 sum: row.sum,
             })),
         }
-
+        //console.log('PAYLOAD',payload)
         await execute(`/supplies/${id.value}/`, { method: 'PUT', body: payload })
         toast.add({
             title: 'Поставку збережено',
@@ -487,6 +486,7 @@ const handleSave = async () => {
         await navigateTo('/admin2/supplies/list')
     } catch (e) {
         console.error(e)
+        
         toast.add({
             title: 'Помилка збереження',
             description: 'Спробуйте ще раз або зверніться до розробника.',

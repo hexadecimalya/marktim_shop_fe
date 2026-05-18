@@ -423,7 +423,7 @@ const isReadyToBeFinished = computed(() => {
         return (
             row.product_id &&           // Наявність ID (товар створено або знайдено)
             row.sell_price != null &&   // Ціна продажу
-            row.bulk_price != null &&   // Оптова ціна
+            //row.bulk_price != null &&   // Оптова ціна
             row.price != null &&        // Ціна закупівлі (zl)
             row.quantity != null &&     // Кількість
             row.quantity > 0
@@ -465,7 +465,7 @@ const handleSave = async () => {
     isSavingSupply.value = true;
     try {
         const payload = {
-            supplier: counterpartyName.value,
+            supplier_id: counterpartyName.value,
             exchange_rate_f: exchangeRate.value,
             exchange_rate_real: exchangeRateReal.value,
             delivery_fee: deliveryFee.value,
@@ -474,8 +474,7 @@ const handleSave = async () => {
             total: parseFloat(total.value.toFixed(3)),
             total_in_uah: parseFloat(totalInUAH.value.toFixed(2)),
             supply_products: supplyRowsWithCost.value.map((row) => ({
-                product_id: row.product_id,
-                name: row.name,
+                product: row.product_id,  // product_id -> product
                 receipt_index: row.receiptIndex,
                 sell_price: row.sell_price,
                 bulk_price: row.bulk_price,
@@ -483,12 +482,12 @@ const handleSave = async () => {
                 cost_price: row.cost_price || 0,
                 discount: row.discount || 0,
                 regular_price: row.regular_price,
-                promotion_price: row.promotion_price,
-                price: parseFloat(row.price.toFixed(3)),
+                promotion_price: row.promotion_price != null ? parseFloat(Number(row.promotion_price).toFixed(3)) : null,
+                price: row.price != null ? parseFloat(Number(row.price).toFixed(3)) : null,
                 sum: row.sum,
             })),
         };
-        console.log("PAYLOAD:", payload)
+        //console.log("PAYLOAD:", payload)
         await execute('/supplies/', { method: 'POST', body: payload })
         toast.add({
             title: 'Поставка збережена',
@@ -535,7 +534,7 @@ const currentReceiptNotFinished = computed(() => {
 
 
 
-watchEffect(() => console.log("INDEX: current ", currentReceiptIndex.value, supplyRows.value))
+//watchEffect(() => console.log("INDEX: current ", currentReceiptIndex.value, supplyRows.value))
 
 const hydrated = ref(false);
 onMounted(() => {
