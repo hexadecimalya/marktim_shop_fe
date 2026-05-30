@@ -21,7 +21,7 @@
             </div>
 
             <div>
-                <!-- ── Sumup accordion ──────────────────────────────────────────────── -->
+                <!-- ── Sumup accordion  ──────────────────────────────────────────────── -->
                 <section v-if="sumupItems.length" class="mt-4 bg-gray-100 p-4 rounded-md">
                     <UAccordion :items="sumupAccordionItems">
                         <template #sumup-content>
