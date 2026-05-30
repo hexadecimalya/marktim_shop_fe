@@ -102,66 +102,69 @@
         <section v-if="preorderIsInitialized">
             <div class="my-4">
                 <SearchBarAdmin @update:search="onSearch" />
-
             </div>
-
-            <div class="grid grid-cols-16 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold  tracking-wider text-gray-500">
-                <div class="flex justify-center">Дії</div>
-                <div class="col-span-7">Назва</div>
-                <div>Стара</div>
-                <div>Продаж</div>
-                <div>Опт</div>
-                <div>Закуп (zl)</div>
-                <div>Промо (zl)</div>
-                <div class="col-span-2 text-center">Тип промо</div>
-                <div class="text-end">
-                    <UIcon name="i-lucide:image" />
-                </div>
-            </div>
-
-            <section v-if="!loading && !error">
-                <div class="divide-y divide-gray-100 border-x border-b border-gray-200 rounded-b-lg">
-                    <div v-for="product in productList" :key="product.id"
-                        class="grid grid-cols-16 items-center p-1 text-sm gap-x-1 hover:bg-gray-50 transition-colors">
-
-                        <div class="flex justify-center">
-                            <UCheckbox :disabled="!product.regular_price && !product.sell_price"
-                                :model-value="isProductInPreorder(product.id)"
-                                @update:model-value="(val) => toggleProductSelection(val, product)" />
-                        </div>
-
-                        <div class="col-span-7 font-medium hover:underline truncate">
-                            <NuxtLink :to="`/admin2/products/${product.id}`">
-                                {{ product.name_ukr || product.name }}
-                            </NuxtLink>
-                        </div>
-                        <UInput v-model="product.old_price" variant="soft" placeholder="—"
-                            @update:model-value="syncWithStore(product)" />
-                        <UInput v-model="product.sell_price" class="font-bold"
-                            @update:model-value="syncWithStore(product)" />
-                        <UInput v-model="product.bulk_price" @update:model-value="syncWithStore(product)" />
-
-                        <UInput v-model="product.regular_price" @change="store.calculatePrices(product)" />
-                        <UInput v-model="product.promo_price" @change="store.calculatePrices(product)" />
-                        <div class="col-span-2 flex justify-center">
-                            <USelect :items="selectPromoItems" v-model="product.promoSelected"
-                                @change="store.calculatePromo(product)" label-key="label" value-key="value"
-                                class="w-24" />
-                        </div>
-                        <div class="flex justify-end">
-                            <img :src="product?.files?.[0]?.link || placeholder"
-                                :class="{ '': placeholder, 'hover:scale-350 hover:inset-10 duration-200 ease-out': product?.files?.[0]?.link }"
-                                class="w-10 h-10 object-cover rounded shadow-sm" />
-                        </div>
+            <div v-if="!loading && !error && totalCount">
+                <div
+                    class="grid grid-cols-16 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold  tracking-wider text-gray-500">
+                    <div class="flex justify-center">Дії</div>
+                    <div class="col-span-7">Назва</div>
+                    <div>Стара</div>
+                    <div>Продаж</div>
+                    <div>Опт</div>
+                    <div>Закуп (zl)</div>
+                    <div>Промо (zl)</div>
+                    <div class="col-span-2 text-center">Тип промо</div>
+                    <div class="text-end">
+                        <UIcon name="i-lucide:image" />
                     </div>
                 </div>
 
-                <div class="my-6 flex justify-center">
-                    <UPagination v-model:page="page" :total="totalCount" :items-per-page="limit" />
-                </div>
-            </section>
+                <section >
+                    <div class="divide-y divide-gray-100 border-x border-b border-gray-200 rounded-b-lg">
+                        <div v-for="product in productList" :key="product.id"
+                            class="grid grid-cols-16 items-center p-1 text-sm gap-x-1 hover:bg-gray-50 transition-colors">
 
-            <div v-else-if="loading" class="py-10">
+                            <div class="flex justify-center">
+                                <UCheckbox :disabled="!product.regular_price && !product.sell_price"
+                                    :model-value="isProductInPreorder(product.id)"
+                                    @update:model-value="(val) => toggleProductSelection(val, product)" />
+                            </div>
+
+                            <div class="col-span-7 font-medium hover:underline truncate">
+                                <NuxtLink :to="`/admin2/products/${product.id}`">
+                                    {{ product.name_ukr || product.name }}
+                                </NuxtLink>
+                            </div>
+                            <UInput v-model="product.old_price" variant="soft" placeholder="—"
+                                @update:model-value="syncWithStore(product)" />
+                            <UInput v-model="product.sell_price" class="font-bold"
+                                @update:model-value="syncWithStore(product)" />
+                            <UInput v-model="product.bulk_price" @update:model-value="syncWithStore(product)" />
+
+                            <UInput v-model="product.regular_price" @change="store.calculatePrices(product)" />
+                            <UInput v-model="product.promo_price" @change="store.calculatePrices(product)" />
+                            <div class="col-span-2 flex justify-center">
+                                <USelect :items="selectPromoItems" v-model="product.promoSelected"
+                                    @change="store.calculatePromo(product)" label-key="label" value-key="value"
+                                    class="w-24" />
+                            </div>
+                            <div class="flex justify-end">
+                                <img :src="product?.files?.[0]?.link || placeholder"
+                                    :class="{ '': placeholder, 'hover:scale-350 hover:inset-10 duration-200 ease-out': product?.files?.[0]?.link }"
+                                    class="w-10 h-10 object-cover rounded shadow-sm" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="my-6 flex justify-center">
+                        <UPagination v-model:page="page" :total="totalCount" :items-per-page="limit" />
+                    </div>
+                </section>
+
+            </div>
+            <NoItemsFoundAdmin v-else-if="!loading && !totalCount"/>
+
+            <div v-else-if="loading">
                 <AdminLoader />
             </div>
         </section>
@@ -295,7 +298,7 @@ const handlePreorder = async () => {
 
         store.clearPreorder()
         formInitState.exchangeRate = null
-      
+
 
 
     } catch (e) {

@@ -196,7 +196,7 @@ const handleExport = () => {
     params.set('export', 'true')
 
     const baseURL = useRuntimeConfig().public.apiBase
-    window.open(`${baseURL}/products/?${params.toString()}`, _self)
+    window.open(`${baseURL}/products/?${params.toString()}` )
 }
 
 watch([searchTerm, toggleInStock, toggleNoImages, page], () => {

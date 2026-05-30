@@ -39,7 +39,7 @@
                       <span class="text-gray-700">{{ item.quantity }}</span>
                       <UButton @click="updateQty(item, item.quantity + 1)" :disabled="item.quantity === item.maxQuantity"
                         variant="ghost" size="md" color="neutral " class="mx-2 p-0 flex items-center"
-                        icon="i-solar:minus-square-bold"
+                        icon="i-solar:add-square-bold"
                         />
                     </div>
                     <div @click="remove(item)" class="underline cursor-pointer">Видалити</div>
@@ -96,7 +96,7 @@
                         icon="i-solar:minus-square-bold" />
                       <span class="text-gray-700">{{ item.quantity }}</span>
                       <UButton @click="updateQty(item, item.quantity + 1)" variant="ghost" size="md" color="neutral"
-                        class="mx-2 p-0 flex items-center" icon="i-solar:minus-square-bold" />
+                        class="mx-2 p-0 flex items-center" icon="i-solar:add-square-bold" />
 
                     </div>
                     <div @click="remove(item)" class="underline cursor-pointer">Видалити</div>

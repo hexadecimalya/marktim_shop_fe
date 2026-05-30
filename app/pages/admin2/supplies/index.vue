@@ -112,10 +112,7 @@
                 </div>
             </div>
         </div>
-
-        <div v-if="loading" class="flex justify-center py-12">
-            <UIcon name="i-lucide:loader" class="animate-spin text-gray-400 text-2xl" />
-        </div>
+        <AdminLoader v-if="loading" />
     </section>
 
     <div class="my-6 flex justify-center" v-if="!loading">
