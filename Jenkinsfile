@@ -21,7 +21,7 @@ pipeline {
   agent any
 
   environment {
-    NODE_VERSION = 'v22.14.0'
+    NODE_VERSION = 'v22.17.1'
     NODE_PATH    = "/home/webber/.nvm/versions/node/${NODE_VERSION}/bin"
     PATH         = "${NODE_PATH}:${env.PATH}"
     NODE_OPTIONS = "--max-old-space-size=4096"
