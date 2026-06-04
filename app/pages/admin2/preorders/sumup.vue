@@ -178,4 +178,6 @@ const handleExportProductsList = async () => {
         isExporting.value = false
     }
 }
+
+useHead({title: 'Підрахунок передзамовлення'})
 </script>

@@ -336,7 +336,7 @@ const downloadCSV = () => {
 
         return {
             name: row.name,
-            cost_price: row.cost_price,
+            cost_price: Number(row.cost_price).toFixed(2),
             sell_price: row.sell_price,
             bulk_price: row.bulk_price || null,
             quantity: row.quantity,
@@ -547,4 +547,5 @@ onMounted(() => {
 });
 
 definePageMeta({ layout: "admin" });
+useHead({title: 'Нова поставка PLN'})
 </script>

@@ -86,4 +86,5 @@ const savePreorder = () => {
 definePageMeta({
   layout: 'admin'
 })
+useHead({title: 'Редагування передзамовлення'})
 </script>

@@ -194,10 +194,6 @@
                     <NoItemsFoundAdmin v-else-if="!searchLoading && totalCount === 0" />
                 </div>
 
-
-
-
-
                 <div>
                     <div class="my-4">
                         <USeparator label="Накладні витрати" type="solid" />
@@ -318,7 +314,7 @@ const downloadCSV = () => {
 
         return {
             name: row.name,
-            cost_price: row.cost_price,
+            cost_price: Number(row.cost_price).toFixed(2),
             sell_price: row.sell_price,
             quantity: row.quantity,
             unit: isFractional ? "кг" : "шт",
@@ -484,4 +480,5 @@ onMounted(() => {
 });
 
 definePageMeta({ layout: "admin" });
+useHead({title: 'Нова поставка EUR'})
 </script>

@@ -6,4 +6,5 @@
 definePageMeta({
   layout: 'admin'
 })
+useHead({title: 'Всі продажі'})
 </script>

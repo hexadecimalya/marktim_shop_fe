@@ -288,5 +288,5 @@ const resetForm = () => {
     })
     uploadedFile.value = null
 }
-
+useHead({title: 'Створення продукту'})
 </script>

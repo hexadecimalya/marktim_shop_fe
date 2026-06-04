@@ -10,4 +10,5 @@
 definePageMeta({
   layout: 'admin'
 })
+useHead({title: 'Головна сторінка адміністратора'})
 </script>

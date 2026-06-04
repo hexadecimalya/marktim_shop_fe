@@ -282,7 +282,7 @@ const downloadCSV = () => {
 
         return {
             name: row.name,
-            cost_price: row.cost_price,
+            cost_price: Number(row.cost_price).toFixed(2),
             sell_price: row.sell_price,
             quantity: row.quantity,
             // Conditionally assign values based on the fraction check
@@ -443,4 +443,5 @@ onMounted(() => {
 });
 
 definePageMeta({ layout: "admin" });
+useHead({title: 'Нова поставка UAH'})
 </script>

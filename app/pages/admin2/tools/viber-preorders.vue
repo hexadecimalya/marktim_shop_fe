@@ -165,5 +165,6 @@ const copyMessage = async () => {
     console.error('Copy failed', err)
   }
 }
+useHead({title: 'Калькулятор для збору Viber'})
 </script>
 

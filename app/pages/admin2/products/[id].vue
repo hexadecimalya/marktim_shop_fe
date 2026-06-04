@@ -353,4 +353,6 @@ const openAsCopy = () => {
     window.open(router.resolve('/admin2/products/create').href, '_blank')
 }
 
+
+useHead({title: 'Редагування продукту'})
 </script>

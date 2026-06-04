@@ -237,6 +237,6 @@ const handleDeleteSupply = (id) => {
     console.log('deleted')
 }
 
-
+useHead({title: 'Всі поставки'})
 
 </script>

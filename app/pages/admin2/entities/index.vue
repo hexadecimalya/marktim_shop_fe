@@ -16,6 +16,7 @@
 
 <script setup>
 definePageMeta({ layout: 'admin' })
+useHead({title: 'Всі довідники'})
 
 const hydrated = ref(false)
 const { execute } = useAuthFetchMulti()
@@ -24,4 +25,3 @@ onMounted(() => {
   hydrated.value = true
 })
 </script>
-=

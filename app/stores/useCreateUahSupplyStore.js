@@ -104,7 +104,7 @@ export const useCreateUahSupplyStore = defineStore('createUahSupply', () => {
     supplyRows.value.forEach(row => {
       const reg = parseFloat(row.regular_price) || 0
       if (reg > 0) {
-        row.cost_price = reg + (reg * ratio)
+        row.cost_price = Number(reg + (reg * ratio)).toFixed(2)
         row.sell_price = row.cost_price > 0 && currentMargin > 0 
           ? Math.ceil(row.cost_price * currentMargin) 
           : 0
