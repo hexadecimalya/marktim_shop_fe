@@ -407,7 +407,7 @@ const handleSave = async () => {
                 product: row.product_id,
                 sell_price: row.sell_price,
                 quantity: row.quantity,
-                cost_price: row.cost_price.toFixed(2) || 0,
+                cost_price: row.cost_price ? Number(row.cost_price).toFixed(2) : 0,
                 regular_price: row.regular_price || 0,
                 sum: row.sum,
             })),
