@@ -10,6 +10,7 @@
       </section></template>
 <script setup>
 definePageMeta({ layout: 'admin' })
+useHead({title: 'Категорії товару'})
 
 const hydrated = ref(false)
 const { execute } = useAuthFetchMulti()

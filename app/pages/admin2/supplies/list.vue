@@ -153,6 +153,6 @@ const handleDeleteSupply = async (id) => {
     }
 }
 
-
+useHead({title: 'Поставки (для складу)'})
 
 </script>

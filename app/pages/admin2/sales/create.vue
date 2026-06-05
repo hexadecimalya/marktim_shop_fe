@@ -249,4 +249,5 @@ function holdReceipt() {
 definePageMeta({
   layout: 'admin'
 })
+useHead({title: 'Новий продаж'})
 </script>

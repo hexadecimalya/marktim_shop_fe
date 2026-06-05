@@ -21,7 +21,7 @@
             </div>
 
             <div>
-                <!-- ── Sumup accordion ──────────────────────────────────────────────── -->
+                <!-- ── Sumup accordion  ──────────────────────────────────────────────── -->
                 <section v-if="sumupItems.length" class="mt-4 bg-gray-100 p-4 rounded-md">
                     <UAccordion :items="sumupAccordionItems">
                         <template #sumup-content>
@@ -282,7 +282,7 @@ const downloadCSV = () => {
 
         return {
             name: row.name,
-            cost_price: row.cost_price,
+            cost_price: Number(row.cost_price).toFixed(2),
             sell_price: row.sell_price,
             quantity: row.quantity,
             // Conditionally assign values based on the fraction check
@@ -407,7 +407,7 @@ const handleSave = async () => {
                 product: row.product_id,
                 sell_price: row.sell_price,
                 quantity: row.quantity,
-                cost_price: row.cost_price.toFixed(2) || 0,
+                cost_price: row.cost_price ? Number(row.cost_price).toFixed(2) : 0,
                 regular_price: row.regular_price || 0,
                 sum: row.sum,
             })),
@@ -443,4 +443,5 @@ onMounted(() => {
 });
 
 definePageMeta({ layout: "admin" });
+useHead({title: 'Нова поставка UAH'})
 </script>

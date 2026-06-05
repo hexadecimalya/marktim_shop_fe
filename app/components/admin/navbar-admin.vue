@@ -125,5 +125,12 @@ const menus = [
             { label: 'Бренди', icon: 'i-lucide-scroll-text', to: '/admin2/entities/brands' },
         ],
     },
+      {
+        label: 'Rozetka',
+        items: [
+            { label: 'Не додане', icon: 'i-lucide-sticky-note-x', to: '/admin2/rozetka/not-added' },
+             { label: 'Змінити ціни', icon: 'i-lucide-coins', to: '/admin2/rozetka/price-review' },
+        ],
+    },
 ]
 </script>

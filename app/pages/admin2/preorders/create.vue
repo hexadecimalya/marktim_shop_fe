@@ -317,4 +317,5 @@ onMounted(() => {
     hydrated.value = true
 })
 definePageMeta({ layout: 'admin' })
+useHead({title: 'Створити передзамовлення'})
 </script>

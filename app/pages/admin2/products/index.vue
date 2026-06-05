@@ -253,4 +253,5 @@ const copyName = async (name, id) => {
 definePageMeta({
     layout: 'admin'
 })
+useHead({title: 'Всі товари'})
 </script>

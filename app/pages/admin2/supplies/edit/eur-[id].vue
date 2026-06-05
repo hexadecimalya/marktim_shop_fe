@@ -381,7 +381,7 @@ const downloadCSV = () => {
         const isFractional = Number(row.quantity) % 1 !== 0;
         return {
             name: row.name,
-            cost_price: row.cost_price,
+            cost_price: Number(row.cost_price).toFixed(2),
             sell_price: row.sell_price,
             quantity: row.quantity,
             unit: isFractional ? "кг" : "шт",
@@ -426,4 +426,5 @@ onMounted(() => { hydrated.value = true; });
 onUnmounted(() => store.clearSupply());
 
 definePageMeta({ layout: "admin" });
+useHead({title: 'Змінити поставку EUR'})
 </script>

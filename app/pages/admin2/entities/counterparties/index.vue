@@ -204,4 +204,6 @@ const executeDelete = async () => {
   //     deletingId.value = null
   //   }
 }
+
+useHead({title: 'Контрагенти'})
 </script>

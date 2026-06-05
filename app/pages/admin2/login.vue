@@ -103,4 +103,5 @@ const onSubmit = async () => {
 definePageMeta({
   layout: 'auth'
 })
+useHead({title: 'Увійти'})
 </script>

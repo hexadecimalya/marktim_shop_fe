@@ -318,4 +318,5 @@ const handleStopPreorders = async () => {
 }
 
 definePageMeta({ layout: 'admin' })
+useHead({title: 'Всі передзамовлення'})
 </script>

@@ -136,6 +136,7 @@
 
 <script setup>
 definePageMeta({ layout: 'admin' })
+useHead({title: 'Бренди'})
 
 const hydrated = ref(false)
 const { execute } = useAuthFetchMulti()
