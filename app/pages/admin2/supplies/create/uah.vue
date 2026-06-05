@@ -255,7 +255,7 @@ const onSearch = (value) => {
 
 const searchUrl = computed(() => {
     const offset = (page.value - 1) * limit;
-    const base = "/preorders/products/";
+    const base = "/products2/";
     return searchTerm.value.length >= 3
         ? `${base}?filter_param=${encodeURIComponent(
             searchTerm.value
