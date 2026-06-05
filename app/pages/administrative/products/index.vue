@@ -42,7 +42,7 @@
           class="grid grid-cols-25 items-center px-1 py-1 text-xs gap-2"
         >
           <div class="text-center hover:underline text-xs text-gray-400 font-mono">
-            <NuxtLink :to="`/admin2/products/${product.id}`">{{ product.id }}</NuxtLink>
+            <NuxtLink :to="`/administrative/products/${product.id}`">{{ product.id }}</NuxtLink>
           </div>
           <div
             @click="copyName(product.name, product.id)"
@@ -94,7 +94,7 @@
       >
         <div class="flex items-start justify-between gap-2">
           <NuxtLink
-            :to="`/admin2/products/${product.id}`"
+            :to="`/administrative/products/${product.id}`"
             class="text-sm font-semibold leading-snug hover:underline"
           >
             {{ product.name_ukr ?? product.name }}

@@ -81,7 +81,7 @@ const onSubmit = async () => {
     }
 
     initUserDataFromObject(userData)
-    await navigateTo('/admin2')
+    await navigateTo('/administrative')
 
    
   } catch (error) {

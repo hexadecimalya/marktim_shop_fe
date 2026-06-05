@@ -30,7 +30,7 @@
               class="grid grid-cols-14 p-1 text-sm font-slim gap-x-1">
               <img :src="`${product?.files?.[0]?.link}`" width="70" />
               <div class="col-span-7 font-medium hover:underline content-center">
-                <NuxtLink :to="`/admin2/products/${product.product_id}`">{{ product.name_ukr ? product.name_ukr :
+                <NuxtLink :to="`/administrative/products/${product.product_id}`">{{ product.name_ukr ? product.name_ukr :
                   product.name }}
                 </NuxtLink>
               </div>

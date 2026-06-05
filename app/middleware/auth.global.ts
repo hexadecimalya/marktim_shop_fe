@@ -8,12 +8,12 @@ export default defineNuxtRouteMiddleware((to) => {
   }
 
   const isAuthenticated = Boolean(userStore.user.access_token);
-  const isLoginPage = to.path === "/admin2/login";
+  const isLoginPage = to.path === "/administrative/login";
 
   if (isLoginPage && !isAuthenticated) {
     return;
   } else if (isLoginPage && isAuthenticated) {
-    return navigateTo("/admin2");
-  } else if (to.path.startsWith("/admin2") && !isAuthenticated)
-    return navigateTo("/admin2/login");
+    return navigateTo("/administrative");
+  } else if (to.path.startsWith("/administrative") && !isAuthenticated)
+    return navigateTo("/administrative/login");
 });

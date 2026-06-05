@@ -28,7 +28,7 @@
             <div class="grid grid-cols-6 px-4 py-2 text-sm items-center">
               <div class="text-gray-500 text-xs">{{ preorder.created }}</div>
               <div class="col-span-2 font-semibold text-gray-600">
-                <NuxtLink :to="`/admin2/preorders/${preorder.id}`" class="hover:underline">
+                <NuxtLink :to="`/administrative/preorders/${preorder.id}`" class="hover:underline">
                   {{ preorder.name }}
                 </NuxtLink>
               </div>
@@ -92,7 +92,7 @@
         >
           <div class="flex items-start justify-between gap-2">
             <NuxtLink
-              :to="`/admin2/preorders/${preorder.id}`"
+              :to="`/administrative/preorders/${preorder.id}`"
               class="font-semibold text-gray-700 hover:underline leading-snug"
             >
               {{ preorder.name }}

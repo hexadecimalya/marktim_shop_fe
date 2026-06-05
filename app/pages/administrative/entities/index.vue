@@ -5,9 +5,9 @@
     <!-- <div class="flex items-center justify-between mb-4"> -->
       <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 mb-4">Загальні довідники</h1>
       <ul class="font-mono space-y-2">
-        <li class="hover:scale-102 hover:font-semibold hover:px-4"><NuxtLink to="/admin2/entities/categories"><UIcon name="i-lucide:chart-bar-stacked"/> Категорії </NuxtLink></li>
-         <li class="hover:scale-102 hover:font-semibold hover:px-4"><NuxtLink to="/admin2/entities/counterparties"><UIcon name="i-lucide:users"/> Контрагенти </NuxtLink></li>
-         <li class="hover:scale-102 hover:font-semibold hover:px-4"><NuxtLink to="/admin2/entities/brands"><UIcon name="i-lucide:scroll-text"/> Бренди </NuxtLink></li>
+        <li class="hover:scale-102 hover:font-semibold hover:px-4"><NuxtLink to="/administrative/entities/categories"><UIcon name="i-lucide:chart-bar-stacked"/> Категорії </NuxtLink></li>
+         <li class="hover:scale-102 hover:font-semibold hover:px-4"><NuxtLink to="/administrative/entities/counterparties"><UIcon name="i-lucide:users"/> Контрагенти </NuxtLink></li>
+         <li class="hover:scale-102 hover:font-semibold hover:px-4"><NuxtLink to="/administrative/entities/brands"><UIcon name="i-lucide:scroll-text"/> Бренди </NuxtLink></li>
    
       </ul>
       <!-- </div> -->

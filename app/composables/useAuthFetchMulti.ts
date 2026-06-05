@@ -61,7 +61,7 @@ export function useAuthFetchMulti() {
         const refreshed = await tryRefresh();
         if (refreshed) return await makeRequest();
         userStore.logOut();
-        await navigateTo("/admin2/login");
+        await navigateTo("/administrative/login");
         throw err; // navigateTo is async, this prevents returning undefined
       }
 

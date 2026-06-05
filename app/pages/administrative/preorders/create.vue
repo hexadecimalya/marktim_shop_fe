@@ -131,7 +131,7 @@
                             </div>
 
                             <div class="col-span-7 font-medium hover:underline truncate">
-                                <NuxtLink :to="`/admin2/products/${product.id}`">
+                                <NuxtLink :to="`/administrative/products/${product.id}`">
                                     {{ product.name_ukr || product.name }}
                                 </NuxtLink>
                             </div>

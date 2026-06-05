@@ -1,5 +1,5 @@
 <template>
-  <!-- <NavbarAdmin v-if="routeLocation.startsWith('/admin2')"/> -->
+  <!-- <NavbarAdmin v-if="routeLocation.startsWith('/administrative')"/> -->
   <MenuBar />
   <slot />
 

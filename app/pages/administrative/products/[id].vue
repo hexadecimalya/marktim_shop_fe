@@ -350,7 +350,7 @@ const openAsCopy = () => {
         loose:           product.loose,
     }
     sessionStorage.setItem('product_copy_prefill', JSON.stringify(copyData))
-    window.open(router.resolve('/admin2/products/create').href, '_blank')
+    window.open(router.resolve('/administrative/products/create').href, '_blank')
 }
 
 

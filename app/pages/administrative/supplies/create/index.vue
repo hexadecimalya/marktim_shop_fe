@@ -72,7 +72,7 @@ const supplyTypes = [
 
 
 const startSupply = async (type) => {
-  await navigateTo(`/admin2/supplies/create/${type}`)
+  await navigateTo(`/administrative/supplies/create/${type}`)
 }
 definePageMeta({ layout: 'admin' })
 useHead({title: 'Типи поставок для створення'})

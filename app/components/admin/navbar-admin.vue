@@ -90,46 +90,46 @@ const menus = [
     {
         label: 'Продажі',
         items: [
-            { label: 'Всі', icon: 'i-lucide-align-justify', to: '/admin2/sales' },
-            { label: 'Створити', icon: 'i-lucide-plus', to: '/admin2/sales/create' },
+            { label: 'Всі', icon: 'i-lucide-align-justify', to: '/administrative/sales' },
+            { label: 'Створити', icon: 'i-lucide-plus', to: '/administrative/sales/create' },
         ],
     },
     {
         label: 'Продукти',
         items: [
-            { label: 'Всі', icon: 'i-lucide-align-justify', to: '/admin2/products' },
-            { label: 'Створити', icon: 'i-lucide-plus', to: '/admin2/products/create' },
+            { label: 'Всі', icon: 'i-lucide-align-justify', to: '/administrative/products' },
+            { label: 'Створити', icon: 'i-lucide-plus', to: '/administrative/products/create' },
         ],
     },
     {
         label: 'Передзамовлення',
         items: [
-            { label: 'Всі', icon: 'i-lucide-align-justify', to: '/admin2/preorders' },
-            { label: 'Створити', icon: 'i-lucide-plus', to: '/admin2/preorders/create' },
-            { label: 'Підрахувати', icon: 'i-lucide-sigma', to: '/admin2/preorders/sumup' },
+            { label: 'Всі', icon: 'i-lucide-align-justify', to: '/administrative/preorders' },
+            { label: 'Створити', icon: 'i-lucide-plus', to: '/administrative/preorders/create' },
+            { label: 'Підрахувати', icon: 'i-lucide-sigma', to: '/administrative/preorders/sumup' },
         ],
     },
     {
         label: 'Поставки',
         items: [
-            { label: 'Всі', icon: 'i-lucide-align-justify', to: '/admin2/supplies' },
-            { label: 'Experimental: Create', icon: 'i-lucide-flask-conical', to: '/admin2/supplies/create' },
-            { label: 'Experimental: List', icon: 'i-lucide-flask-conical', to: '/admin2/supplies/list' },
+            { label: 'Всі', icon: 'i-lucide-align-justify', to: '/administrative/supplies' },
+            { label: 'Experimental: Create', icon: 'i-lucide-flask-conical', to: '/administrative/supplies/create' },
+            { label: 'Experimental: List', icon: 'i-lucide-flask-conical', to: '/administrative/supplies/list' },
         ],
     },
     {
         label: 'Довідники',
         items: [
-            { label: 'Категорії', icon: 'i-lucide-chart-bar-stacked', to: '/admin2/entities/categories' },
-            { label: 'Контрагенти', icon: 'i-lucide-users', to: '/admin2/entities/counterparties' },
-            { label: 'Бренди', icon: 'i-lucide-scroll-text', to: '/admin2/entities/brands' },
+            { label: 'Категорії', icon: 'i-lucide-chart-bar-stacked', to: '/administrative/entities/categories' },
+            { label: 'Контрагенти', icon: 'i-lucide-users', to: '/administrative/entities/counterparties' },
+            { label: 'Бренди', icon: 'i-lucide-scroll-text', to: '/administrative/entities/brands' },
         ],
     },
       {
         label: 'Rozetka',
         items: [
-            { label: 'Не додане', icon: 'i-lucide-sticky-note-x', to: '/admin2/rozetka/not-added' },
-             { label: 'Змінити ціни', icon: 'i-lucide-coins', to: '/admin2/rozetka/price-review' },
+            { label: 'Не додане', icon: 'i-lucide-sticky-note-x', to: '/administrative/rozetka/not-added' },
+             { label: 'Змінити ціни', icon: 'i-lucide-coins', to: '/administrative/rozetka/price-review' },
         ],
     },
 ]

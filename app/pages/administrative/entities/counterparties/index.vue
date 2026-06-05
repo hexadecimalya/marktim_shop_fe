@@ -179,7 +179,7 @@ const pendingDelete = ref(null)
 
 
 const goToEditPage = async (id) => {
-  await navigateTo(`/admin2/counterparties/${id}`)
+  await navigateTo(`/administrative/counterparties/${id}`)
 }
 
 const confirmDelete = (brand) => {

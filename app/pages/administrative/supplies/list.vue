@@ -127,7 +127,7 @@ const limit = 30
 const totalCount = computed(() => data.value?.count ?? 0)
 const url = computed(() => `/supplies/?page_size=${limit}&page=${page.value}&order_by=-id`) // add ordering to backend
 
-const editRoute = (supply) => `/admin2/supplies/edit/${supply.type}-${supply.id}`
+const editRoute = (supply) => `/administrative/supplies/edit/${supply.type}-${supply.id}`
 
 const { data, error, loading, refresh } = useAuthFetchData(
     url

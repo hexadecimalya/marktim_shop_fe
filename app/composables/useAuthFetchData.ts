@@ -94,7 +94,7 @@ export function useAuthFetchData<T = any>(
             if (!cancelled) data.value = result;
           } else {
             userStore.logOut();
-            router.push("/admin2/login");
+            router.push("/administrative/login");
           }
         } else {
           if (!cancelled) error.value = err;

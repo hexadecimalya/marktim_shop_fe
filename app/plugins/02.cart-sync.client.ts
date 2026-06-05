@@ -2,7 +2,7 @@
 import { toast } from "#build/ui";
 export default defineNuxtPlugin(async () => {
   const route = useRoute();
-  const EXCLUDED_PREFIXES = ["/admin2"];
+  const EXCLUDED_PREFIXES = ["/administrative"];
 
   const isExcluded = EXCLUDED_PREFIXES.some((prefix) =>
     route.path.startsWith(prefix),
