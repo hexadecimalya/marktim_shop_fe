@@ -29,7 +29,7 @@
                 </UFormField>
             </div>
 
-            <div v-show="counterpartyName && margin && exchangeRate">
+            <div>
                 <!-- ── Sumup accordion ──────────────────────────────────────────────── -->
                 <section v-if="sumupItems.length" class="mt-4 bg-gray-100 p-4 rounded-md">
                     <UAccordion :items="sumupAccordionItems">

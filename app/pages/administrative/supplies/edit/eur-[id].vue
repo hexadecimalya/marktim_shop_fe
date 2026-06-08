@@ -42,7 +42,7 @@
                 </UFormField>
             </div>
 
-            <div v-show="counterpartyName && margin && exchangeRate">
+            <div>
                 <!-- ── Table Supply ────────────────────────────────────────────────── -->
                 <div class="my-4">
                     <USeparator label="Таблиця поставки" type="solid" />
