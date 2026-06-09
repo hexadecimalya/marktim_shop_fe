@@ -19,7 +19,7 @@
                 </UFormField>
             </div>
 
-            <div v-show="exchangeRate && counterpartyName">
+            <div>
                 <!-- ── Sumup accordion ──────────────────────────────────────────────── -->
                 <section v-if="sumupItems.length" class="mt-4 bg-gray-100 p-4 rounded-md">
                     <UAccordion :items="sumupAccordionItems">
@@ -92,12 +92,12 @@
                             </div>
 
                             <!-- Quantity -->
-                            <UInput v-model="row.quantity" type="number" size="sm" @change="store.recalculate(row)" />
+                            <UInput v-model="row.quantity" type="number" size="sm" @change="store.recalculateRow(row)" />
                             <!-- Regular price -->
                             <UInput v-model="row.regular_price" type="number" size="sm"
-                                @change="store.recalculate(row)" />
+                                @change="store.recalculateRow(row)" />
                             <!-- Discount -->
-                            <UInput v-model="row.discount" type="number" size="sm" @change="store.recalculate(row)" />
+                            <UInput v-model="row.discount" type="number" size="sm" @change="store.recalculateRow(row)" />
 
                             <!-- promotion_price – display only -->
                             <div class="text-xs text-center text-gray-500 tabular-nums">

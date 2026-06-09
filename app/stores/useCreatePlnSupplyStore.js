@@ -292,6 +292,7 @@ export const useCreatePlnSupplyStore = defineStore('createPlnSupply', () => {
     loadFromBackend,
     updateRowProduct,
     aggregateRows,
+    recalculateRow,
     receiptGroups,
     receiptTotals,
     total,
