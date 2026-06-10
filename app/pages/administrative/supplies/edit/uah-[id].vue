@@ -115,14 +115,14 @@
                         <UInput v-model="row.regular_price" type="number" size="sm" @change="store.recalculateAll" />
 
                         <!-- sum – display only -->
-                        <div class="text-xs text-center font-semibold tabular-nums">
+                        <div class="text-xs text-center font-semibold tabular-nums bg-mtgreen-100 rounded-lg py-1">
                             {{ row.sum != null ? fmt(row.sum) : "—" }}
                         </div>
 
                         <!-- Sell price -->
                         <UInput v-model="row.sell_price" size="sm" />
 
-                        <div class="text-center">{{ fmt(row.cost_price) || "-" }}</div>
+                        <div class="text-center text-xs tabular-nums">{{ fmt(row.cost_price) || "-" }}</div>
                     </div>
 
                     <!-- Empty state -->

@@ -49,6 +49,9 @@ export const useCreatePlnSupplyStore = defineStore('createPlnSupply', () => {
     // sell/bulk
     const rate = toNum(exchangeRate.value)
     const priceForSale = toNum(row.price)
+    const ratio = overheadRatio.value
+    const rateReal = toNum(exchangeRateReal.value)
+    const baseUAH = toNum(row.price) * rateReal * 1.25
 
     if (rate > 0 && priceForSale > 0) {
       const markupMultiplier = 1.25 * 1.1
@@ -56,22 +59,18 @@ export const useCreatePlnSupplyStore = defineStore('createPlnSupply', () => {
 
       row.sell_price = Math.ceil(priceForSale * rate * markupMultiplier * floatRate)
       row.bulk_price = Math.ceil(row.sell_price * 0.95)
+      row.cost_price = baseUAH > 0 ? round(baseUAH * (1 + ratio)) : null
+
     } else {
       row.sell_price = null
       row.bulk_price = null
+      row.cost_price = null
+
     }
   }
 
   const recalculateAll = () => {
     supplyRows.value.forEach(row => recalculateRow(row))
-
-    const ratio = overheadRatio.value
-    const rateReal = toNum(exchangeRateReal.value)
-
-    supplyRows.value.forEach(row => {
-      const baseUAH = toNum(row.price) * rateReal * 1.25
-      row.cost_price = baseUAH > 0 ? round(baseUAH * (1 + ratio)) : null
-    })
   }
 
   // ─── Row factory ─────────────────────────────────────────────────────────────
@@ -261,7 +260,6 @@ export const useCreatePlnSupplyStore = defineStore('createPlnSupply', () => {
   )
 
   const totalInUAH = computed(() => round(total.value * toNum(exchangeRateReal.value) * 1.25))
-
   const monoBankFee = 0.018
 
   const terminalTotalFee = computed(() => round(totalInUAH.value * monoBankFee))
@@ -271,9 +269,10 @@ export const useCreatePlnSupplyStore = defineStore('createPlnSupply', () => {
   )
 
   const overheadRatio = computed(() => {
-    return totalInUAH.value > 0 ? round((totalOverheads.value / totalInUAH.value)) : 0
+    return totalInUAH.value > 0 ? totalOverheads.value / totalInUAH.value : 0
   })
 
+  watchEffect(() => console.log(overheadRatio.value))
   return {
     exchangeRate,
     exchangeRateReal,

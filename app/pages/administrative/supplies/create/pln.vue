@@ -57,7 +57,7 @@
 
                 <!-- Header -->
                 <div
-                    class="grid grid-cols-13 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-2 py-3 text-xs font-semibold tracking-wider text-gray-500">
+                    class="grid grid-cols-14 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-2 py-3 text-xs font-semibold tracking-wider text-gray-500">
                     <div class="flex justify-center">Дії</div>
                     <div class="col-span-4">Назва</div>
                     <div>К-сть</div>
@@ -68,13 +68,14 @@
                     <div class="text-center">Сума</div>
                     <div>Продаж</div>
                     <div>Опт</div>
+                    <div class="text-center">Собівартість</div>
                 </div>
 
                 <!-- Rows -->
                 <div class="border-x border-b border-gray-200 rounded-b-lg">
                     <template v-for="(rows, receiptIdx) in receiptGroups" :key="receiptIdx">
                         <div v-for="row in rows" :key="row._id"
-                            class="grid grid-cols-13 items-center px-2 py-1 text-sm gap-x-1 hover:bg-red-50/20 transition-colors border-b border-gray-100">
+                            class="grid grid-cols-14 items-center px-2 py-1 text-sm gap-x-1 hover:bg-red-50/20 transition-colors border-b border-gray-100">
                             <!-- Delete -->
                             <div class="flex justify-center">
                                 <UButton icon="i-lucide:trash-2" color="error" variant="ghost" size="sm"
@@ -92,12 +93,14 @@
                             </div>
 
                             <!-- Quantity -->
-                            <UInput v-model="row.quantity" type="number" size="sm" @change="store.recalculateRow(row)" />
+                            <UInput v-model="row.quantity" type="number" size="sm"
+                                @change="store.recalculateRow(row)" />
                             <!-- Regular price -->
                             <UInput v-model="row.regular_price" type="number" size="sm"
                                 @change="store.recalculateRow(row)" />
                             <!-- Discount -->
-                            <UInput v-model="row.discount" type="number" size="sm" @change="store.recalculateRow(row)" />
+                            <UInput v-model="row.discount" type="number" size="sm"
+                                @change="store.recalculateRow(row)" />
 
                             <!-- promotion_price – display only -->
                             <div class="text-xs text-center text-gray-500 tabular-nums">
@@ -110,7 +113,7 @@
                             </div>
 
                             <!-- sum – display only -->
-                            <div class="text-xs text-center font-semibold tabular-nums">
+                            <div class="text-xs text-center font-semibold tabular-nums bg-mtgreen-100 rounded-lg py-1">
                                 {{ row.sum != null ? fmt(row.sum) : "—" }}
                             </div>
                             <!-- Sell price -->
@@ -118,7 +121,7 @@
 
                             <!-- Bulk price -->
                             <UInput v-model="row.bulk_price" size="sm" />
-
+                            <div class="text-center text-xs tabular-nums">{{ fmt(row.cost_price) || "-" }}</div>
                         </div>
 
                         <!-- Receipt separator – only for closed receipts -->
@@ -207,14 +210,15 @@
                     </div>
                     <div class="flex items-start justify-start gap-2">
                         <UFormField label="Курс (zl) реальний">
-                            <UInput v-model="exchangeRateReal" type="number" placeholder="Напр. 13.3" />
+                            <UInput v-model="exchangeRateReal" type="number" placeholder="Напр. 13.3" @change="store.recalculateAll()" />
                         </UFormField>
                         <UFormField label="Доставка Нова пошта">
-                            <UInput v-model="deliveryFee" type="number" />
+                            <UInput v-model="deliveryFee" type="number" @change="store.recalculateAll()" />
                         </UFormField>
                         <UFormField label="Додаткові витрати">
-                            <UInput v-model="additionalSpendings" type="number" />
+                            <UInput v-model="additionalSpendings" type="number" @change="store.recalculateAll()" />
                         </UFormField>
+      
                     </div>
                 </div>
                 <!-- ── Actions ────────────────────────────────────────────────────── -->
@@ -547,5 +551,5 @@ onMounted(() => {
 });
 
 definePageMeta({ layout: "admin" });
-useHead({title: 'Нова поставка PLN'})
+useHead({ title: 'Нова поставка PLN' })
 </script>

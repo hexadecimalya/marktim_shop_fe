@@ -135,7 +135,7 @@
                             </div>
 
                             <!-- sum – display only -->
-                            <div class="text-xs text-center font-semibold tabular-nums">
+                            <div class="text-xs text-center font-semibold tabular-nums bg-mtgreen-100 rounded-lg py-1">
                                 {{ row.sum != null ? fmt(row.sum) : "—" }}
                             </div>
 
@@ -144,7 +144,7 @@
 
                             <!-- Bulk price -->
                             <UInput v-model="row.bulk_price" size="sm" />
-                            <div class="text-center">{{ fmt(row.cost_price) || "-" }}</div>
+                            <div class="text-center text-xs tabular-nums">{{ fmt(row.cost_price) || "-" }}</div>
                         </div>
 
                         <!-- Receipt separator – only for closed receipts -->
@@ -237,8 +237,7 @@
                     </div>
                     <div class="flex items-start justify-start gap-2">
                         <UFormField label="Курс (zl) реальний">
-                            <UInput v-model="exchangeRateReal" type="number" placeholder="Напр. 13.3"
-                                @change="store.recalculateAll()" />
+                            <UInput v-model="exchangeRateReal" type="number" placeholder="Напр. 13.3" @change="store.recalculateAll()" />
                         </UFormField>
                         <UFormField label="Доставка Нова пошта">
                             <UInput v-model="deliveryFee" type="number" @change="store.recalculateAll()" />
@@ -246,6 +245,7 @@
                         <UFormField label="Додаткові витрати">
                             <UInput v-model="additionalSpendings" type="number" @change="store.recalculateAll()" />
                         </UFormField>
+      
                     </div>
                 </div>
 

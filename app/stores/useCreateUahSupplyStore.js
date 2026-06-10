@@ -93,7 +93,7 @@ export const useCreateUahSupplyStore = defineStore('createUahSupply', () => {
     supplyRows.value.forEach(row => {
       const qty = parseFloat(row.quantity) || 0
       const reg = parseFloat(row.regular_price) || 0
-      row.sum = qty > 0 && reg > 0 ? reg * qty : null
+      row.sum = qty > 0 && reg > 0 ? (reg * qty).toFixed(3) : null
     })
 
     // Step 2: Grab the freshly computed overhead ratio 
