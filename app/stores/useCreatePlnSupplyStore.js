@@ -272,7 +272,6 @@ export const useCreatePlnSupplyStore = defineStore('createPlnSupply', () => {
     return totalInUAH.value > 0 ? totalOverheads.value / totalInUAH.value : 0
   })
 
-  watchEffect(() => console.log(overheadRatio.value))
   return {
     exchangeRate,
     exchangeRateReal,
