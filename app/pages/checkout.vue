@@ -138,70 +138,88 @@ const validate = (state) => {
     return errors
 }
 
-
 const handleSubmit = async () => {
     isProcessing.value = true
-    //unpacking 
-    const products = [
-        ...stockItems.value.map(item => ({
-            id: item.id,
-            product_preorder_id: null,
-            stock_id: item.id,
-            amount: item.quantity
-        })),
-        ...preorderItems.value.map(item => ({
-            id: item.id,
-            product_preorder_id: item.id,
-            stock_id: null,
-            amount: item.quantity
-        }))
-    ]
 
-    const newOrder = {
+    const baseOrder = {
         phone_number: state.phone.trim(),
         name: state.firstName,
         last_name: state.lastName,
-        order_type: stockItems.value.length && preorderItems.value.length
-            ? "stock/preorder"
-            : stockItems.value.length
-                ? "stock"
-                : "preorder",
-
         comment: state.comment,
-        delivery_type: deliveryType.value === deliveryItems.value[0]
-            ? "takeaway"
-            : "ukraine_delivery",
+        delivery_type: deliveryType.value === deliveryItems.value[0] ? "takeaway" : "ukraine_delivery",
         city: selectedCity.value?.label ?? null,
         np_dept: selectedWarehouse.value?.label ?? null,
         another_r_phone: state.anotherRPhone || null,
         another_r_name: state.anotherRfirstName || null,
         another_r_lastname: state.anotherRLastName || null,
-        products
     }
+
+    const requests = []
+
+    if (stockItems.value.length) {
+
+        requests.push(
+
+            $fetch(`${config.public.apiBase}/public/orders/`, {
+                method: 'POST',
+                body: {
+                    ...baseOrder,
+                    is_preorder: false, // Нове булеве поле
+                    products: stockItems.value.map(item => ({
+                        id: item.id,
+                        product_preorder_id: null,
+                        stock_id: item.id,
+                        amount: item.quantity
+                    }))
+                }
+            })
+        )
+    }
+
+    if (preorderItems.value.length) {
+        requests.push(
+            $fetch(`${config.public.apiBase}/public/orders/`, {
+                method: 'POST',
+                body: {
+                    ...baseOrder,
+                    is_preorder: true, 
+                    products: preorderItems.value.map(item => ({
+                        id: item.id,
+                        product_preorder_id: item.id,
+                        stock_id: null,
+                        amount: item.quantity
+                    }))
+                }
+            })
+        )
+    }
+
     try {
-        const res = await $fetch(`${config.public.apiBase}/public/orders/`, {
-            method: 'POST',
-            body: newOrder,
-        })
+        // Виконуємо запити паралельно
+        const responses = await Promise.all(requests)
+        
+        // Зберігаємо ID створених замовлень (одне або декілька через кому)
+        const orderIds = responses.map(res => res.id).join(', ')
+
         orderInfo.value = {
-            id: res.id,
+            id: orderIds,
             deliveryType: deliveryType.value
         }
-        // redirect
+
+        // Редірект на сторінку успішного замовлення
         router.push({
             path: "/order-confirmation",
             query: {
-                number: res.id
+                number: orderIds // Передасть щось на кшталт ?number=42 або ?number=42,43
             },
         })
     } catch (e) {
-        console.log("Order error:", e)
+        console.error("Order error:", e)
     } finally {
         isProcessing.value = false
     }
 }
 
-// redirect on reload
 definePageMeta({ middleware: 'checkout' })
 useHead({
   title: 'Дані замовника'
