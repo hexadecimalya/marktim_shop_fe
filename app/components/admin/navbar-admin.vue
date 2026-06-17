@@ -88,10 +88,18 @@ watch(() => route.path, () => {
 
 const menus = [
     {
-        label: 'Продажі',
+        label: 'Точка продажу',
         items: [
-            { label: 'Всі', icon: 'i-lucide-align-justify', to: '/administrative/sales' },
-            { label: 'Створити', icon: 'i-lucide-plus', to: '/administrative/sales/create' },
+            { label: 'Новий продаж', icon: 'i-lucide-plus', to: '/administrative/pos/create' },
+            { label: 'Історія', icon: 'i-lucide-align-justify', to: '/administrative/pos' },
+    
+        ],
+    },
+    {
+        label: 'Замовлення',
+        items: [
+            { label: 'Всі', icon: 'i-lucide-align-justify', to: '/administrative/orders' },
+            { label: 'Створити', icon: 'i-lucide-plus', to: '/administrative/orders/create' },
         ],
     },
     {
