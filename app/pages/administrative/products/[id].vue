@@ -163,8 +163,8 @@ const product = reactive({
     categories: [],
     rozetka_id: '',
     rozetka_price_offer_id: '',
-    name_rozetka_ukr: '',
     name_rozetka: '',
+    name_rozetka_ukr: '',
     measure_units: null,
     loose: false,
     images: []

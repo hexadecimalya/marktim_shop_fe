@@ -34,6 +34,7 @@
       </div>
 
       <div class="flex items-center gap-4">
+        <UButton label="RZ" icon="i-lucide:smile" @click="getRozetkaOrders()"/>
         <USwitch v-model="showPos" label="POS" :loading="loading" />
         <span class="text-sm text-gray-400 font-medium">{{ totalCount }} записів</span>
       </div>
@@ -95,8 +96,8 @@
 
           <!-- Type -->
           <div>
-            <UBadge :color="order.preorder ? 'pink' : 'teal'" variant="subtle" size="sm">
-              {{ order.metadata.type }}
+            <UBadge :color="order.is_preorder ? 'warning' : 'primary'" variant="subtle" size="sm">
+              {{ order.is_preorder ? 'Замовити' : 'На складі' }}
             </UBadge>
           </div>
 
@@ -110,13 +111,13 @@
           <!-- Payment status -->
           <div>
             <UBadge :color="paymentBadgeColor(order.payment_status)" variant="subtle" size="sm">
-              {{ order.payment_status }}
+              {{ order.payment }}
             </UBadge>
           </div>
 
           <!-- Actions -->
           <div class="flex gap-1 justify-end">
-            <UButton :to="`/administrative/orders/${order.id}/edit`" icon="i-lucide:pencil" color="neutral"
+            <UButton :to="`/administrative/orders/${order.id}`" icon="i-lucide:pencil" color="neutral"
               variant="ghost" size="xs" />
             <UButton icon="i-lucide:trash-2" color="error" variant="ghost" size="xs" @click="confirmDelete(order)" />
           </div>
@@ -138,8 +139,9 @@
     </div>
 
     <!-- Pagination -->
-    <div v-if="totalCount > 0" class="flex justify-end mt-4">
-      <UPagination v-model:page="page" :total="totalCount" :items-per-page="pageSize" />
+    <div v-if="totalCount > 0" class="my-6 flex justify-center">
+      <UPagination v-model:page="page" :show-controls="false" :total="totalCount" active-color="neutral"
+        active-variant="subtle" :items-per-page="pageSize" show-edges />
     </div>
 
     <!-- Delete confirm modal -->
@@ -162,6 +164,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+const { execute } = useAuthFetchMulti()
 
 const PAGE_SIZE = 20
 
@@ -244,44 +247,44 @@ const hasActiveFilters = computed(() =>
 // Reset page on filter/search change
 watch([search, filters, showPos], () => { page.value = 1 }, { deep: true })
 
-function resetFilters() {
+const resetFilters = () => {
   search.value = ''
   filters.value = { dateFrom: '', dateTo: '', source: null, status: null, type: null, paymentStatus: null }
 }
 
-function formatDate(iso) {
+const formatDate = (iso) => {
   if (!iso) return '—'
   return new Date(iso).toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: '2-digit' })
 }
 
-function formatMoney(val) {
+const formatMoney = (val) => {
   if (val == null) return '—'
   return Number(val).toLocaleString('uk-UA')
 }
 
-function sourceBadgeColor(source) {
-  return { web: 'blue', pos: 'violet', manual: 'amber' }[source] ?? 'neutral'
+const sourceBadgeColor = (source) => {
+  return { web: 'success', pos: 'neutral', manual: 'warning' }[source] ?? 'neutral'
 }
 
-function statusBadgeColor(status) {
+const statusBadgeColor = (status) => {
   return {
-    draft: 'neutral', confirmed: 'blue', shipped: 'violet',
+    new: 'neutral', confirmed: 'info', shipped: 'info',
     completed: 'success', cancelled: 'error',
   }[status] ?? 'neutral'
 }
 
-function paymentBadgeColor(status) {
-  return { pending: 'amber', paid: 'success', failed: 'error', refunded: 'teal' }[status] ?? 'neutral'
+const paymentBadgeColor = (status) => {
+  return { pending: 'warning', paid: 'success', failed: 'error', refunded: 'info' }[status] ?? 'neutral'
 }
 
-function confirmDelete(order) {
+const confirmDelete = (order)  => {
   deleteModal.value = { open: true, order, loading: false }
 }
 
-async function handleDelete() {
+ const handleDelete = async() =>  {
   deleteModal.value.loading = true
   try {
-    await $fetch(`/api/orders2/${deleteModal.value.order.id}/`, { method: 'DELETE' })
+    await execute(`/orders2/${deleteModal.value.order.id}/`, { method: 'DELETE' })
     deleteModal.value.open = false
     refresh()
   } catch (e) {
@@ -290,6 +293,21 @@ async function handleDelete() {
     deleteModal.value.loading = false
   }
 }
+
+const isGettingRZOrders = ref(false)
+
+const getRozetkaOrders = async () => {
+  isGettingRZOrders.value = true
+  try {
+     await execute(`/orders2/rozetka/sync/`, { method: 'POST' })
+    refresh()
+  } catch (e) {
+    console.error(e)
+  } finally {
+    isGettingRZOrders.value = false
+  }
+}
+
 definePageMeta({
   layout: 'admin'
 })

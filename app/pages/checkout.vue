@@ -164,7 +164,7 @@ const handleSubmit = async () => {
                 method: 'POST',
                 body: {
                     ...baseOrder,
-                    is_preorder: false, // Нове булеве поле
+                    is_preorder: false, 
                     products: stockItems.value.map(item => ({
                         id: item.id,
                         product_preorder_id: null,
