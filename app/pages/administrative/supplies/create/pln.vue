@@ -268,7 +268,7 @@ const {
     receiptTotals,
     total,
     totalInUAH,
-    supplyRowsWithCost,
+    //supplyRowsWithCost,
 } = storeToRefs(store);
 
 // ── Sumup ──────────────────────────────────────────────────────────────────────
@@ -335,7 +335,7 @@ const downloadCSV = () => {
     isProcessing.value = true;
 
 
-    const rows = supplyRowsWithCost.value.map((row) => {
+    const rows = supplyRows.value.map((row) => {
         const isFractional = Number(row.quantity) % 1 !== 0;
 
         return {
@@ -485,7 +485,7 @@ const handleSave = async () => {
             receipt_totals: receiptTotals.value,
             total: total.value,
             total_in_uah: totalInUAH.value,
-            supply_products: supplyRowsWithCost.value.map((row) => ({
+            supply_products: supplyRows.value.map((row) => ({
                 product: row.product_id,  // product_id -> product
                 receipt_index: row.receiptIndex,
                 sell_price: row.sell_price,
