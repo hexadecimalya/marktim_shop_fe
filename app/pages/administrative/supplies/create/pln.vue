@@ -426,9 +426,9 @@ const hasValidRows = computed(() => supplyRows.value.length > 0 && supplyRows.va
 const isReadyToBeFinished = computed(() => {
 
     const hasHeaderFields =
-        !!exchangeRateReal.value &&
+        exchangeRateReal.value &&
         deliveryFee.value !== null &&
-        !!counterpartyName.value;
+        counterpartyName.value;
     //console.log(hasHeaderFields)
     const hasValidRows = supplyRows.value.length > 0 && supplyRows.value.every(row => {
         return (

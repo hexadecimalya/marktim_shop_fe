@@ -389,9 +389,9 @@ const hasValidRows = computed(() =>
 
 const isReadyToBeFinished = computed(() => {
     const hasHeaderFields =
-        !!exchangeRateReal.value &&
+        exchangeRateReal.value &&
         deliveryFee.value !== null &&
-        !!counterpartyName.value;
+        counterpartyName.value;
 
     return hasHeaderFields && hasValidRows.value;
 });
@@ -437,7 +437,7 @@ const handleUpdate = async () => {
                 discount: row.discount || 0,
                 regular_price: row.regular_price,
                 promotion_price: row.promotion_price || 0,
-                price: row.price,
+                price: row.price.toFixed(3),
                 sum: row.sum,
             })),
         };
@@ -463,6 +463,8 @@ const handleUpdate = async () => {
     }
 };
 
+
+
 // ── CSV Export ─────────────────────────────────────────────────────────────────
 const downloadCSV = () => {
     if (!supplyRows.value.length) return alert("Таблиця порожня");
@@ -479,7 +481,7 @@ const downloadCSV = () => {
             unit: isFractional ? "кг" : "шт",
             loose: isFractional ? "да" : "нет",
         };
-    });
+    }); 
 
     const headersConfig = [
         { key: "name", label: "Наименование" },

@@ -7,20 +7,22 @@
         <div v-if="!loading && !error && suppliesList.length !== 0">
             <div class="hidden md:block">
                 <div
-                    class="grid grid-cols-7 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    class="grid grid-cols-8 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
                     <div>ID</div>
                     <div class="col-span-2">Постачальник</div>
                     <div>Позицій</div>
+                    <div>Сума</div>
                     <div>Статус</div>
                     <div>Створено</div>
                     <div class="text-end">Дії</div>
                 </div>
                 <div class="border-x border-b border-gray-200 rounded-b-lg">
                     <div v-for="supply in suppliesList" :key="supply.id">
-                        <div class="grid grid-cols-7 px-4 py-3 text-sm items-center">
+                        <div class="grid grid-cols-8 px-4 py-3 text-sm items-center">
                             <div class="font-mono text-gray-400 text-xs">{{ supply.id }}</div>
                             <div class="col-span-2 font-medium">{{ supply.supplier?.name || 'no name' }}</div>
-                            <div>{{ supply.supply_products.length }}</div>
+                            <div>{{ supply.total_items }}</div>
+                            <div class="text-xs font-medium">{{ supply.total }} {{supply.type}}</div>
                             <div>
                                 <UBadge variant="subtle" :color="!supply.draft ? 'primary' : 'neutral'">
                                     {{ supply.draft ? 'чернетка' : 'проведена' }}
@@ -69,7 +71,8 @@
                     </div>
                     <div class="text-sm font-medium">{{ supply.supplier?.name || 'no name' }}</div>
                     <div class="flex gap-4 text-xs text-gray-500">
-                        <span>📦 {{ supply.supply_products.length }} товарів</span>
+                        <span>📦 {{ supply.total_items }} товарів</span>
+                        <span>💵 {{ supply.total }} {{supply.type}}</span>
                         <span>🗓 {{ supply.created }}</span>
                     </div>
                     <div class="flex gap-2 pt-1 border-t border-gray-100 justify-end">
@@ -153,6 +156,6 @@ const handleDeleteSupply = async (id) => {
     }
 }
 
-useHead({title: 'Поставки (для складу)'})
+useHead({ title: 'Поставки (для складу)' })
 
 </script>
