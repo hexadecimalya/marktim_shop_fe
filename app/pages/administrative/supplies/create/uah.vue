@@ -330,12 +330,6 @@ const handleBarcodeScan = async () => {
 
 const addFromBarcode = (product) => {
     store.addRowFromSearch(product)
-    toast.add({
-        title: "Товар додано",
-        description: product.name || product.name_ukr,
-        icon: "i-lucide:check",
-        color: "success",
-    })
     barcodeResults.value = null
     nextTick(() => barcodeInputRef.value?.input?.focus())
 }
