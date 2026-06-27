@@ -272,6 +272,12 @@ export const useCreatePlnSupplyStore = defineStore('createPlnSupply', () => {
     return totalInUAH.value > 0 ? totalOverheads.value / totalInUAH.value : 0
   })
 
+  watch(
+    [exchangeRate, exchangeRateReal, deliveryFee, additionalSpendings, total],
+    () => {
+      recalculateAll()
+    })
+
   return {
     exchangeRate,
     exchangeRateReal,

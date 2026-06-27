@@ -95,14 +95,14 @@
                         <UInput v-model="row.regular_price" type="number" size="sm" @change="store.recalculateAll" />
 
                         <!-- sum – display only -->
-                         <div class="text-xs text-center font-semibold tabular-nums bg-mtgreen-100 rounded-lg py-1">
+                        <div class="text-xs text-center font-semibold tabular-nums bg-mtgreen-100 rounded-lg py-1">
                             {{ row.sum != null ? fmt(row.sum) : "—" }}
                         </div>
 
                         <!-- Sell price -->
                         <UInput v-model="row.sell_price" size="sm" />
 
-                         <div class="text-center text-xs tabular-nums">{{ fmt(row.cost_price) || "-" }}</div>
+                        <div class="text-center text-xs tabular-nums">{{ fmt(row.cost_price) || "-" }}</div>
                     </div>
 
                     <!-- Empty state -->
@@ -124,6 +124,53 @@
                             {{ fmt(total) }}
                         </span>
                     </div>
+                </div>
+                <!-- ── Barcode Scanner ──────────────────────────────────────────────────────── -->
+                <div class="my-4">
+                    <USeparator label="Сканування штрих-коду" type="solid" />
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="relative flex-1 max-w-sm">
+                        <UInput ref="barcodeInputRef" v-model="barcodeValue"
+                            placeholder="Відскануйте або введіть штрих-код" icon="i-lucide:scan-barcode"
+                            :loading="barcodeLoading" :disabled="barcodeLoading" size="md"
+                            @keydown.enter="handleBarcodeScan" />
+                    </div>
+                </div>
+
+                <!-- Barcode results -->
+                <div v-if="barcodeResults !== null" class="mt-2">
+                    <!-- Multiple matches — let user pick -->
+                    <template v-if="barcodeResults.length > 1">
+                        <div
+                            class="grid grid-cols-8 items-center bg-gray-50 border border-gray-200 rounded-t-xl px-4 py-3 text-xs font-semibold tracking-wider text-gray-500 mt-2">
+                            <div class="flex justify-center">Дії</div>
+                            <div class="col-span-6">Назва</div>
+                            <div class="flex justify-end">
+                                <UIcon name="i-lucide:image" />
+                            </div>
+                        </div>
+                        <div class="divide-y divide-gray-100 border-x border-b border-gray-200 rounded-b-lg">
+                            <div v-for="product in barcodeResults" :key="product.id"
+                                class="grid grid-cols-8 items-center p-1 text-sm gap-x-1 hover:bg-gray-50 transition-colors">
+                                <div class="flex justify-center">
+                                    <UButton icon="i-lucide:plus" color="primary" variant="ghost" size="sm"
+                                        @click.stop="addFromBarcode(product)" />
+                                </div>
+                                <div class="col-span-6 font-medium truncate">
+                                    {{ product.name || product.name_ukr }}
+                                </div>
+                                <div class="flex justify-end">
+                                    <img :src="product?.files?.[0]?.link || placeholder"
+                                        class="w-10 h-10 object-cover rounded shadow-sm" />
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- No results -->
+                    <NoItemsFoundAdmin v-else-if="barcodeResults.length === 0" />
                 </div>
                 <div class="my-4">
                     <USeparator label="Пошук у базі" type="solid" />
@@ -242,6 +289,51 @@ const filteredCounterparties = computed(() =>
         .filter(b => b?.name?.toLowerCase().includes(counterpartySearch.value.toLowerCase()))
         .sort((a, b) => b.favoured - a.favoured)
 )
+
+// ── Barcode scanner ────────────────────────────────────────────────────────────
+const barcodeInputRef = ref(null)
+const barcodeValue = ref("")
+const barcodeLoading = ref(false)
+const barcodeResults = ref(null)   // null = idle, [] = no results, [...] = matches
+//const barcodeLastScanned = ref("")
+
+const handleBarcodeScan = async () => {
+    const code = barcodeValue.value.trim()
+    if (!code) return
+
+    barcodeLoading.value = true
+    barcodeResults.value = null
+
+    try {
+        const res = await execute(
+            `/products2/by-barcode/?code=${encodeURIComponent(code)}&order_by=-id`,
+            { method: "GET" }
+        )
+        const items = res?.data ?? []
+
+        if (items.length === 1) {
+            // Exact single match — add immediately
+            store.addRowFromSearch(items[0])
+            barcodeResults.value = null
+        } else {
+            barcodeResults.value = items
+        }
+    } catch (e) {
+        console.error("Barcode search failed", e)
+        barcodeResults.value = []
+    } finally {
+        barcodeLoading.value = false
+        barcodeValue.value = ""
+        nextTick(() => barcodeInputRef.value?.input?.focus())
+    }
+}
+
+const addFromBarcode = (product) => {
+    store.addRowFromSearch(product)
+    barcodeResults.value = null
+    nextTick(() => barcodeInputRef.value?.input?.focus())
+}
+
 
 // ── Search & pagination ────────────────────────────────────────────────────────
 const searchTerm = ref("");
@@ -443,5 +535,5 @@ onMounted(() => {
 });
 
 definePageMeta({ layout: "admin" });
-useHead({title: 'Нова поставка UAH'})
+useHead({ title: 'Нова поставка UAH' })
 </script>
